@@ -35,11 +35,15 @@ threads under explicit variable-interference conditions, with consistent
 shared ownership and retained private postconditions. Competing protected
 writes followed by private loads check for all interleavings. A general semantic
 spatial frame rule now holds at closed entry, including frames with pending
-writes. Temporal framing has a checked theorem in a separate semantics that
-retains completeness marks, and a checked fence example. Integration with
-ownership transfer exposed a further history/shared-pool obstruction; a
-replacement release-transfer lemma is proved, but the combined semantics and
-full soundness remain open. See [the framing results and next steps](notes/framing-status.md),
+writes. A subsequent generalized ownership model proves acquire/release,
+flushing, bounded calculus soundness, and temporal history framing around the
+whole shared/private region. A checked counterexample shows that its
+unrestricted private temporal frame rule fails even for a derivable
+closed-to-closed specification: invariant transfer can export another
+processor's completeness mark. The replacement boundary rule and examples
+check, but the general frame/concurrency integration and full soundness remain
+open. See [the current regional result and obstruction](notes/regional-ownership.md),
+[the preceding framing work](notes/framing-status.md),
 [the parallel rule](notes/parallel-ownership.md),
 [the private-resource extension](notes/private-ownership.md), and
 [the soundness status](notes/soundness-status.md) for exact claims and limits.
@@ -118,6 +122,12 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/TemporalFramingExamples.v` | Rejected spurious barrier, pending-write fence example, all-execution safety/post and concrete trace | Nonvacuity of the marked prototype |
 | `theories/TemporalTransfer.v` | Mark-preserving invariant extraction and enabled unlock behind unchanged temporal history | Transfer lemma for history outside the ownership region |
 | `theories/TemporalOwnershipObstruction.v` | Restored-invariant release fails with a spatial pool outside temporal history; alternative arrangement recomposes | Checked integration obstruction and positive repair witness |
+| `theories/RegionalResources.v` | Generalized shared/private regions, marked acquisition, temporal history, and flush preservation | History placed before the combined ownership region |
+| `theories/RegionalSafety.v` | All-index acquire/release, skip, consequence, sequence and operational adequacy | Checked regional ownership semantics |
+| `theories/RegionalCalculus.v` | Derivations and soundness for the regional lock/sequence/consequence fragment | No frame or heap/concurrency constructors yet |
+| `theories/RegionalFraming.v` | Operational history frame rule around `J * P` and `J * Q` | Checked boundary rule, not the private frame rule under hidden `J` |
+| `theories/InvariantCompleteness.v` | Points-to completeness can be assigned to an empty spatial sibling; derived foreign-processor barrier | Completeness import obstruction |
+| `theories/RegionalExamples.v` | Pending-write round trip, overlapping past/shared cell, all-run boundary theorem, rejected private temporal frame | Concrete nonvacuity and closed-to-closed counterexample |
 | `theories/VariableSupport.v` | Bounds on assertion variables, invariant freshness, and static thread interfaces | Existing variable-interference condition supplies compatibility |
 | `theories/ThreadProgress.v` | Residual derivations with variable bounds, relevant-register agreement, and waiting-thread steps | Thread obligations for the parallel rule |
 | `theories/SharedViews.v` | One shared ownership decision, symmetric views, flushing and step preservation | Concurrent owner/non-owner agreement |
@@ -273,6 +283,12 @@ distinguishes this interpretation from both earlier models.
   shared ownership. `temporal_history_release_transfer` checks the alternative
   release decomposition with history outside the ownership region. These
   results are not yet a combined spatial/temporal/parallel calculus.
+- `regional_calculus_sound` proves the generalized acquire/release,
+  skip/sequence/consequence fragment. `regional_history_frame_rule` proves
+  `{R ; (J * P)} c {R ; (J * Q)}` as an all-execution boundary theorem.
+  An overlapping-history/pending-private-write example checks.
+  `regional_temporal_frame_counterexample` refutes the unrestricted private
+  temporal rule for an actually derivable closed-to-closed specification.
 
 The earlier message-passing examples in `Examples.v` check syntax and variable
 side conditions. Their general operational correctness remains open. The
@@ -436,12 +452,13 @@ See [the precise rule comparison and release problem](notes/persistent-semantics
 
 ## Remaining proof work
 
-1. Integrate temporal framing with ownership transfer using generalized
-   completeness and history outside the shared/private region. Prove flush
-   preservation, acquire/release, both frame rules, and adequacy together;
-   then port the critical-section and parallel examples. The new transfer
-   lemma is a starting point, not this combined theorem. See
-   [the checked obstructions and exact next steps](notes/framing-status.md).
+1. Resolve completeness import before attempting the unrestricted private
+   temporal frame rule again. The generalized ownership model now checks
+   flushing, acquire/release, adequacy, and a whole-region history rule, but a
+   derived closed-to-closed counterexample rules out simply adding the old
+   private rule. Investigate separating protected completeness from private
+   barrier claims, then integrate spatial framing, heap operations and the
+   parallel example. See [the checked boundary rule and next design choices](notes/regional-ownership.md).
 2. Extend the two-thread parallel rule to nested parallel derivations and
    additional threads. It now permits private loads after release under the
    existing variable-interference condition, with checked preservation of

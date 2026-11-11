@@ -165,8 +165,10 @@ The subsequent [framing work](framing-status.md) proves spatial framing for
 ordinary private semantic validity, plus temporal framing in a separate
 marked-resource prototype. Neither result adds a frame constructor to
 `private_derivation`, and the temporal prototype does not replace the semantics
-of this parallel theorem. Invariant transfer across overlapping history is
-the next integration problem.
+of this parallel theorem. The newer [regional model](regional-ownership.md)
+handles overlapping history and acquire/release, but exposes a further
+completeness-import counterexample to unrestricted private temporal framing.
+That rule-design issue should be resolved before porting the parallel theorem.
 
 Ordinary arithmetic assignments and general expression-based loads/stores
 still need integration into the private calculus. Removing `memory_only`

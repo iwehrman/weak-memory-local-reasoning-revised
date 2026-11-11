@@ -10,11 +10,13 @@ base heap/lock rules, with a restricted release rule. The subsequent ownership
 protocol proves protected-memory transfer with private resources, and a first
 parallel theorem composes two threads under explicit variable-interference
 conditions, including private loads into registers. General spatial framing
-is now proved for private validity with closed entry. Temporal framing and
-fence are proved in a separate marked-resource prototype, with two checked
-obstructions to combining it with the ownership model. An alternative release
-transfer lemma addresses the overlapping-history example; the combined
-semantics and full concurrency rules remain open. See
+is now proved for private validity with closed entry. A generalized ownership
+model now proves acquire/release, flushing, bounded calculus soundness and
+temporal framing around the entire shared/private region. A further checked
+counterexample shows why its unrestricted private temporal rule cannot simply
+be added: a derivable acquire/release specification exports another processor's
+completeness from the invariant. The combined spatial/temporal/concurrency
+calculus remains open. See [the regional result](regional-ownership.md),
 [the framing results](framing-status.md), [the semantic changes](persistent-semantics.md),
 and [the parallel theorem's exact premises](parallel-ownership.md).
 
@@ -247,8 +249,17 @@ and a framed fence handles a pending write. However,
 spatial shared pool sits outside overlapping temporal history.
 `temporal_history_release_transfer` proves an enabled release and invariant
 recomposition with history before the combined ownership region. This is a
-checked replacement lemma, not yet a combined safety model. See
-[framing-status.md](framing-status.md).
+checked replacement lemma. The subsequent `RegionalSafety.v` completes a
+generalized ownership safety model, its acquire/release/sequence/consequence
+fragment, and adequacy. `regional_history_frame_rule` establishes the boundary
+rule `{R ; (J * P)} c {R ; (J * Q)}`. However,
+`regional_temporal_frame_counterexample` refutes the private temporal frame
+rule even for a source specification derived in that fragment and with both
+boundaries closed. Points-to completeness can be reassigned to an empty
+private sibling, then returned as a barrier for a different processor.
+An overlapping-history/private-pending-write example validates the boundary
+rule. General spatial framing, heap rules and concurrency are not yet ported
+to this model. See [regional-ownership.md](regional-ownership.md).
 
 Capture-avoiding assertion substitution, general expression-based heap
 axioms, choice/loop, general parallel, invariant rules, and integration of the

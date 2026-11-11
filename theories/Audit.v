@@ -12,6 +12,8 @@ From WMLR Require Import PrivateOwnership PrivateRules PrivateHeap PrivateCalcul
 From WMLR Require Import SpatialExchange VariableSupport ThreadProgress SharedViews ParallelOwnership ParallelExamples ParallelLoads.
 From WMLR Require Import PrivateFraming SpatialFramingExamples TemporalFrameCounterexample TemporalSafety
   TemporalFence TemporalFramingExamples TemporalTransfer TemporalOwnershipObstruction.
+From WMLR Require Import RegionalResources RegionalSafety RegionalCalculus RegionalFraming
+  InvariantCompleteness RegionalExamples.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 Print Assumptions eval_expr_agrees.
@@ -282,3 +284,26 @@ Print Assumptions prefix_ownership_release_invalid.
 Print Assumptions release_marked_invariant.
 Print Assumptions temporal_history_release_transfer.
 Print Assumptions overlapping_history_release_recomposes.
+
+Print Assumptions acquire_marked_payload.
+Print Assumptions marked_region_future.
+Print Assumptions regional_environment_flush.
+Print Assumptions regional_acquire_valid.
+Print Assumptions regional_release_valid.
+Print Assumptions regional_consequence_valid.
+Print Assumptions regional_sequence_valid.
+Print Assumptions regional_roundtrip_valid.
+Print Assumptions regional_execution_no_abort.
+Print Assumptions regional_execution_post.
+Print Assumptions regional_calculus_sound.
+Print Assumptions regional_history_frame_rule.
+Print Assumptions cell_emp_entails_barrier.
+Print Assumptions regional_roundtrip_barrier_derivable.
+Print Assumptions regional_empty_private_initial.
+Print Assumptions regional_pending_roundtrip_trace.
+Print Assumptions regional_pending_roundtrip_derivable.
+Print Assumptions regional_pending_roundtrip_no_abort.
+Print Assumptions regional_pending_roundtrip_all_terminating_runs.
+Print Assumptions regional_temporal_frame_counterexample.
+Print Assumptions regional_overlap_pending_initial.
+Print Assumptions regional_overlap_pending_all_runs.

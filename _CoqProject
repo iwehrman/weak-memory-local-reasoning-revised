@@ -39,6 +39,11 @@ theories/PrivateFraming.v
 theories/TemporalSafety.v
 theories/TemporalFence.v
 theories/TemporalTransfer.v
+theories/RegionalResources.v
+theories/RegionalSafety.v
+theories/RegionalCalculus.v
+theories/RegionalFraming.v
+theories/InvariantCompleteness.v
 theories/VariableSupport.v
 theories/ThreadProgress.v
 theories/SharedViews.v
@@ -58,6 +63,7 @@ theories/PrivateExamples.v
 theories/ParallelExamples.v
 theories/ParallelLoads.v
 theories/SpatialFramingExamples.v
+theories/RegionalExamples.v
 theories/Specifications.v
 theories/Examples.v
 theories/Audit.v

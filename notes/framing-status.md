@@ -1,10 +1,14 @@
 # Spatial framing and the temporal repair
 
 The general semantic spatial frame rule is proved for `private_valid` with
-closed entry. Temporal framing is proved in a separate semantics retaining
-completeness marks, but combining that semantics with invariant transfer and
-parallel ownership is still open. Two checked counterexamples explain why
-that integration requires changes. Full corrected soundness is not proved.
+closed entry. The work below proves temporal framing in a separate semantics
+retaining completeness marks and identifies two transfer obstacles. The
+subsequent [generalized regional model](regional-ownership.md) now proves
+flushing, acquire/release, bounded calculus soundness, and temporal history
+framing around the whole shared/private region. It also finds a stronger
+counterexample: the unrestricted private temporal rule fails even for an
+actually derivable closed-to-closed specification. Full corrected soundness
+and frame/concurrency integration remain open.
 
 ## Spatial framing
 
@@ -140,15 +144,16 @@ for the new arrangement.
 
 ## Next proof obligations
 
-1. Define generalized shared/private regions with history outside the region,
-   carrying completeness through both ownership phases. Prove silent-flush
-   preservation, acquire/release, and operational adequacy there.
-2. Reprove temporal and spatial framing together in that model. The checked
-   frame theorem in the prototype cannot simply be transplanted across a
-   changed environment decomposition; mixed rearrangement laws are needed.
-3. Port the critical-section/private-load example and then the two-thread
-   ownership argument. Check which hypotheses actually need strengthening
-   before proposing user-facing rule restrictions.
+1. The generalized region definition, silent-flush preservation, acquire/release,
+   and adequacy are now proved in `RegionalResources.v` and `RegionalSafety.v`.
+   The checked temporal rule frames the whole region, explicitly including `J`.
+2. Resolve the newly checked completeness-import obstruction. The unrestricted
+   private temporal rule is false with the current transfer and consequence
+   rules, so mixed rearrangement lemmas alone cannot establish it. Investigate
+   separating protected completeness from private barrier claims; see
+   [the new result and counterexample](regional-ownership.md).
+3. Integrate spatial framing and heap operations in the chosen regional model,
+   then port the critical-section/private-load and two-thread ownership examples.
 4. Address general spatiotemporal environments and strong temporal framing,
    which are not established by the ordinary temporal frame theorem.
 

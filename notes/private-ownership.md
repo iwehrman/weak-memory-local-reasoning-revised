@@ -119,6 +119,12 @@ prototype proves temporal framing and fence, but integrating temporal external
 frames with these ownership rules remains open. See
 [the exact results and transfer obstruction](framing-status.md).
 
+The newer [regional model](regional-ownership.md) now proves generalized
+acquire/release and a history rule around the entire shared/private region.
+Its derivable closed-to-closed counterexample shows that the original private
+temporal frame rule cannot be recovered merely by retaining completeness.
+These results do not reinterpret the private or parallel theorems above.
+
 The transfer rules accept arbitrary private assertions; the current checked
 heap rules are constant-cell rules. The example preserves its private cell;
 arbitrary private-state transformations, general expressions, substitution,

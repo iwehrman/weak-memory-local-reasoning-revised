@@ -1,0 +1,14 @@
+*.vo
+*.vos
+*.vok
+*.glob
+.*.aux
+.lia.cache
+.nia.cache
+RocqMakefile
+RocqMakefile.conf
+.RocqMakefile.d
+META.weak-memory-local-reasoning
+.rocq-native/
+.coq-native/
+.DS_Store

@@ -58,7 +58,16 @@ so older framed values need not remain live cells. Both transfer directions,
 FRAME-TM, a small calculus and all-execution examples check. A flush-simulation
 lemma supports extending this design to buffered histories, but that combined
 model and integration with spatial framing/concurrency remain open.
-See [retirement: checked repair and its scope](notes/retired-ownership.md),
+The independent review subsequently proves two unsound specifications from
+the printed rules and identifies an additional cell-erasure defect in the
+retirement interpretation. Development will now preserve `emp`'s unit laws,
+drop permanent protected/private assertion slots and retirement, and test
+explicit ownership rules with restricted temporal framing. This target is
+not yet proved; the invariant re-marking and frame-shape checkpoints come
+before further safety development.
+See [the response and development checkpoints](review/lead-response.md),
+[the independent review](review/independent-review.md),
+[retirement: earlier experiment and its limits](notes/retired-ownership.md),
 [the preceding transfer results and obstruction](notes/ownership-transfer.md),
 [the recovered FRAME-TM and its ownership discipline](notes/separated-temporal-framing.md),
 [the preceding regional result and obstruction](notes/regional-ownership.md),
@@ -486,13 +495,14 @@ See [the precise rule comparison and release problem](notes/persistent-semantics
 
 ## Remaining proof work
 
-1. Extend the checked retirement experiment to pending buffers: prove the
-   combined compatibility/associativity and generalized-future decomposition,
-   then assertion closure including wands. Port the transfer rules and
-   FRAME-TM, recheck foreign-barrier rejection, and settle ownership bounds
-   before integrating spatial framing and concurrency. The current result is
-   buffer-free bidirectional transfer plus a masked-history flush simulation.
-   See [the exact retirement scope](notes/retired-ownership.md).
+1. Follow the [independent-review checkpoints](review/lead-response.md):
+   settle the response before prototype code; prove or refute re-marking for
+   an exact invariant fragment before safety proofs; then search small
+   buffers for a counterexample to the frame-shape lemma and report the
+   outcome before a general proof. The candidate replaces INV with explicit
+   ownership rules, preserves `emp`, and initially restricts FRAME-TM to
+   unlock-free commands. Do not extend the retirement interpretation or add
+   another validity predicate without a checkpoint.
 2. Extend the two-thread parallel rule to nested parallel derivations and
    additional threads. It now permits private loads after release under the
    existing variable-interference condition, with checked preservation of

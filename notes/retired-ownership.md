@@ -1,5 +1,15 @@
 # Retaining history after returning ownership
 
+**Status after independent review: not the development direction.** The
+review checks an additional defect: permissive later cell atoms can erase
+unrelated earlier cells (`retired_later_cell_can_erase_earlier` in
+`review/Review.v`). Together with the loss of `emp`'s right-unit law, this
+rules out continuing this interpretation as the preferred repair. The
+proofs below retain their stated, limited meanings. See
+[the review](../review/independent-review.md) and
+[the development response](../review/lead-response.md) for the replacement
+direction and required checkpoints.
+
 The retirement experiment proves both directions of cell transfer, including
 at unlock, together with the original variable condition for FRAME-TM. It
 resolves the overlapping-heap obstruction **in a buffer-free fragment**.

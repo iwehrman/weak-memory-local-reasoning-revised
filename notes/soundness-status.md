@@ -1,5 +1,16 @@
 # Soundness: checked obstructions and repairs
 
+**Direction after independent review:** the review now supplies checked
+derivations of stale-value and foreign-barrier specifications from the
+printed rules themselves. It also exposes unrelated-cell erasure in the
+retirement interpretation. The lead response accepts both derivations and
+drops retirement and permanent protected/private assertion positions from
+the target design. The proposed rule-level replacement is not proved.
+Invariant re-marking and frame-shape checkpoints must precede further safety
+development. See [the review](../review/independent-review.md) and
+[the response](../review/lead-response.md). The results below describe
+distinct earlier models, not one integrated calculus.
+
 The revised full soundness theorem is **not proved**. The current development
 contains checked negative results about the printed claims and a separate
 repaired model. The repaired model has associative generalized-memory

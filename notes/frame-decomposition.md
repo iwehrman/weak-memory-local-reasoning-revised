@@ -67,23 +67,40 @@ The next proof obligation is to construct a post-step witness that both:
 - stays within the original private-plus-invariant ownership region; and
 - preserves the required invariant and recursive safety/postcondition facts.
 
-This should first be attempted as a witness-normalization theorem for the
-printed safety semantics. Merely deleting overlapping cells is insufficient:
+One possible approach is a witness-normalization theorem for the printed
+safety semantics. No such theorem is established. Merely deleting overlapping
+cells is insufficient:
 assertion satisfaction and recursive safety of the resulting resource must
 also be proved. In particular, lock steps can transfer ownership from the
 shared invariant, so restricting all residuals to the original private
 footprint would be too strong.
 
-If normalization cannot be established, the alternative is an explicit
-strengthening of safety that tracks admissible ownership regions and requires
-post-step witnesses to respect them. Primitive, lock, invariant, concurrency,
-and frame rules must then be checked against that revised semantics. This
-file records that candidate repair; the current development has not yet
-adopted or proved sound such a safety definition.
+The development now explores the explicit alternative in `RepairedSafety.v`.
+Its `ownership_preserved` condition requires both residual private and shared
+domains to lie within the union of the old private and shared domains. The
+external frame still evolves by actual flushing. `repaired_safe` includes
+this requirement at each recursive step, and uses the combined repaired
+separator. The printed `safe` definition is retained unchanged.
+
+`ownership_frame_disjoint` proves that a spatial frame initially disjoint from
+both private and shared regions remains disjoint from both residuals when it
+flushes and `ownership_preserved` holds. `owned_spatial_recombination` then
+turns a repaired spatiotemporal result into a spatial result. This is a checked
+bridge from the new witness condition to the replacement lemma.
+
+Actual silent steps construct these witnesses in `repaired_environment_flush`.
+The corrected assignment rule and the skip/sequence/consequence fragment
+supply them and have full validity proofs; adequacy is reproved for the revised
+predicate. Lock, invariant, concurrency, and frame rules still need proofs
+that maintain the ownership condition, assertion truth, and recursive safety.
+The spatial frame inference rule is therefore still open.
 
 `OrderedSeparation.v` now proves one-step and finite flushing decomposition
 for a candidate separator using ordered buffer overriding. The transcription
 remains unchanged. Two separate associativity obstructions and their candidate
-repairs are detailed in [soundness-status.md](soundness-status.md). Complete
-memory algebra and assertion flushing closure remain obligations. None is
-postulated as an axiom to make the replacement lemma compile.
+repairs are detailed in [soundness-status.md](soundness-status.md).
+`RepairedSeparation.v` and `RepairedFlushing.v` now combine the repairs, prove
+temporal and spatiotemporal associativity on valid generalized resources, and
+preserve the stronger guard under actual component flushing. Full assertion
+flushing closure and the remaining rearrangement laws are still obligations.
+None is postulated as an axiom to make the replacement lemma compile.

@@ -2,6 +2,8 @@ From WMLR Require Import Expressions Languages Assertions AssertionSemantics Spe
 From WMLR Require Import Machine OperationalSemantics ExecutionExamples.
 From WMLR Require Import BufferRelations Separation FrameDecomposition ConcreteAssertions SeparationExamples.
 From WMLR Require Import OrderedBuffers OrderedSeparation StableCompatibility Safety SafetyExamples.
+From WMLR Require Import BufferSelections RepairedSeparation RepairedFlushing
+  RepairedAssertions RepairedSafety RepairedRules RepairedExamples.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 Print Assumptions eval_expr_agrees.
@@ -81,3 +83,39 @@ Print Assumptions assignment_preserves_environment.
 Print Assumptions repaired_assignment_action.
 Print Assumptions printed_assignment_invalid.
 Print Assumptions printed_assignment_soundness_false.
+
+Print Assumptions ordered_results_spec.
+Print Assumptions select_left_spec.
+Print Assumptions select_right_spec.
+Print Assumptions repaired_in_printed.
+Print Assumptions spatial_in_repaired.
+Print Assumptions repaired_temporal_in_spatiotemporal.
+Print Assumptions repaired_well_formed.
+Print Assumptions repaired_empty_left_unique.
+Print Assumptions repaired_empty_right_unique.
+Print Assumptions memory_repaired_associative.
+Print Assumptions repaired_associative.
+Print Assumptions repaired_resource_associative.
+Print Assumptions repaired_temporal_associative.
+Print Assumptions repaired_temporal_resource_associative.
+Print Assumptions repaired_flush_split.
+Print Assumptions repaired_flushes_split.
+Print Assumptions spatial_flush_split.
+Print Assumptions repaired_satisfies_agrees.
+Print Assumptions repaired_full_pure_flushes.
+Print Assumptions repaired_temporal_assertion_associative.
+Print Assumptions repaired_points_to_requires_flushed.
+Print Assumptions ownership_frame_disjoint.
+Print Assumptions owned_spatial_recombination.
+Print Assumptions repaired_environment_flush.
+Print Assumptions repaired_skip_safe.
+Print Assumptions repaired_pure_assignment_valid.
+Print Assumptions repaired_safe_execution_no_abort.
+Print Assumptions repaired_safe_execution_post.
+Print Assumptions repaired_consequence_valid.
+Print Assumptions repaired_disjunction_valid.
+Print Assumptions repaired_sequence_valid.
+Print Assumptions pure_fragment_sound.
+Print Assumptions repaired_points_to_cell.
+Print Assumptions register_program_flush_trace.
+Print Assumptions register_program_all_terminating_runs.

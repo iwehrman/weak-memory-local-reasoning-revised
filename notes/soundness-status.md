@@ -1,9 +1,11 @@
 # Soundness: checked obstructions and repairs
 
 The revised full soundness theorem is **not proved**. The current development
-contains checked negative results about the printed claims, positive repairs
-of several ingredients, and an operational adequacy theorem for the printed
-safety predicate. These are distinct results.
+contains checked negative results about the printed claims and a separate
+repaired model. The repaired model has associative generalized-memory
+operations, actual flushing decomposition, ownership-aware safety, operational
+adequacy, and derivation soundness for a small pure assertion fragment. These
+results do not establish the memory, locking, parallel, or frame rules.
 
 ## The assignment axiom fails against full safety
 
@@ -34,7 +36,13 @@ The checked repair `assignment_preserves_environment` requires the assigned
 variable to be absent from the invariant's free variables.
 `repaired_assignment_action` additionally checks the concrete assignment
 transition and substituted pure precondition/postcondition. It covers the
-non-silent action; full axiom validity also needs intervening-flush closure.
+non-silent action in the printed model.
+
+The separate `repaired_pure_assignment_valid` now proves full validity in the
+repaired model when the invariant is pure and does not mention the assigned
+variable. It covers every safety index, admissible frame, and silent flush,
+using proved flushing closure of pure assertions. General spatial/temporal
+invariants still require their own flushing-closure theorem.
 
 ## Lookup-only list overriding is not associative
 
@@ -84,12 +92,44 @@ checked regardless of whether a processor is currently blocked. It implies
 the printed compatibility relation. `stable_compatibility_associative`
 proves its definedness conditions are invariant under temporal regrouping;
 `temporal_join_associative` proves equality of the resulting temporal tuples
-up to pointwise equivalence. These are not yet a proof of the full
-spatiotemporal algebra or of its generalized completeness-set version.
+up to pointwise equivalence. The combined generalized-memory results are
+described below.
 
 The stronger guard excludes some compositions permitted by the dissertation.
 That is an explicit change to expressiveness, not a transcription correction.
-It has not been installed into the assertion interpretation or safety model.
+It is now used in the explicitly separate repaired assertion interpretation
+and safety model. The printed definitions remain unchanged.
+
+## Combined repair and constructive associativity
+
+`RepairedSeparation.v` combines stable compatibility and ordered overriding
+in `memory_repaired`, and lifts it to `repaired_spatiotemporal`.
+`repaired_temporal` combines stable compatibility with the original temporal
+completeness side condition. The following are checked:
+
+- Associativity for both operations on generalized memories and on the
+  well-formed resource subtype used by assertions. Intermediate witnesses
+  are themselves valid resources.
+- Inclusion of spatial and repaired temporal composition in repaired
+  spatiotemporal composition; inclusion of the repaired relations in their
+  printed counterparts; well-formedness and spatiotemporal unit properties.
+- Actual one-step and finite flushing decomposition preserving the stronger
+  compatibility guard, plus spatial flushing decomposition.
+- Temporal assertion associativity in `repaired_interpretation`; a nonempty
+  points-to model still exists and still describes a flushed cell.
+
+`BufferSelections.v` enumerates the finite ordered merges of two finite
+buffers and selects a valid intermediate merge. This makes the intermediate
+buffer array a function, avoiding a choice axiom when lifting buffer
+associativity to arbitrary processor domains. No processor-finiteness,
+functional-extensionality, or proof-irrelevance assumption is used. The
+enumeration constructs proof witnesses; it is not an efficient execution engine.
+
+The compatibility repair changes expressiveness. Restricting the framing
+relation reduces the environments quantified by safety, so repaired validity
+does not automatically imply printed validity. Repaired adequacy is proved
+directly against the original operational steps. Locked-update specifications
+remain an important test of the stronger guard.
 
 ## What the safety adequacy results establish
 
@@ -106,16 +146,48 @@ consequence and disjunction rules for specification validity. These results
 assume safety where stated; they do not assume the intended derivation
 soundness theorem, any separation-algebra law, or assertion flushing closure.
 
+## Ownership-aware safety and the proved calculus fragment
+
+`RepairedSafety.v` defines an explicit alternative to `safe`. Besides the
+combined framing relation, it requires each post-step private and shared
+domain to stay within the union of the previous private and shared domains.
+The external frame must still evolve by actual flushes. This permits ownership
+transfer through the invariant while excluding acquisition from an unrelated
+spatial frame. It does not require a private residual to stay private throughout.
+
+`repaired_environment_flush` constructs such witnesses for silent transitions,
+assuming flushing closure of the invariant. `repaired_skip_safe` covers all
+indices for flush-closed invariant and postcondition predicates. These closure
+premises are discharged for pure assertions, giving full corrected assignment
+validity. `owned_spatial_recombination` proves the connection between the new
+witness requirement and the replacement frame lemma; the frame inference rule
+itself remains open.
+
+`RepairedRules.v` proves consequence, disjunction, and sequencing for repaired
+validity. It also defines `pure_derivation`, containing skip, assignment with
+invariant freshness, sequencing, and pure consequence, and proves
+`pure_fragment_sound` by induction on derivations. No rule has a safety or
+program-validity premise. The logical implications in consequence concern
+only expression evaluation.
+
+`repaired_safe_execution_no_abort` and `repaired_safe_execution_post` reprove
+operational adequacy. `RepairedExamples.v` derives `x := 1; x := x + 1` under
+the invariant `y = 0`, constructs an initial environment containing allocated
+heap cells and a pending write, and exhibits a run flushing that write between
+assignments. The derivation and adequacy theorem establish `x = 2` for every
+terminating execution from that initial state, independently of flush scheduling.
+
 ## What still prevents a full positive soundness claim
 
-The candidate algebra repairs need to be combined and checked with generalized
-memories and assertion closure. The corrected derivation system must then be
-encoded and its primitive, structural, concurrency, invariant, and frame
-rules proved against a compatible safety semantics.
+The combined operations and a small calculus fragment are now checked, but
+full assertion flushing closure remains open, especially for temporal
+composition, generalized completeness changes, and separating implications.
+Capture-avoiding assertion substitution is also still needed.
 
-The earlier replacement frame lemma still needs a proof that safety supplies
-ownership-respecting residual witnesses, including transfers from shared
-invariants. See [frame-decomposition.md](frame-decomposition.md). Strengthening
-safety to carry these witnesses is a candidate design, not an established
-theorem. No semantic-validity premise has been inserted into an axiom merely
-to make a soundness induction succeed.
+The remaining primitive, choice/loop, parallel, invariant, and frame rules must
+be stated and proved against the repaired semantics. The ownership condition
+is a requirement that each such proof must construct; it is not a proof that
+all printed specifications admit suitable witnesses. Further rearrangement
+laws may also be needed. See [frame-decomposition.md](frame-decomposition.md).
+The stronger compatibility guard's suitability for the intended weak-memory
+examples is not yet settled.

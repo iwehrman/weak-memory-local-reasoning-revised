@@ -18,8 +18,11 @@ The printed safety predicate is now formalized, with proofs of its operational
 adequacy. A checked assignment instance refutes the unrestricted assignment
 axiom against that full semantics, so **Theorem 1 cannot hold as printed**.
 There are also checked counterexamples to two claimed associativity properties.
-Conservative repairs have proved properties, but they have not yet been
-integrated into a complete corrected soundness theorem. See
+The combined repair now has generalized-memory associativity, flushing
+decomposition, a separate assertion interpretation, and an ownership-aware
+safety predicate with operational adequacy. A small corrected calculus for
+pure assertions, skip, assignment, sequencing, and consequence has a checked
+soundness theorem. **Full corrected soundness remains open.** See
 [the soundness status](notes/soundness-status.md) for exact claims and limits.
 
 ## Build and check
@@ -36,7 +39,8 @@ make check
 runs `rocq check` on `WMLR.Audit` and its dependencies to check the compiled proof
 objects. `theories/Audit.v` prints the assumptions of the principal theorems
 when compiled. Each currently reports `Closed under the global context`.
-All current proofs end with `Qed` and use no admitted facts or declared axioms.
+The proofs use no admitted facts or declared axioms. Constructive witness
+functions do not require choice, extensionality, or a finite processor domain.
 
 For a fresh build, run `make clean` followed by `make check`. Editors can use
 `_CoqProject` for the `WMLR` namespace and source paths.
@@ -52,16 +56,23 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/Machine.v` | Heaps, FIFO write buffers, blocked sets, processor domains, flushing, memory well-formedness | Definition 4 and §4.2, pp. 90–95 |
 | `theories/BufferRelations.v` | Order-preserving interleavings, list overriding, domain and lookup lemmas | Section 2.1.3, pp. 14-15 |
 | `theories/OrderedBuffers.v` | Candidate event-ordering repair; associativity, conservativity, head origin; printed associativity counterexample | Repair work for Proposition 2, pp. 14-15 |
+| `theories/BufferSelections.v` | Finite enumeration and constructive selection of intermediate buffers without choice | Lifting repaired buffer associativity to arbitrary processor arrays |
 | `theories/Separation.v` | Generalized-memory validity, spatial/temporal/spatiotemporal separation, unit properties, commutativity and inclusions | Definition 5 and Section 4.3, pp. 99-113 |
 | `theories/OrderedSeparation.v` | Candidate repaired separator and one-step/finite flushing decomposition | Repair work for Lemmas 4 and 7 |
 | `theories/StableCompatibility.v` | Conservative compatibility repair; temporal definedness associativity; blocking-based counterexample | Repair work for Sections 4.3.2-4.3.3 |
+| `theories/RepairedSeparation.v` | Combined repair; temporal/spatiotemporal associativity on valid generalized resources, inclusions and units | Explicit alternative to Section 4.3 |
+| `theories/RepairedFlushing.v` | Actual component flushes preserving the combined repair; spatial flushing decomposition | Replacements for the flushing lemmas used in soundness |
 | `theories/FrameDecomposition.v` | Preservation of memory domains and operational replacement frame-decomposition lemmas | Repair work for Conjecture 1 and Lemma 21, pp. 174-176 |
 | `theories/OperationalSemantics.v` | Primitive and command steps, aborts, successful execution closure, Lemma 2 and preservation proofs | Figures 4.1–4.2, pp. 93–96 and Lemma 2, p. 48 |
 | `theories/ExecutionExamples.v` | Complete store-buffering, fence, and lock/unlock traces, blocked operations and faults | Concrete checks of §4.2's execution rules |
 | `theories/Assertions.v` | Both assertion grammars, named quantifiers, spatial and temporal connectives, all three wands, points-to abbreviations | §3.5, pp. 60–69 and §4.4, pp. 113–119 |
 | `theories/AssertionSemantics.v` | Interpretation of the concurrent assertion grammar over a supplied resource model | Figure 4.4, p. 115 |
 | `theories/ConcreteAssertions.v` | Figure 4.4 instantiated over valid generalized memories; points-to denotes a flushed cell | Sections 4.4.1-4.4.2, pp. 114-119 |
+| `theories/RepairedAssertions.v` | Separate interpretation using stable temporal composition; temporal assertion associativity and pure flushing closure | Candidate corrected assertion semantics |
 | `theories/Safety.v` | Printed safety and validity, index/postcondition monotonicity, consequence/disjunction rules, operational adequacy, assignment-action repair | Section 4.5.2, pp. 131-132 |
+| `theories/RepairedSafety.v` | Ownership-aware safety, flushing witnesses, full pure-assignment validity, operational adequacy, frame-recombination bridge | Explicit alternative to Section 4.5.2 |
+| `theories/RepairedRules.v` | Consequence, disjunction and sequencing; soundness of a pure assertion derivation fragment | Checked subset of a corrected calculus |
+| `theories/RepairedExamples.v` | Points-to witness, derived register program, nonempty initial environment and execution with an intervening flush | Nonvacuity and operational checks of the repair |
 | `theories/SafetyExamples.v` | Refutation of a printed assignment-axiom instance against full safety | Figure 4.7, p. 124 |
 | `theories/SeparationExamples.v` | Concrete assertion witnesses, completeness checks, and a checked refutation of Conjecture 1 | Sections 4.3-4.4 and p. 174 |
 | `theories/Specifications.v` | Specification records, variable side conditions, invariant-preservation lemma | §3.6, §4.5, Figure 4.8 |
@@ -143,7 +154,31 @@ The interface assumes no algebraic laws.
   It still includes spatial and temporal compositions.
 - `stable_compatibility_associative` proves that a conservative compatibility
   condition is invariant under temporal regrouping. This is a definedness
-  theorem, not a proof of the complete spatiotemporal separation algebra.
+  theorem; the combined repair is established by the following results.
+- `repaired_resource_associative` and
+  `repaired_temporal_resource_associative` prove associativity for the combined
+  operations on valid generalized memories, including temporal completeness
+  side conditions. `repaired_temporal_assertion_associative` lifts that result
+  to assertion satisfaction.
+- `repaired_flush_split` and `repaired_flushes_split` prove actual component
+  flushing while preserving stable compatibility. `spatial_flush_split`
+  additionally preserves disjoint ownership.
+- `repaired_environment_flush` constructs shared, private, and external-frame
+  residuals for a silent step, given flushing closure of the invariant.
+  Pure assertions have this closure proved in `repaired_full_pure_flushes`.
+- `owned_spatial_recombination` derives spatial recombination from the new
+  ownership witness requirement, allowing private/shared transfers. It does
+  not establish the full frame inference rule.
+- `repaired_pure_assignment_valid` proves full validity with a pure invariant
+  that does not mention the assigned variable, including all intervening
+  flushes. `pure_fragment_sound` proves derivation soundness for pure
+  assertions, skip, assignment, sequence, and consequence.
+- `repaired_safe_execution_no_abort` and `repaired_safe_execution_post`
+  re-establish operational adequacy for the revised safety predicate.
+  `register_program_all_terminating_runs` uses a derivation and a concrete
+  nonempty initial environment to prove the result of every terminating
+  execution of `x := 1; x := x + 1`; a checked run flushes a pending write
+  between the assignments.
 
 The earlier message-passing examples in `Examples.v` check syntax and variable
 side conditions. Their general operational correctness remains open. The
@@ -254,11 +289,13 @@ spatial-frame argument under that additional, operationally justified
 hypothesis. The region variant permits transfers inside a larger region,
 such as the combined invariant and private state.
 
-This does **not** yet establish the full spatial frame rule: the printed safety
-predicate does not supply these execution-backed witnesses automatically.
-The exact integration obligation and possible repair are recorded in
-[notes/frame-decomposition.md](notes/frame-decomposition.md). No change to
-`safe_n` or the specification rules has been silently adopted.
+This does **not** yet establish the full spatial frame rule. The original
+`safe` predicate is unchanged. The separate `repaired_safe` predicate now
+requires post-step private and shared domains to remain within their prior
+combined region. `owned_spatial_recombination` connects those witnesses to
+the needed spatial result, and the proved primitive fragment supplies them.
+Other inference rules must still establish compatible witnesses and recursive
+safety. See [notes/frame-decomposition.md](notes/frame-decomposition.md).
 
 ## Safety and candidate algebra repairs
 
@@ -280,24 +317,30 @@ address remains. It repairs list associativity and enables checked memory
 flushing decomposition. Independently, the printed compatibility condition
 can change when a third component supplies blocking facts; a conservative
 condition without that exception has checked temporal definedness
-associativity. Neither repair has been silently installed into
-`concrete_interpretation` or `safe`, and their combination has not yet been
-proved to support all of the intended inference rules.
+associativity. `RepairedSeparation.v` combines these changes and proves
+associativity at the generalized-resource level. `repaired_interpretation`
+and `repaired_safe` use the changes explicitly; `concrete_interpretation` and
+`safe` retain the printed definitions.
+
+The stronger guard excludes some old compositions and therefore restricts
+the environments quantified by safety. Relation inclusion does **not** imply
+that repaired validity entails printed validity. Operational adequacy has
+been reproved independently. Whether the stronger guard preserves the
+intended load/store/lock specifications remains an open expressiveness check.
 
 ## Remaining proof work
 
-1. Combine and validate the candidate algebra repairs at the complete-memory
-   and generalized-memory levels, including completeness sets and assertion
-   flushing closure. List associativity alone is insufficient.
+1. Prove generalized flushing closure for the full repaired assertion
+   language, including temporal composition, completeness sets, and wands.
+   Pure assertion closure and memory flushing decomposition are already proved.
 2. Implement capture-avoiding assertion substitution and its semantic lemma.
-3. Encode the corrected full inference system. Complete assignment validity
-   through silent transitions, and check the load rule's freshness conditions.
-   The currently encoded derivability fragment is only the pure assignment
-   axiom needed to refute the printed claim.
-4. Connect the replacement frame-decomposition lemma to safety witnesses,
-   including shared-invariant ownership transfers and preservation of the
-   local postcondition. Derive witness normalization if possible; otherwise
-   explicitly revise the safety semantics and recheck the primitive rules.
+3. Extend the corrected calculus beyond the proved pure fragment. Check
+   load/store/fence/lock/unlock axioms, including variable freshness and
+   shared-invariant transfers. Test locked-update examples against the
+   stronger compatibility guard before treating it as a settled repair.
+4. Complete the spatial and temporal frame rules: recombination is checked,
+   but recursive safety, assertion preservation, and the required rearrangement
+   laws remain to be established. No normalization from printed safety is claimed.
 5. Establish the full frame, concurrency, and invariant rules, then complete
    soundness by induction on derivations and the message-passing example.
 

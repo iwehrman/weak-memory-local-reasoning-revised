@@ -1,6 +1,7 @@
 From WMLR Require Import Expressions Languages Assertions AssertionSemantics Specifications Examples.
 From WMLR Require Import Machine OperationalSemantics ExecutionExamples.
 From WMLR Require Import BufferRelations Separation FrameDecomposition ConcreteAssertions SeparationExamples.
+From WMLR Require Import OrderedBuffers OrderedSeparation StableCompatibility Safety SafetyExamples.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 Print Assumptions eval_expr_agrees.
@@ -58,3 +59,25 @@ Print Assumptions printed_conjecture1_false.
 Print Assumptions steps_domain_subset.
 Print Assumptions spatial_frame_recombination_sets.
 Print Assumptions spatial_frame_recombination_region.
+Print Assumptions ordered_is_override.
+Print Assumptions ordered_associative.
+Print Assumptions ordered_head_origin.
+Print Assumptions printed_buffer_override_not_associative.
+Print Assumptions spatial_in_ordered.
+Print Assumptions temporal_in_ordered.
+Print Assumptions ordered_flush_split.
+Print Assumptions ordered_flushes_split.
+Print Assumptions stable_implies_printed_compatible.
+Print Assumptions stable_compatibility_associative.
+Print Assumptions temporal_join_associative.
+Print Assumptions printed_spatiotemporal_not_associative.
+Print Assumptions safe_index_mono.
+Print Assumptions consequence_valid.
+Print Assumptions disjunction_valid.
+Print Assumptions safe_execution_residual.
+Print Assumptions safe_execution_no_abort.
+Print Assumptions safe_execution_post.
+Print Assumptions assignment_preserves_environment.
+Print Assumptions repaired_assignment_action.
+Print Assumptions printed_assignment_invalid.
+Print Assumptions printed_assignment_soundness_false.

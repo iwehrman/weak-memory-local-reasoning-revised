@@ -56,7 +56,7 @@ require every residual private location to have been private initially.
 
 ## Remaining connection to soundness
 
-The printed safety predicate (pp. 131-132) provides post-step resources
+The printed safety predicate (pp. 131-132), now transcribed in `Safety.v`, provides post-step resources
 existentially. It constrains the external frame to flush, but does not say
 that the chosen local resource follows an execution of the original local
 state or stays within a tracked ownership region. A global transition alone
@@ -81,6 +81,9 @@ and frame rules must then be checked against that revised semantics. This
 file records that candidate repair; the current development has not yet
 adopted or proved sound such a safety definition.
 
-Associativity, flushing decomposition, and assertion flushing closure remain
-separate obligations. None is postulated as an axiom to make the replacement
-lemma compile.
+`OrderedSeparation.v` now proves one-step and finite flushing decomposition
+for a candidate separator using ordered buffer overriding. The transcription
+remains unchanged. Two separate associativity obstructions and their candidate
+repairs are detailed in [soundness-status.md](soundness-status.md). Complete
+memory algebra and assertion flushing closure remain obligations. None is
+postulated as an axiom to make the replacement lemma compile.

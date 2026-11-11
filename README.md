@@ -30,8 +30,12 @@ soundness of a small calculus, and a heap-restoring critical section for all
 executions. It keeps assertion syntax and interpretation unchanged, but uses
 open/closed judgment indices and spatial external frames. Its private-resource
 extension now carries arbitrary private assertions through acquisition/release
-and proves a post-release private load; concurrency and temporal external
-frames remain open. See [the private-resource extension](notes/private-ownership.md) and
+and proves a post-release private load. A first parallel rule now composes two
+register-preserving threads, with consistent shared ownership and retained
+private postconditions. Competing protected writes check for all interleavings;
+general concurrency and temporal external frames remain open. See
+[the parallel rule](notes/parallel-ownership.md),
+[the private-resource extension](notes/private-ownership.md), and
 [the soundness status](notes/soundness-status.md) for exact claims and limits.
 
 ## Build and check
@@ -99,6 +103,11 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/PrivateHeap.v` | Framed stores/fences, buffered release, and post-release private loads | Checked spatial primitive framing |
 | `theories/PrivateCalculus.v` | Bounded sound calculus and derived whole-critical-section rule | Phase-indexed proof rules |
 | `theories/PrivateExamples.v` | Two-cell all-execution restoration and private load, concrete trace, rejected aliasing | Private resource preservation and accessibility |
+| `theories/SpatialExchange.v` | Constructive spatial associativity and exchange of closed ownership views | Resource rearrangement for concurrency |
+| `theories/ThreadProgress.v` | Residual derivations, register preservation, and waiting-thread steps | Thread obligations for the parallel rule |
+| `theories/SharedViews.v` | One shared ownership decision, symmetric views, flushing and step preservation | Concurrent owner/non-owner agreement |
+| `theories/ParallelOwnership.v` | All-execution parallel safety and recombination of private postconditions | Two distinct register-preserving threads |
+| `theories/ParallelExamples.v` | Competing writers with separate private cells, both execution orders, and a blocked contender | Nonempty concurrent checks |
 | `theories/UnlockCounterexample.v` | Two-processor failure of arbitrary-invariant unlock | Release-restoration obstruction |
 | `theories/PersistentCalculus.v` | Bounded derivation system and checked soundness | Partial corrected version of Theorem 1 |
 | `theories/PersistentExamples.v` | Store postcondition through flushing, wand repair, and derived lock round trip | Concrete checks of the current semantics and rules |
@@ -398,10 +407,11 @@ See [the precise rule comparison and release problem](notes/persistent-semantics
 
 ## Remaining proof work
 
-1. Extend the checked private-resource protocol with concurrent owner/non-owner
-   views and agreement on the shared pool's phase. Private-resource transfer,
-   a derived critical-section rule, and post-release private access now check.
-   See [its exact scope](notes/private-ownership.md).
+1. Relax the first parallel rule's register-preservation premise to explicit
+   interference conditions, and admit private loads after release. Shared
+   ownership agreement, all-interleaving safety for two threads, and competing
+   heap-restoring critical sections now check. Extend this to nested parallel
+   derivations and additional threads. See [its exact scope](notes/parallel-ownership.md).
 2. Implement capture-avoiding assertion substitution and its semantic lemma.
 3. Generalize constant-cell load/store to expression and framed forms, and
    check their freshness conditions and shared-invariant transfers. Extend

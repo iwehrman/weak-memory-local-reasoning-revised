@@ -107,10 +107,13 @@ chosen combined region. All new principal results are included in `Audit.v`.
 
 ## Remaining boundaries
 
-The protocol still has one owning processor and spatial external frames.
-Concurrency needs a non-owner view while another processor owns the shared
-pool, plus a proof that different threads agree on its ownership phase.
-Temporal external frames and general frame inference rules remain open.
+The protocol uses spatial external frames. A subsequent
+[two-thread composition theorem](parallel-ownership.md) now proves agreement
+between owner and non-owner views, preserves both private postconditions, and
+handles competing heap-restoring critical sections. Its current premise
+excludes register modifications, so the post-release load above is not yet
+covered in parallel. Temporal external frames and general frame inference
+rules remain open.
 
 The transfer rules accept arbitrary private assertions; the current checked
 heap rules are constant-cell rules. The example preserves its private cell;

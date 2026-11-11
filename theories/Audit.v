@@ -9,6 +9,7 @@ From WMLR Require Import GeneralizedFlushing AssertionFlushing PersistentAsserti
   PersistentCalculus PersistentExamples.
 From WMLR Require Import OwnershipProtocol OwnershipRules OwnershipHeap OwnershipCalculus OwnershipExamples.
 From WMLR Require Import PrivateOwnership PrivateRules PrivateHeap PrivateCalculus PrivateExamples.
+From WMLR Require Import SpatialExchange ThreadProgress SharedViews ParallelOwnership ParallelExamples.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 Print Assumptions eval_expr_agrees.
@@ -205,3 +206,36 @@ Print Assumptions private_restore_no_abort.
 Print Assumptions private_restore_all_terminating_runs.
 Print Assumptions private_restore_trace.
 Print Assumptions private_alias_rejected.
+
+Print Assumptions memory_spatial_associative.
+Print Assumptions spatial_exchange.
+Print Assumptions private_closed_exchange.
+Print Assumptions memory_only_step.
+Print Assumptions private_derivation_step.
+Print Assumptions thread_spec_transport.
+Print Assumptions thread_spec_terminal.
+Print Assumptions thread_spec_progress.
+Print Assumptions thread_spec_no_abort.
+Print Assumptions waiting_derivation_step.
+Print Assumptions waiting_derivation_no_abort.
+Print Assumptions joint_state_sym.
+Print Assumptions joint_state_flush.
+Print Assumptions joint_left_no_abort.
+Print Assumptions joint_left_step.
+Print Assumptions joint_right_step.
+Print Assumptions joint_left_done.
+Print Assumptions parallel_certificate_no_abort.
+Print Assumptions parallel_certificate_step.
+Print Assumptions parallel_certificate_execution.
+Print Assumptions parallel_certificate_post.
+Print Assumptions private_parallel_rule.
+Print Assumptions parallel_initial_environment.
+Print Assumptions restore_for_derivable.
+Print Assumptions competing_restorers_no_abort.
+Print Assumptions competing_restorers_all_terminating_runs.
+Print Assumptions restore_for_trace.
+Print Assumptions competing_restorers_left_first.
+Print Assumptions competing_restorers_right_first.
+Print Assumptions competing_restorers_contended.
+Print Assumptions contended_value_and_blocking.
+Print Assumptions contended_waiter_cannot_acquire.

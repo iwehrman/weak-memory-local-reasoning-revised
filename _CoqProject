@@ -46,7 +46,9 @@ theories/RegionalFraming.v
 theories/InvariantCompleteness.v
 theories/SeparatedSafety.v
 theories/SeparatedRules.v
+theories/TransferredCells.v
 theories/SeparatedHeap.v
+theories/OwnershipTransfer.v
 theories/SeparatedCalculus.v
 theories/VariableSupport.v
 theories/ThreadProgress.v
@@ -69,6 +71,8 @@ theories/ParallelLoads.v
 theories/SpatialFramingExamples.v
 theories/RegionalExamples.v
 theories/SeparatedExamples.v
+theories/OwnershipTransferLimits.v
+theories/TransferExamples.v
 theories/Specifications.v
 theories/Examples.v
 theories/Audit.v

@@ -1,5 +1,11 @@
 # Recovering FRAME-TM with separate protected assertions
 
+**Transfer extension:** [ownership-transfer.md](ownership-transfer.md) now
+proves withdrawal of protected cells into private ownership at an owner
+fence or unlock, and identifies a checked obstruction to unrestricted
+donation in the reverse direction. FRAME-TM still checks with the relaxed
+combined-footprint bound.
+
 `separated_FRAME_TM` recovers the printed form of the private temporal frame
 rule in a new, explicitly separated ownership model:
 
@@ -22,8 +28,9 @@ phase boundaries, with the protected assertions unchanged by framing.
 The result is not soundness of the dissertation's entire calculus. The
 ownership discipline has changed: protected and private assertions are kept
 in separate proof compartments, including while the lock is held. Spatial
-framing, concurrency, and ownership transfer between compartments have not
-yet been integrated into this model. Existing results under the older
+framing and concurrency have not yet been integrated into this model.
+Protected-to-private withdrawal is now supported; general donation remains
+open. Existing results under the older
 validity predicates keep their original meanings.
 
 ## What changes in judgments
@@ -126,24 +133,22 @@ as the load example demonstrates. Historical assertions about protected
 memory belong in the protected assertion, not in a private frame carried out
 of the critical section.
 
-Each compartment's footprint may shrink but cannot grow at a proof step;
-this currently prevents moving cells between protected and private
-ownership. There is also no joint consequence rule that merges their
-assertions. This
-supports ordinary updates of a fixed protected region, but does not yet
-support ownership-passing examples such as removing a node from a shared
-structure and retaining it privately. This is a substantive limitation of
-the current semantics and calculus. Supporting transfer requires revisiting
-these footprint bounds and their interaction with framing; it is not just
-an additional constructor justified by the present proof.
+The initial checkpoint prevented either compartment's footprint from
+growing. The transfer extension replaces that restriction with a bound on
+their combined footprint and reproves framing. A known protected cell can
+now be retained privately on release, using an owner-specific flushed-cell
+assertion. There is still no joint consequence rule that merges the two
+assertion positions. A general return of private cells to the protected
+pool conflicts with retained overlapping history; see the positive transfer
+rules and negative result in [ownership-transfer.md](ownership-transfer.md).
 
 The regional theorem allowing external history to overlap the shared pool
 still belongs to the earlier model. We have not combined that capability
 with the recovered private FRAME-TM theorem. Likewise, the existing spatial
 and parallel results have not been silently imported into separated validity.
 
-Next work should test explicit ownership-transfer rules and integrate spatial
-framing/concurrency while preserving the rejection of foreign-barrier
-import. General heap expressions, assignment, loops, and full corrected
+Next work should resolve donation's overlapping-history obstruction and
+integrate spatial framing/concurrency while preserving the rejection of
+foreign-barrier import. General heap expressions, assignment, loops, and full corrected
 soundness also remain open. All new principal results are audited in
 `Audit.v`; there are no added axioms or admitted proofs.

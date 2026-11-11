@@ -1,6 +1,7 @@
 From Stdlib Require Import List ZArith.
 From WMLR Require Import Expressions Languages Assertions AssertionSemantics Specifications
-  HeapRules OwnershipProtocol OwnershipHeap OwnershipCalculus RegionalSafety SeparatedSafety SeparatedRules SeparatedHeap.
+  HeapRules OwnershipProtocol OwnershipHeap OwnershipCalculus RegionalSafety SeparatedSafety SeparatedRules SeparatedHeap
+  TransferredCells OwnershipTransfer.
 
 (** Two assertion positions, with componentwise consequence. The existing
     bounded protected calculus supplies heap operations and invariant transfer.
@@ -20,6 +21,18 @@ Inductive separated_derivation active owner invariant : ownership_phase ->
     separated_derivation active owner invariant phase protected_assertion (cell_assertion loc v)
       (Concurrent.Prim (Concurrent.Common (Sequential.Load x (EVal (Z.pos loc)))) (EVal (Z.pos owner)))
       phase protected_assertion (A.And (cell_assertion loc v) (A.Pure (BEq (EVar x) (EVal v))))
+| SeparateTakeCell rest loc v :
+    separated_derivation active owner invariant Open (owned_assertion owner (A.Spatial rest (cell_assertion loc v))) A.Emp
+      (Concurrent.Prim (Concurrent.Common Sequential.Fence) (EVal (Z.pos owner)))
+      Open (owned_assertion owner rest) (processor_cell owner loc v)
+| SeparateTakeRelease loc v :
+    separated_derivation active owner invariant Open (owned_assertion owner (A.Spatial invariant (cell_assertion loc v))) A.Emp
+      (Concurrent.Prim Concurrent.Unlock (EVal (Z.pos owner))) Closed A.Emp (processor_cell owner loc v)
+| SeparateProcessorLoad phase protected_assertion cell_owner loc v x :
+    ~ In x (A.fv invariant) -> ~ In x (A.fv protected_assertion) ->
+    separated_derivation active owner invariant phase protected_assertion (processor_cell cell_owner loc v)
+      (Concurrent.Prim (Concurrent.Common (Sequential.Load x (EVal (Z.pos loc)))) (EVal (Z.pos owner)))
+      phase protected_assertion (A.And (processor_cell cell_owner loc v) (A.Pure (BEq (EVar x) (EVal v))))
 | SeparateSequence start protected_pre pre first middle protected_mid mid second finish protected_post post :
     separated_derivation active owner invariant start protected_pre pre first middle protected_mid mid ->
     separated_derivation active owner invariant middle protected_mid mid second finish protected_post post ->
@@ -43,6 +56,9 @@ Proof.
   - apply separated_protocol_valid; [apply ownership_calculus_sound |]; assumption.
   - apply separated_fence_valid.
   - apply separated_load_cell_valid; assumption.
+  - apply separated_take_cell_fence_valid.
+  - apply separated_take_cell_release_valid.
+  - apply separated_load_processor_cell_valid; assumption.
   - eapply separated_sequence_valid; eassumption.
   - eapply separated_consequence_valid; eassumption.
   - apply separated_temporal_frame_valid; assumption.

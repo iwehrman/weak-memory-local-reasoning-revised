@@ -269,10 +269,18 @@ acquire/release/store/fence, private fence/load, sequence, componentwise
 consequence and temporal framing is sound. Its operational adequacy and
 nonvacuous pending-write/overlapping-private-history examples check. It
 rejects the regional source specification that exported a foreign barrier.
-There is currently no transfer of ownership between the protected and private
-compartments; the private temporal context stays spatially disjoint from the
-protected region. Spatial framing and concurrency remain unintegrated in
-this new semantics. See [separated-temporal-framing.md](separated-temporal-framing.md).
+The transfer extension relaxes individual footprint bounds to a combined
+bound and reproves FRAME-TM. Withdrawal into private ownership checks at an
+owner fence or unlock, returning an owner-specific flushed-cell assertion.
+An open-branch withdrawal/release/load example checks with another processor's
+write pending. Ordinary all-processor points-to is an invalid transfer
+postcondition in that example. Donation back into protected ownership has a
+separate checked obstruction: retained earlier heap values conflict spatially
+with the new protected pool, even with empty buffers. Reassembly works under
+an explicit disjoint-history condition, but that lemma is not a general
+validity rule. Spatial framing and concurrency remain unintegrated in
+this semantics. See [separated-temporal-framing.md](separated-temporal-framing.md)
+and [ownership-transfer.md](ownership-transfer.md).
 
 Capture-avoiding assertion substitution, general expression-based heap
 axioms, choice/loop, general parallel, invariant rules, and integration of the

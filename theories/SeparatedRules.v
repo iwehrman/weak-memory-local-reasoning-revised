@@ -39,8 +39,8 @@ Proof.
         -- exact (protocol_region_ok _ _ _ _ _ _ _ _ Hprotocol').
         -- exists combined'; split; [exact Htm' |rewrite Ec; exact (protocol_separation _ _ _ _ _ _ _ _ Hprotocol')].
       * split; [exact Hhf |]. split.
-        -- eapply flushes_domain_subset; apply generalized_future_memory_flushes, Hlf.
-        -- split; [exact Hpd |]. apply IHn; try assumption.
+        -- intros loc H; left; eapply flushes_domain_subset; [apply generalized_future_memory_flushes, Hlf |exact H].
+        -- split; [intros loc H; right; apply Hpd, H |]. apply IHn; try assumption.
            ++ intros x Hwrite Hx; apply (Hvariables x); [eapply step_modifies_subset; eassumption |exact Hx].
            ++ assert (Hagree : agrees (A.fv private_assertion) s t).
               { intros x Hx; apply (step_preserves_unmodified _ _ _ _ _ Hstep x).
@@ -102,7 +102,7 @@ Proof.
       split; [exact Hld |]. split; [exact Hpd |apply IHn, Hsafe].
     + destruct (Hterminal ltac:(eexists; reflexivity)) as [E [HS HP]]; subst phase.
       exists middle, local, protected, history; split; [exact Henv |]. split; [constructor |].
-      split; [intros loc H; exact H |]. split; [intros loc H; exact H |apply Hsecond; assumption].
+      split; [intros loc H; left; exact H |]. split; [intros loc H; right; exact H |apply Hsecond; assumption].
 Qed.
 
 Theorem separated_sequence_valid active owner invariant start protected_pre pre first middle protected_mid mid
@@ -179,13 +179,13 @@ Proof.
       match goal with E : eval_expr _ (EVal (Z.pos _)) = Z.pos _ |- _ => simpl in E; inversion E; subst end.
       match goal with Hi : active ?j |- _ => exists phase, (mark_processor active local j Hi), protected, history end.
       split; [eapply separated_environment_fence; eassumption |]. split; [constructor |].
-      split; [intros loc H; exact H |]. split; [intros loc H; exact H |].
+      split; [intros loc H; left; exact H |]. split; [intros loc H; right; exact H |].
       apply separated_skip_safe; try assumption; apply marked_emp_barrier, HP.
     + match goal with H : flush _ _ _ |- _ =>
         destruct (separated_environment_flush _ _ _ _ _ _ _ _ _ _ Henv H)
           as (local' & protected' & history' & Henv' & Hlf & Hpf & Hhf & Hld & Hpd) end.
       exists phase, local', protected', history'; split; [exact Henv' |]. split; [exact Hhf |].
-      split; [exact Hld |]. split; [exact Hpd |]. apply IHn.
+      split; [intros loc H; left; apply Hld, H |]. split; [intros loc H; right; apply Hpd, H |]. apply IHn.
       * exact (separated_protected_ok _ _ _ _ _ _ _ _ _ Henv').
       * exact (separated_local_free _ _ _ _ _ _ _ _ _ Henv').
       * eapply protocol_assertion_flush; eassumption.

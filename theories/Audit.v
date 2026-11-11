@@ -15,6 +15,7 @@ From WMLR Require Import PrivateFraming SpatialFramingExamples TemporalFrameCoun
 From WMLR Require Import RegionalResources RegionalSafety RegionalCalculus RegionalFraming
   InvariantCompleteness RegionalExamples.
 From WMLR Require Import SeparatedSafety SeparatedRules SeparatedHeap SeparatedCalculus SeparatedExamples.
+From WMLR Require Import TransferredCells OwnershipTransfer OwnershipTransferLimits TransferExamples.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 Print Assumptions eval_expr_agrees.
@@ -338,3 +339,27 @@ Print Assumptions separated_pending_fence_changes_buffer.
 Print Assumptions separated_historical_load_derivable.
 Print Assumptions separated_historical_initial.
 Print Assumptions separated_historical_load_all_runs.
+
+Print Assumptions processor_cell_from_shape.
+Print Assumptions processor_cell_shape.
+Print Assumptions separated_take_cell_environment.
+Print Assumptions separated_take_cell_fence_valid.
+Print Assumptions separated_take_cell_release_valid.
+Print Assumptions history_disjoint_donation_recomposes.
+Print Assumptions separated_load_processor_cell_valid.
+Print Assumptions take_and_read_derivable.
+Print Assumptions framed_take_and_read_derivable.
+Print Assumptions transfer_initial_certificate.
+Print Assumptions take_and_read_all_runs.
+Print Assumptions take_and_read_trace.
+Print Assumptions withdrawal_as_all_processor_cell_invalid.
+Print Assumptions release_take_and_read_derivable.
+Print Assumptions framed_release_take_and_read_derivable.
+Print Assumptions release_take_and_read_all_runs.
+Print Assumptions release_take_and_read_trace.
+Print Assumptions withdrawal_preserves_foreign_pending.
+Print Assumptions processor_cell_does_not_imply_all_processor_cell.
+Print Assumptions retained_history_prevents_donation.
+Print Assumptions donation_initial_certificate.
+Print Assumptions owner_fenced_donation_invalid.
+Print Assumptions donation_without_history_recomposes.

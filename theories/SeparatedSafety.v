@@ -85,6 +85,11 @@ Proof.
     eapply flushes_domain_subset; apply generalized_future_memory_flushes, Hlf.
 Qed.
 
+(** Ownership may move between compartments, but their combined footprint
+    cannot grow. The environment still has to recompose for EVERY history. *)
+Definition separated_owned_domain local protected target := forall loc,
+  memory_domain target loc -> memory_domain local loc \/ memory_domain protected loc.
+
 Fixpoint separated_safe active owner invariant n command s phase
     (local : resource active) protected finish protected_post post : Prop :=
   match n with
@@ -102,8 +107,8 @@ Fixpoint separated_safe active owner invariant n command s phase
       exists phase' local' protected' history',
         separated_environment active owner invariant phase' t local' protected' history' whole' /\
         resource_future active history history' /\
-        domain_included (resource_memory active local') (resource_memory active local) /\
-        domain_included protected' protected /\
+        separated_owned_domain (resource_memory active local) protected (resource_memory active local') /\
+        separated_owned_domain (resource_memory active local) protected protected' /\
         separated_safe active owner invariant remaining next t phase' local' protected' finish protected_post post)
   end.
 
@@ -164,16 +169,21 @@ Proof.
         -- exists combined'; auto.
       * split; [exact Hef |]. split.
         -- intros loc Hloc; apply (temporal_memory_domain _ _ _ _ Hinner') in Hloc.
-           apply (temporal_memory_domain _ _ _ _ Hinner).
-           destruct Hloc as [Hret |Hloc]; [left |right; apply Hld, Hloc].
-           eapply flushes_domain_subset; [apply generalized_future_memory_flushes; exact Hrf |exact Hret].
-        -- split; [exact Hpd |]. eapply IHn; [exact Hsafe' | | |exact Hbfree |exact Hinner'].
-           ++ intros x Hwrite Hx; apply (Hvariables x); [eapply step_modifies_subset; eassumption |exact Hx].
-           ++ assert (Hagrees : agrees (A.fv frame_assertion) s t).
-              { intros x Hx; apply (step_preserves_unmodified _ _ _ _ _ Hstep x).
-                intros Hwrite; exact (Hvariables x Hwrite Hx). }
-              apply (proj1 (future_satisfies_agrees _ _ _ _ _ Hagrees retained')).
-              eapply persistent_assertion_flushing_closed; eassumption.
+           destruct Hloc as [Hret |Hloc].
+           ++ left; apply (temporal_memory_domain _ _ _ _ Hinner); left.
+              eapply flushes_domain_subset; [apply generalized_future_memory_flushes; exact Hrf |exact Hret].
+           ++ destruct (Hld loc Hloc) as [Hlocal |Hpool]; [left |right; exact Hpool].
+              apply (temporal_memory_domain _ _ _ _ Hinner); auto.
+        -- split.
+           ++ intros loc Hloc; destruct (Hpd loc Hloc) as [Hlocal |Hpool]; [left |right; exact Hpool].
+              apply (temporal_memory_domain _ _ _ _ Hinner); auto.
+           ++ eapply IHn; [exact Hsafe' | | |exact Hbfree |exact Hinner'].
+              ** intros x Hwrite Hx; apply (Hvariables x); [eapply step_modifies_subset; eassumption |exact Hx].
+              ** assert (Hagrees : agrees (A.fv frame_assertion) s t).
+                 { intros x Hx; apply (step_preserves_unmodified _ _ _ _ _ Hstep x).
+                   intros Hwrite; exact (Hvariables x Hwrite Hx). }
+                 apply (proj1 (future_satisfies_agrees _ _ _ _ _ Hagrees retained')).
+                 eapply persistent_assertion_flushing_closed; eassumption.
 Qed.
 
 Theorem separated_temporal_frame_valid active owner invariant start protected_pre pre command finish protected_post post frame :

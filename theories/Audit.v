@@ -16,9 +16,28 @@ From WMLR Require Import RegionalResources RegionalSafety RegionalCalculus Regio
   InvariantCompleteness RegionalExamples.
 From WMLR Require Import SeparatedSafety SeparatedRules SeparatedHeap SeparatedCalculus SeparatedExamples.
 From WMLR Require Import TransferredCells OwnershipTransfer OwnershipTransferLimits TransferExamples.
+From WMLR Require Import InvariantFragment InvariantFragmentExamples.
 From WMLR Require Import RetiredHeaps RetiredSafety RetiredTransfer RetiredRules RetiredExamples RetirementFlushing.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
+Print Assumptions writer_points_to_shape.
+Print Assumptions writer_points_to_from_shape.
+Print Assumptions invariant_fragment_shape.
+Print Assumptions invariant_fragment_remark.
+Print Assumptions invariant_singleton_remark.
+Print Assumptions invariant_return_full_completeness.
+Print Assumptions invariant_spatial_pending_retained.
+Print Assumptions invariant_unlock_premise_pending_retained.
+Print Assumptions invariant_cannot_absorb_pending.
+Print Assumptions bare_pure_unlock_premise.
+Print Assumptions checkpoint_unlock_foreign_write_test.
+Print Assumptions bare_pure_is_not_buffer_free.
+Print Assumptions checkpoint_container_fragment.
+Print Assumptions checkpoint_guarded_container_fragment.
+Print Assumptions checkpoint_container_acquire_remark.
+Print Assumptions checkpoint_cell_remark_and_no_foreign_barrier.
+Print Assumptions checkpoint_nonempty_release_assertions.
+
 Print Assumptions eval_expr_agrees.
 Print Assumptions eval_bexpr_agrees.
 Print Assumptions eval_subst_expr.

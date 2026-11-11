@@ -6,9 +6,12 @@ printed rules themselves. It also exposes unrelated-cell erasure in the
 retirement interpretation. The lead response accepts both derivations and
 drops retirement and permanent protected/private assertion positions from
 the target design. The proposed rule-level replacement is not proved.
-Invariant re-marking and frame-shape checkpoints must precede further safety
-development. See [the review](../review/independent-review.md) and
-[the response](../review/lead-response.md). The results below describe
+Checkpoint 2 now proves acquisition re-marking and buffer-freeness for
+invariants with heap-guarded pure assertions, and proves that their release
+premise retains every pending write outside the donated invariant. The
+frame-shape checkpoint still precedes further safety development. See
+[checkpoint 2](../review/checkpoint-2.md), [the review](../review/independent-review.md)
+and [the response](../review/lead-response.md). The results below describe
 distinct earlier models, not one integrated calculus.
 
 The revised full soundness theorem is **not proved**. The current development

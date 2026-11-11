@@ -63,9 +63,12 @@ the printed rules and identifies an additional cell-erasure defect in the
 retirement interpretation. Development will now preserve `emp`'s unit laws,
 drop permanent protected/private assertion slots and retirement, and test
 explicit ownership rules with restricted temporal framing. This target is
-not yet proved; the invariant re-marking and frame-shape checkpoints come
-before further safety development.
-See [the response and development checkpoints](review/lead-response.md),
+not yet proved. Checkpoint 2 now proves that invariants with heap-guarded pure
+assertions survive re-marking to the acquiring processor alone, have empty
+buffers, and cannot absorb pending writes at release. The frame-shape
+checkpoint remains before further safety development.
+See [the invariant-fragment checkpoint](review/checkpoint-2.md),
+[the response and development checkpoints](review/lead-response.md),
 [the independent review](review/independent-review.md),
 [retirement: earlier experiment and its limits](notes/retired-ownership.md),
 [the preceding transfer results and obstruction](notes/ownership-transfer.md),
@@ -162,6 +165,8 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/SeparatedCalculus.v` | Sound bounded calculus including FRAME-TM | No safety or validity premises in constructors |
 | `theories/SeparatedExamples.v` | Pending-frame protected restoration, real fence, rejected foreign-barrier import and overlapping private history | All-execution results and concrete operational traces |
 | `theories/TransferredCells.v` | Owner-specific flushed-cell abbreviation, shape and private-mark construction | Existing assertion grammar with a weaker synchronization contract |
+| `theories/InvariantFragment.v` | Guarded invariant fragment, arbitrary nonempty re-marking, empty-buffer shape, and retained-write release obligation | Checkpoint 2; assertion results without a new safety model |
+| `theories/InvariantFragmentExamples.v` | Bare-pure release counterexample, nonempty cell with a pending foreign write, rejected foreign-barrier import, and container fragment | Concrete checkpoint-2 assertion checks |
 | `theories/OwnershipTransfer.v` | Protected-to-private withdrawal at fence/unlock; disjoint-history donation reassembly | Checked transfer rules and a restricted boundary lemma |
 | `theories/OwnershipTransferLimits.v` | Scoped cell versus ordinary points-to; general retained-history donation obstruction | Concrete invalid donation and positive disjoint-history instance |
 | `theories/TransferExamples.v` | Known-present withdrawal, release, private load and retained foreign write | All-run proofs, concrete traces, rejected all-processor transfer postcondition |
@@ -495,11 +500,11 @@ See [the precise rule comparison and release problem](notes/persistent-semantics
 
 ## Remaining proof work
 
-1. Follow the [independent-review checkpoints](review/lead-response.md):
-   settle the response before prototype code; prove or refute re-marking for
-   an exact invariant fragment before safety proofs; then search small
-   buffers for a counterexample to the frame-shape lemma and report the
-   outcome before a general proof. The candidate replaces INV with explicit
+1. Continue the [independent-review checkpoints](review/lead-response.md).
+   The review response and [guarded invariant results](review/checkpoint-2.md)
+   are complete. State the frame-shape lemma precisely, search small buffers
+   for a counterexample, and report the outcome before a general proof.
+   The candidate replaces INV with explicit
    ownership rules, preserves `emp`, and initially restricts FRAME-TM to
    unlock-free commands. Do not extend the retirement interpretation or add
    another validity predicate without a checkpoint.

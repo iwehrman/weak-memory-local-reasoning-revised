@@ -47,6 +47,7 @@ theories/InvariantCompleteness.v
 theories/SeparatedSafety.v
 theories/SeparatedRules.v
 theories/TransferredCells.v
+theories/InvariantFragment.v
 theories/SeparatedHeap.v
 theories/OwnershipTransfer.v
 theories/SeparatedCalculus.v
@@ -73,6 +74,7 @@ theories/RegionalExamples.v
 theories/SeparatedExamples.v
 theories/OwnershipTransferLimits.v
 theories/TransferExamples.v
+theories/InvariantFragmentExamples.v
 theories/RetiredHeaps.v
 theories/RetiredSafety.v
 theories/RetiredTransfer.v

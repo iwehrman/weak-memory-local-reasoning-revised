@@ -16,6 +16,7 @@ From WMLR Require Import RegionalResources RegionalSafety RegionalCalculus Regio
   InvariantCompleteness RegionalExamples.
 From WMLR Require Import SeparatedSafety SeparatedRules SeparatedHeap SeparatedCalculus SeparatedExamples.
 From WMLR Require Import TransferredCells OwnershipTransfer OwnershipTransferLimits TransferExamples.
+From WMLR Require Import RetiredHeaps RetiredSafety RetiredTransfer RetiredRules RetiredExamples RetirementFlushing.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 Print Assumptions eval_expr_agrees.
@@ -363,3 +364,38 @@ Print Assumptions retained_history_prevents_donation.
 Print Assumptions donation_initial_certificate.
 Print Assumptions owner_fenced_donation_invalid.
 Print Assumptions donation_without_history_recomposes.
+
+Print Assumptions RH.temporal_associative.
+Print Assumptions RH.spatial_commutative.
+Print Assumptions RH.spatial_associative.
+Print Assumptions RH.processor_cell_shape.
+Print Assumptions RH.processor_cell_intro.
+Print Assumptions RH.historical_cell_emp_is_not_current.
+Print Assumptions prior_processor_cell_emp_entails_current.
+Print Assumptions retired_pool_excludes_private_cell.
+Print Assumptions retired_FRAME_TM.
+Print Assumptions retired_execution_no_abort.
+Print Assumptions retired_execution_post.
+Print Assumptions retired_donate_environment.
+Print Assumptions retired_donate_fence_valid.
+Print Assumptions retired_donate_release_valid.
+Print Assumptions retired_take_environment.
+Print Assumptions retired_take_release_valid.
+Print Assumptions retired_release_valid.
+Print Assumptions retired_acquire_valid.
+Print Assumptions retired_load_valid.
+Print Assumptions retired_sequence_valid.
+Print Assumptions retired_calculus_sound.
+Print Assumptions retired_initial_certificate.
+Print Assumptions retired_framed_donation_derivable.
+Print Assumptions retired_donation_all_runs.
+Print Assumptions retired_donation_trace.
+Print Assumptions retired_donation_returns_current_ownership.
+Print Assumptions retired_roundtrip_derivable.
+Print Assumptions retired_roundtrip_all_runs.
+Print Assumptions retired_roundtrip_trace.
+Print Assumptions stable_history_can_retire.
+Print Assumptions retirement_flush_simulation.
+Print Assumptions retirement_flushes_simulation.
+Print Assumptions retirement_flushes_from_mask.
+Print Assumptions masking_a_pending_write_does_not_commute.

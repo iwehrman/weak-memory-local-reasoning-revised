@@ -73,6 +73,12 @@ theories/RegionalExamples.v
 theories/SeparatedExamples.v
 theories/OwnershipTransferLimits.v
 theories/TransferExamples.v
+theories/RetiredHeaps.v
+theories/RetiredSafety.v
+theories/RetiredTransfer.v
+theories/RetiredRules.v
+theories/RetiredExamples.v
+theories/RetirementFlushing.v
 theories/Specifications.v
 theories/Examples.v
 theories/Audit.v

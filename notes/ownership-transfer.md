@@ -1,5 +1,12 @@
 # Ownership withdrawal, temporal framing, and the donation obstruction
 
+**Subsequent experiment:** [retired-ownership.md](retired-ownership.md) resolves
+the overlapping-heap case in a separate buffer-free interpretation, with
+bidirectional transfer and FRAME-TM. It changes the meaning of temporal
+`emp`; it does not invalidate the obstruction below in the previous model.
+A flush-simulation bridge is checked, but the combined buffered retirement
+model is still open.
+
 The separated calculus now supports taking a protected cell into private
 ownership, including at unlock without an added fence instruction. Its
 general FRAME-TM theorem still has only the original variable condition.

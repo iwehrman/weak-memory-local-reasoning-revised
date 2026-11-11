@@ -52,8 +52,14 @@ an owner fence or unlock, returning an owner-specific flushed-cell assertion;
 FRAME-TM survives the relaxed footprint bound. Donation back to the protected
 pool still conflicts with overlapping private heap history, even after
 draining buffers. A positive reassembly lemma covers disjoint histories.
-Integration with spatial framing/concurrency and full soundness remain open.
-See [ownership transfer and its remaining obstruction](notes/ownership-transfer.md),
+A separate retirement experiment now resolves the overlapping-heap case
+in a **buffer-free fragment**: `emp` can record relinquished ownership,
+so older framed values need not remain live cells. Both transfer directions,
+FRAME-TM, a small calculus and all-execution examples check. A flush-simulation
+lemma supports extending this design to buffered histories, but that combined
+model and integration with spatial framing/concurrency remain open.
+See [retirement: checked repair and its scope](notes/retired-ownership.md),
+[the preceding transfer results and obstruction](notes/ownership-transfer.md),
 [the recovered FRAME-TM and its ownership discipline](notes/separated-temporal-framing.md),
 [the preceding regional result and obstruction](notes/regional-ownership.md),
 [the preceding framing work](notes/framing-status.md),
@@ -150,6 +156,12 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/OwnershipTransfer.v` | Protected-to-private withdrawal at fence/unlock; disjoint-history donation reassembly | Checked transfer rules and a restricted boundary lemma |
 | `theories/OwnershipTransferLimits.v` | Scoped cell versus ordinary points-to; general retained-history donation obstruction | Concrete invalid donation and positive disjoint-history instance |
 | `theories/TransferExamples.v` | Known-present withdrawal, release, private load and retained foreign write | All-run proofs, concrete traces, rejected all-processor transfer postcondition |
+| `theories/RetiredHeaps.v` | Experimental live/retired heap resources; spatial/temporal associativity; changed temporal-emp entailment | Buffer-free candidate repair for donation |
+| `theories/RetiredSafety.v` | Separate buffer-free validity, general FRAME-TM, ownership exclusivity and execution adequacy | Actual machine semantics with explicit empty-buffer environments |
+| `theories/RetiredTransfer.v` | Donation and withdrawal with arbitrary overlapping heap history, including at unlock | Checked bidirectional transfer in the experiment |
+| `theories/RetiredRules.v` | Acquire/release/load/sequence, bounded calculus and soundness | No safety premise hidden in constructors |
+| `theories/RetiredExamples.v` | Return at unlock and return/withdraw/read with old value 5 and current value 7 | All-execution proofs and terminating traces |
+| `theories/RetirementFlushing.v` | Masked-history flush simulation; compatibility supplies the required no-pending-write condition | Bridge toward buffered retirement, not a complete buffered model |
 | `theories/VariableSupport.v` | Bounds on assertion variables, invariant freshness, and static thread interfaces | Existing variable-interference condition supplies compatibility |
 | `theories/ThreadProgress.v` | Residual derivations with variable bounds, relevant-register agreement, and waiting-thread steps | Thread obligations for the parallel rule |
 | `theories/SharedViews.v` | One shared ownership decision, symmetric views, flushing and step preservation | Concurrent owner/non-owner agreement |
@@ -474,12 +486,13 @@ See [the precise rule comparison and release problem](notes/persistent-semantics
 
 ## Remaining proof work
 
-1. Resolve donation's overlapping-history obstruction while preserving
-   FRAME-TM, then integrate spatial framing and concurrency. Protected-to-private
-   withdrawal now checks, including at unlock without an additional fence,
-   and the old foreign-barrier specification remains rejected. Returning a
-   cell to the protected pool requires a further resource-model change or an
-   explicit history restriction. See [the exact transfer results](notes/ownership-transfer.md).
+1. Extend the checked retirement experiment to pending buffers: prove the
+   combined compatibility/associativity and generalized-future decomposition,
+   then assertion closure including wands. Port the transfer rules and
+   FRAME-TM, recheck foreign-barrier rejection, and settle ownership bounds
+   before integrating spatial framing and concurrency. The current result is
+   buffer-free bidirectional transfer plus a masked-history flush simulation.
+   See [the exact retirement scope](notes/retired-ownership.md).
 2. Extend the two-thread parallel rule to nested parallel derivations and
    additional threads. It now permits private loads after release under the
    existing variable-interference condition, with checked preservation of

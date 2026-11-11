@@ -282,6 +282,21 @@ validity rule. Spatial framing and concurrency remain unintegrated in
 this semantics. See [separated-temporal-framing.md](separated-temporal-framing.md)
 and [ownership-transfer.md](ownership-transfer.md).
 
+The latest **separate buffer-free experiment** distinguishes live cells from
+retired ownership entries. It checks temporal/spatial associativity,
+bidirectional transfer at unlock, general FRAME-TM with the original variable
+condition, a small calculus and execution adequacy. Nonempty overlapping
+history examples return a cell to the pool, and return/withdraw/read it with
+the correct value. The exact assertion cost is checked: a remembered cell
+followed by `emp` need not imply current ownership anymore. Assertion syntax
+is reused, but the private interpretation changes. A general masked-history
+flush simulation is also proved when pending writes avoid retired addresses;
+existing stable compatibility supplies that premise for current heap cells.
+This is not yet a complete buffered resource interpretation, nor does it
+integrate spatial framing/concurrency or port the combined-footprint bound.
+The foreign-pending-barrier counterexample has not yet been rechecked in a
+buffered retirement model. See [retired-ownership.md](retired-ownership.md).
+
 Capture-avoiding assertion substitution, general expression-based heap
 axioms, choice/loop, general parallel, invariant rules, and integration of the
 spatial/temporal/strong-temporal frame rules remain open.

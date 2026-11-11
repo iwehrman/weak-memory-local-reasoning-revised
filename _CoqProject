@@ -14,6 +14,7 @@ theories/FrameDecomposition.v
 theories/RepairedFlushing.v
 theories/GeneralizedFlushing.v
 theories/FrameShape.v
+theories/ResidualUniqueness.v
 theories/ExecutionExamples.v
 theories/Assertions.v
 theories/AssertionSemantics.v
@@ -49,6 +50,7 @@ theories/SeparatedSafety.v
 theories/SeparatedRules.v
 theories/TransferredCells.v
 theories/InvariantFragment.v
+theories/FlushAttribution.v
 theories/SeparatedHeap.v
 theories/OwnershipTransfer.v
 theories/SeparatedCalculus.v
@@ -77,6 +79,7 @@ theories/OwnershipTransferLimits.v
 theories/TransferExamples.v
 theories/InvariantFragmentExamples.v
 theories/FrameShapeCounterexample.v
+theories/FixedFrameExamples.v
 theories/RetiredHeaps.v
 theories/RetiredSafety.v
 theories/RetiredTransfer.v

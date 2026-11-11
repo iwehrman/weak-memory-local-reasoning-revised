@@ -67,9 +67,13 @@ not yet proved. Checkpoint 2 now proves that invariants with heap-guarded pure
 assertions survive re-marking to the acquiring processor alone, have empty
 buffers, and cannot absorb pending writes at release. Checkpoint 3 proves
 the temporal-only resource lemma but refutes the proposed generalization
-to external `#`, including an acquisition case. A replacement residual lemma
-is needed before further safety development.
-See [the frame-shape checkpoint](review/checkpoint-3.md),
+to external `#`, including an acquisition case. Checkpoint 4 proves that a
+fixed frame determines the local buffers and that actual machine flushes
+can be attributed to one component with the other and the pool unchanged.
+The proposed single safety replacement and its frame/concurrency proofs
+remain open.
+See [the fixed-frame and flush checkpoint](review/checkpoint-4.md),
+[the frame-shape checkpoint](review/checkpoint-3.md),
 [the invariant-fragment checkpoint](review/checkpoint-2.md),
 [the response and development checkpoints](review/lead-response.md),
 [the independent review](review/independent-review.md),
@@ -172,6 +176,9 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/InvariantFragmentExamples.v` | Bare-pure release counterexample, nonempty cell with a pending foreign write, rejected foreign-barrier import, and container fragment | Concrete checkpoint-2 assertion checks |
 | `theories/FrameShape.v` | Temporal-only residual splitting and reassociation | Checkpoint-3 baseline; resource theorem without a new safety predicate |
 | `theories/FrameShapeCounterexample.v` | Failed `#` residual reconstruction under a footprint bound, for assume and acquisition | Checked auxiliary-lemma counterexamples, not proof-rule counterexamples |
+| `theories/ResidualUniqueness.v` | Fixed-frame buffer cancellation, forced duplicate-head origin, and incompatible premature local flush | Checkpoint-4 residual and duplicate-write results |
+| `theories/FlushAttribution.v` | A machine flush belongs to the frame or local resource, with precise marks and the buffer-free pool fixed | Checkpoint-4 attribution for arbitrary resources and invariant pools |
+| `theories/FixedFrameExamples.v` | The unchanged frame excludes checkpoint 3's bad assume and acquisition residuals | Direct checks of the proposed repair |
 | `theories/OwnershipTransfer.v` | Protected-to-private withdrawal at fence/unlock; disjoint-history donation reassembly | Checked transfer rules and a restricted boundary lemma |
 | `theories/OwnershipTransferLimits.v` | Scoped cell versus ordinary points-to; general retained-history donation obstruction | Concrete invalid donation and positive disjoint-history instance |
 | `theories/TransferExamples.v` | Known-present withdrawal, release, private load and retained foreign write | All-run proofs, concrete traces, rejected all-processor transfer postcondition |
@@ -507,10 +514,11 @@ See [the precise rule comparison and release problem](notes/persistent-semantics
 
 1. Continue the [independent-review checkpoints](review/lead-response.md).
    The review response and [guarded invariant results](review/checkpoint-2.md)
-   are complete. [Checkpoint 3](review/checkpoint-3.md) proves the temporal
-   baseline but refutes the proposed `#` residual lemma. Agree and test a
-   replacement that prevents reassignment of buffered occurrences before
-   proceeding to the safety proofs.
+   are complete. [Checkpoint 3](review/checkpoint-3.md) refutes the arbitrary
+   residual lemma; [checkpoint 4](review/checkpoint-4.md) proves fixed-frame
+   buffer uniqueness and actual flush attribution. Review the exact single
+   safety target replacing the `separated_safe` development path before
+   defining it and proving the integrated rules.
    The candidate replaces INV with explicit
    ownership rules, preserves `emp`, and initially restricts FRAME-TM to
    unlock-free commands. Do not extend the retirement interpretation or add

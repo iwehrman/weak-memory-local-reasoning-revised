@@ -1,0 +1,2 @@
+{"counterexample": null, "counts": {"frame_output_pairs": 19745, "input_pairs": 7225, "ordered_merges": 19745}, "search": "residual_uniqueness"}
+{"counterexample": null, "counts": {"buffer_layouts": 1457, "duplicate_frame_flushes": 22104, "frame_flushes": 196344, "frame_local_compositions": 241605, "identical_source_heads": 22104, "local_flushes": 433080, "machine_flushes": 629424, "pool_compositions": 738915}, "search": "flush_attribution"}

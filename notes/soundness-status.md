@@ -11,9 +11,13 @@ invariants with heap-guarded pure assertions, and proves that their release
 premise retains every pending write outside the donated invariant. The
 frame-shape checkpoint now proves the temporal-only resource lemma but
 refutes the proposed `#` reconstruction under a footprint bound, including
-acquisition. This refutes an auxiliary lemma, not design D's proof rules;
-the replacement residual argument remains open. See
-[checkpoint 3](../review/checkpoint-3.md), [checkpoint 2](../review/checkpoint-2.md), [the review](../review/independent-review.md)
+acquisition. This refutes an auxiliary lemma, not design D's proof rules.
+Checkpoint 4 proves fixed-frame buffer uniqueness and attribution of actual
+machine flushes to the frame or local resource while fixing the other and
+the buffer-free pool. These support a new single safety target, which has
+not been defined; integrated framing and soundness remain open. See
+[checkpoint 4](../review/checkpoint-4.md), [checkpoint 3](../review/checkpoint-3.md),
+[checkpoint 2](../review/checkpoint-2.md), [the review](../review/independent-review.md)
 and [the response](../review/lead-response.md). The results below describe
 distinct earlier models, not one integrated calculus.
 

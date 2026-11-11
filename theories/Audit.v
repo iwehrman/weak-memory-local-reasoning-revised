@@ -18,9 +18,23 @@ From WMLR Require Import SeparatedSafety SeparatedRules SeparatedHeap SeparatedC
 From WMLR Require Import TransferredCells OwnershipTransfer OwnershipTransferLimits TransferExamples.
 From WMLR Require Import InvariantFragment InvariantFragmentExamples.
 From WMLR Require Import FrameShape FrameShapeCounterexample.
+From WMLR Require Import ResidualUniqueness FlushAttribution FixedFrameExamples.
 From WMLR Require Import RetiredHeaps RetiredSafety RetiredTransfer RetiredRules RetiredExamples RetirementFlushing.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
+Print Assumptions ordered_residual_unique.
+Print Assumptions repaired_residual_buffers_unique.
+Print Assumptions resource_residual_buffers_unique.
+Print Assumptions ordered_head_frame_forced.
+Print Assumptions ordered_duplicate_head_from_frame.
+Print Assumptions local_flush_cannot_pass_frame.
+Print Assumptions pooled_flush_attribution.
+Print Assumptions indexed_flush_resource.
+Print Assumptions pooled_resource_flush_attribution.
+Print Assumptions invariant_pool_flush_attribution.
+Print Assumptions fixed_frame_excludes_assume_counterexample.
+Print Assumptions fixed_frame_excludes_acquire_counterexample.
+
 Print Assumptions temporal_frame_shape.
 Print Assumptions FrameShapeCounterexample.no_reconstruction.
 Print Assumptions FrameShapeCounterexample.overlap_frame_shape_counterexample.

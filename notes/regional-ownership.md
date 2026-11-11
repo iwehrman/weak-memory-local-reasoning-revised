@@ -1,5 +1,11 @@
 # Ownership regions, temporal history, and completeness import
 
+**Subsequent result:** [separated-temporal-framing.md](separated-temporal-framing.md)
+recovers private FRAME-TM in a new model that keeps protected assertions
+separate throughout acquisition/release. The counterexample below remains
+valid for the regional model; the separated model rejects its source specification.
+The new result has an explicit ownership-transfer limitation.
+
 The generalized ownership model now has checked flushing preservation,
 acquire/release validity, consequence and sequencing, operational adequacy,
 and a sound bounded calculus. It supports a temporal history rule around the

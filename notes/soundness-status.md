@@ -261,6 +261,19 @@ An overlapping-history/private-pending-write example validates the boundary
 rule. General spatial framing, heap rules and concurrency are not yet ported
 to this model. See [regional-ownership.md](regional-ownership.md).
 
+The subsequent separated model recovers the original private FRAME-TM shape
+under only its variable condition (`separated_FRAME_TM`), without banning
+pending frames. Protected assertions stay separate from generalized private
+assertions throughout both phases. A bounded calculus with protected
+acquire/release/store/fence, private fence/load, sequence, componentwise
+consequence and temporal framing is sound. Its operational adequacy and
+nonvacuous pending-write/overlapping-private-history examples check. It
+rejects the regional source specification that exported a foreign barrier.
+There is currently no transfer of ownership between the protected and private
+compartments; the private temporal context stays spatially disjoint from the
+protected region. Spatial framing and concurrency remain unintegrated in
+this new semantics. See [separated-temporal-framing.md](separated-temporal-framing.md).
+
 Capture-avoiding assertion substitution, general expression-based heap
 axioms, choice/loop, general parallel, invariant rules, and integration of the
 spatial/temporal/strong-temporal frame rules remain open.

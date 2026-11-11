@@ -42,7 +42,15 @@ unrestricted private temporal frame rule fails even for a derivable
 closed-to-closed specification: invariant transfer can export another
 processor's completeness mark. The replacement boundary rule and examples
 check, but the general frame/concurrency integration and full soundness remain
-open. See [the current regional result and obstruction](notes/regional-ownership.md),
+open. A subsequent model recovers the original private temporal frame rule
+with only its variable condition by keeping protected assertions separate
+from private assertions while the lock is held. It checks protected updates,
+private fences and loads, a bounded calculus with FRAME-TM, and operational
+adequacy, including genuinely pending frames. It rejects foreign-barrier
+import. Ownership transfer between the compartments and integration with
+spatial framing/concurrency remain open.
+See [the recovered FRAME-TM and its ownership discipline](notes/separated-temporal-framing.md),
+[the preceding regional result and obstruction](notes/regional-ownership.md),
 [the preceding framing work](notes/framing-status.md),
 [the parallel rule](notes/parallel-ownership.md),
 [the private-resource extension](notes/private-ownership.md), and
@@ -128,6 +136,11 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/RegionalFraming.v` | Operational history frame rule around `J * P` and `J * Q` | Checked boundary rule, not the private frame rule under hidden `J` |
 | `theories/InvariantCompleteness.v` | Points-to completeness can be assigned to an empty spatial sibling; derived foreign-processor barrier | Completeness import obstruction |
 | `theories/RegionalExamples.v` | Pending-write round trip, overlapping past/shared cell, all-run boundary theorem, rejected private temporal frame | Concrete nonvacuity and closed-to-closed counterexample |
+| `theories/SeparatedSafety.v` | Separate protected/private judgments, actual flushing, general private FRAME-TM and operational adequacy | Recovered frame shape with the original variable condition |
+| `theories/SeparatedRules.v` | Protected proof lifting, acquisition/release, sequence, componentwise consequence and private fence | Completeness remains confined to its assertion compartment |
+| `theories/SeparatedHeap.v` | Private loads with invariant/protected-assertion freshness | Register changes and temporal heap history |
+| `theories/SeparatedCalculus.v` | Sound bounded calculus including FRAME-TM | No safety or validity premises in constructors |
+| `theories/SeparatedExamples.v` | Pending-frame protected restoration, real fence, rejected foreign-barrier import and overlapping private history | All-execution results and concrete operational traces |
 | `theories/VariableSupport.v` | Bounds on assertion variables, invariant freshness, and static thread interfaces | Existing variable-interference condition supplies compatibility |
 | `theories/ThreadProgress.v` | Residual derivations with variable bounds, relevant-register agreement, and waiting-thread steps | Thread obligations for the parallel rule |
 | `theories/SharedViews.v` | One shared ownership decision, symmetric views, flushing and step preservation | Concurrent owner/non-owner agreement |
@@ -452,13 +465,13 @@ See [the precise rule comparison and release problem](notes/persistent-semantics
 
 ## Remaining proof work
 
-1. Resolve completeness import before attempting the unrestricted private
-   temporal frame rule again. The generalized ownership model now checks
-   flushing, acquire/release, adequacy, and a whole-region history rule, but a
-   derived closed-to-closed counterexample rules out simply adding the old
-   private rule. Investigate separating protected completeness from private
-   barrier claims, then integrate spatial framing, heap operations and the
-   parallel example. See [the checked boundary rule and next design choices](notes/regional-ownership.md).
+1. Extend the separated model's recovered private FRAME-TM to explicit
+   protected/private ownership transfer, and integrate spatial framing and
+   concurrency. The rule now checks with only the original variable condition,
+   while protected completeness cannot become a private barrier. The bounded
+   calculus supports protected heap updates and private fences/loads, but
+   keeps the two ownership compartments disjoint. See
+   [the exact result and remaining limits](notes/separated-temporal-framing.md).
 2. Extend the two-thread parallel rule to nested parallel derivations and
    additional threads. It now permits private loads after release under the
    existing variable-interference condition, with checked preservation of

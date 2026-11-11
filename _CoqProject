@@ -44,6 +44,10 @@ theories/RegionalSafety.v
 theories/RegionalCalculus.v
 theories/RegionalFraming.v
 theories/InvariantCompleteness.v
+theories/SeparatedSafety.v
+theories/SeparatedRules.v
+theories/SeparatedHeap.v
+theories/SeparatedCalculus.v
 theories/VariableSupport.v
 theories/ThreadProgress.v
 theories/SharedViews.v
@@ -64,6 +68,7 @@ theories/ParallelExamples.v
 theories/ParallelLoads.v
 theories/SpatialFramingExamples.v
 theories/RegionalExamples.v
+theories/SeparatedExamples.v
 theories/Specifications.v
 theories/Examples.v
 theories/Audit.v

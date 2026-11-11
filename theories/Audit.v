@@ -14,6 +14,7 @@ From WMLR Require Import PrivateFraming SpatialFramingExamples TemporalFrameCoun
   TemporalFence TemporalFramingExamples TemporalTransfer TemporalOwnershipObstruction.
 From WMLR Require Import RegionalResources RegionalSafety RegionalCalculus RegionalFraming
   InvariantCompleteness RegionalExamples.
+From WMLR Require Import SeparatedSafety SeparatedRules SeparatedHeap SeparatedCalculus SeparatedExamples.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 Print Assumptions eval_expr_agrees.
@@ -307,3 +308,33 @@ Print Assumptions regional_pending_roundtrip_all_terminating_runs.
 Print Assumptions regional_temporal_frame_counterexample.
 Print Assumptions regional_overlap_pending_initial.
 Print Assumptions regional_overlap_pending_all_runs.
+
+Print Assumptions separated_environment_flush.
+Print Assumptions separated_safe_temporal_frame.
+Print Assumptions separated_temporal_frame_valid.
+Print Assumptions separated_FRAME_TM.
+Print Assumptions separated_execution_no_abort.
+Print Assumptions separated_execution_post.
+Print Assumptions separated_protocol_valid.
+Print Assumptions separated_acquire_valid.
+Print Assumptions separated_release_valid.
+Print Assumptions separated_sequence_valid.
+Print Assumptions separated_consequence_valid.
+Print Assumptions separated_fence_valid.
+Print Assumptions separated_load_cell_valid.
+Print Assumptions separated_calculus_sound.
+Print Assumptions separated_pending_initial.
+Print Assumptions separated_pending_roundtrip_derivable.
+Print Assumptions separated_restore_derivable.
+Print Assumptions separated_restore_all_runs.
+Print Assumptions separated_restore_pending_trace.
+Print Assumptions separated_restore_keeps_foreign_write.
+Print Assumptions separated_roundtrip_cannot_import_barrier.
+Print Assumptions separated_import_barrier_not_derivable.
+Print Assumptions separated_pending_fence_derivable.
+Print Assumptions separated_pending_fence_all_runs.
+Print Assumptions separated_pending_fence_trace.
+Print Assumptions separated_pending_fence_changes_buffer.
+Print Assumptions separated_historical_load_derivable.
+Print Assumptions separated_historical_initial.
+Print Assumptions separated_historical_load_all_runs.

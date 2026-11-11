@@ -35,7 +35,7 @@ Proof.
   intros Heq. subst y. contradiction.
 Qed.
 
-(** The explicit arithmetic grammar on p. 39. Additional operators lhs as
+(** The explicit arithmetic grammar on p. 39. Additional operators left as
     ellipses in the dissertation can be added when a proof needs them. *)
 Inductive expr : Type :=
 | EVal (v : value)

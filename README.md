@@ -1,14 +1,17 @@
 # Weak-Memory Local Reasoning
 
-A Rocq formalization of Ian Wehrman's 2012 dissertation, beginning with the
-languages and their foundational metatheory. The eventual target is Theorem 1,
+A Rocq formalization of Ian Wehrman's 2012 dissertation, covering the
+languages, concurrent execution semantics, and foundational metatheory.
+The eventual target is Theorem 1,
 soundness of the concurrent specification logic relative to its operational
 semantics, with explicit corrections where required.
 
-The current development defines the syntax of both chapters' commands,
-assertions, and specifications. It proves expression and assertion independence
-from irrelevant stack variables, expression substitution correctness, and
-properties of the syntax. Concrete memory semantics and Theorem 1 remain open.
+The current development defines both chapters' command, assertion, and
+specification syntax, and implements Chapter 4's multiprocessor memory model
+and operational semantics. It proves the three properties of Lemma 2 and
+checks complete store-buffering, fence, and lock/unlock executions. The
+separation operations, concrete assertion interpretation, and Theorem 1 remain
+open.
 
 ## Build and check
 
@@ -37,6 +40,9 @@ Page numbers below are the dissertation's printed page numbers.
 | --- | --- | --- |
 | `theories/Expressions.v` | Integer expressions, booleans, stacks, free variables, substitution, fresh names | §3.2, pp. 39–41 |
 | `theories/Languages.v` | Sequential and concurrent primitives and commands, variable sets, command abbreviations, processor annotation | §3.3, pp. 41–48 and §4.2, pp. 88–98 |
+| `theories/Machine.v` | Heaps, FIFO write buffers, blocked sets, processor domains, flushing, memory well-formedness | Definition 4 and §4.2, pp. 90–95 |
+| `theories/OperationalSemantics.v` | Primitive and command steps, aborts, successful execution closure, Lemma 2 and preservation proofs | Figures 4.1–4.2, pp. 93–96 and Lemma 2, p. 48 |
+| `theories/ExecutionExamples.v` | Complete store-buffering, fence, and lock/unlock traces, blocked operations and faults | Concrete checks of §4.2's execution rules |
 | `theories/Assertions.v` | Both assertion grammars, named quantifiers, spatial and temporal connectives, all three wands, points-to abbreviations | §3.5, pp. 60–69 and §4.4, pp. 113–119 |
 | `theories/AssertionSemantics.v` | Interpretation of the concurrent assertion grammar over a supplied resource model | Figure 4.4, p. 115 |
 | `theories/Specifications.v` | Specification records, variable side conditions, invariant-preservation lemma | §3.6, §4.5, Figure 4.8 |
@@ -65,9 +71,23 @@ systems is a remaining obligation. The interface assumes no algebraic laws.
   assertion grammar, including quantifiers and separating implications.
 - `assignment_preserves_invariant` proves that updating a variable absent
   from an invariant preserves its truth at a fixed resource.
+- `lemma2` proves that a successful concurrent step shrinks the free and
+  modified variable sets and preserves every variable outside the original
+  modified set. Each property also holds for successful finite executions.
+- `steps_preserve_well_formed` and `steps_preserve_lock_complete` establish
+  preservation of processor-domain membership and lock completeness.
+- `buffer_lookup_newest`, `enqueue_read_own_write`, and
+  `enqueue_other_processor_read` establish most-recent-write forwarding and
+  the immediate visibility of an enqueued write to its own processor.
+- `store_buffering_zero_zero` proves a full execution in which both loads
+  read zero, both stores subsequently reach shared memory with value one,
+  and all buffers finish empty. Result registers initially contain minus one.
+- `store_fence_trace` and `lock_store_unlock_trace` check complete executions
+  that flush the local buffer before a fence or unlock proceeds.
 
-The message-passing examples check syntax and variable side conditions.
-Their operational correctness remains open. The assignment example proves
+The earlier message-passing examples in `Examples.v` check syntax and variable
+side conditions. Their general operational correctness remains open. The
+assignment example proves
 that a pure invariant `x = 0` becomes false after updating `x` to `1`, for any
 resource interpretation. Relating that fact to the printed proof rule and
 the complete `safe_n` predicate is also pending.
@@ -86,8 +106,7 @@ the complete `safe_n` predicate is also pending.
   The concurrent points-to abbreviation already chooses a provably fresh
   processor name automatically.
 - Concurrent primitives keep expression-valued processor annotations.
-  Valid processor and location domains will be specified with the memory
-  model. The sequential grammar omits the stray processor subscript on
+  The sequential grammar omits the stray processor subscript on
   p. 44, following that chapter's uniprocessor semantics.
 - `Concurrent.of_sequential` annotates a command tree. Its current theorems
   concern syntax. The semantic relationship between the two machines is a
@@ -95,13 +114,50 @@ the complete `safe_n` predicate is also pending.
 - Temporal wand constructors follow Figure 4.4's operand order.
   `TemporalWandRight conclusion future` models `conclusion ◁− future`.
 
+## Execution model
+
+Locations are positive integers. An arbitrary predicate on positive integers
+specifies the active processor domain, and the examples instantiate it with
+processors 1 and 2. Primitive execution requires an active processor.
+Nonpositive and inactive processor annotations have no primitive transition.
+Addresses outside the current heap and local-buffer domains, including zero
+and negative addresses, produce the load/store aborts in Figure 4.1 when the
+operation is enabled.
+
+Buffers append writes at the tail and flush from the head. Loads use the newest
+matching local write, falling back to shared memory. Blocked processors can
+still assign registers and enqueue stores. Loads and flushing require an
+unblocked processor. Fences, lock acquisition, and lock release require an
+empty local buffer. A false assumption waits, while a false assertion aborts.
+
+The language retains the dissertation's partial blocked sets for future
+separation reasoning. `memory_well_formed` requires blocked processors and
+nonempty buffers to belong to the active domain. `lock_complete` expresses
+the stronger property that the lock is free or has a single owner. Execution
+preserves each property when it holds initially. Set comparisons use pointwise
+logical equivalence, so these results require no extensionality axioms.
+
+Figure 4.2 uses an unannotated terminal `skip`. Generated terminal skips in
+this encoding use the constant annotation 1, which is ignored for termination.
+Every annotated skip is treated as terminal, including when removing it from
+a sequence or parallel composition. Silent flushes can continue after the
+program reaches skip, as permitted by the figure's `c-tau` rule.
+
+`step` represents a successful transition and `abort` a transition to the
+terminal fault outcome. `steps` is the reflexive-transitive closure of
+successful transitions. A faulting execution has a successful prefix followed
+by an abort. The semantics imposes no fairness or termination assumption.
+
+The implemented machine is Chapter 4's concurrent machine. A separate
+Chapter 3 machine and a semantic comparison with `Concurrent.of_sequential`
+remain future work.
+
 ## Remaining proof work
 
 1. Implement capture-avoiding assertion substitution and prove its semantic
    substitution lemma, including shadowing and variable capture cases.
-2. Define heaps, FIFO write buffers, processor arrays, blocked processors,
-   buffer-completeness sets, and the concrete transition relations. Prove
-   the three operational properties of Lemma 2.
+2. Extend memory systems with the buffer-completeness sets of Definition 5,
+   including its heap condition.
 3. Define the spatial, temporal, and spatiotemporal separation relations and
    instantiate the assertion interpretation. Prove the required algebra
    and flushing closure properties.

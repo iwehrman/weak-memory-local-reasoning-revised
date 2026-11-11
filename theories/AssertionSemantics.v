@@ -4,7 +4,7 @@ Import ListNotations.
 
 (** A semantic interface for Figure 4.4. Each interpretation supplies a
     resource model, atomic predicates and two composition relations.
-    The concrete multiprocessor memory interpretation is pending.
+    ConcreteAssertions supplies the multiprocessor memory interpretation.
     In particular, this record assumes no separation-algebra laws. *)
 Record interpretation (resource : Type) := {
   empty_resource : resource -> Prop;

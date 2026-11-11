@@ -2,10 +2,15 @@
 theories/Expressions.v
 theories/Languages.v
 theories/Machine.v
+theories/BufferRelations.v
+theories/Separation.v
 theories/OperationalSemantics.v
+theories/FrameDecomposition.v
 theories/ExecutionExamples.v
 theories/Assertions.v
 theories/AssertionSemantics.v
+theories/ConcreteAssertions.v
+theories/SeparationExamples.v
 theories/Specifications.v
 theories/Examples.v
 theories/Audit.v

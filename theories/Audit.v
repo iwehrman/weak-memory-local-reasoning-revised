@@ -1,5 +1,6 @@
 From WMLR Require Import Expressions Languages Assertions AssertionSemantics Specifications Examples.
 From WMLR Require Import Machine OperationalSemantics ExecutionExamples.
+From WMLR Require Import BufferRelations Separation FrameDecomposition ConcreteAssertions SeparationExamples.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 Print Assumptions eval_expr_agrees.
@@ -29,3 +30,31 @@ Print Assumptions store_fence_trace.
 Print Assumptions lock_store_unlock_trace.
 Print Assumptions blocked_load_waits_even_for_own_buffer.
 Print Assumptions blocked_buffer_cannot_flush.
+
+Print Assumptions interleaves_length.
+Print Assumptions disjoint_interleaves_override.
+Print Assumptions append_overrides.
+Print Assumptions spatial_comm.
+Print Assumptions spatial_in_spatiotemporal.
+Print Assumptions temporal_in_spatiotemporal.
+Print Assumptions spatial_well_formed.
+Print Assumptions temporal_well_formed.
+Print Assumptions spatiotemporal_well_formed.
+Print Assumptions spatial_empty_left_unique.
+Print Assumptions spatial_empty_right_unique.
+Print Assumptions temporal_empty_left_unique.
+Print Assumptions temporal_empty_right_unique.
+Print Assumptions spatiotemporal_empty_left_unique.
+Print Assumptions spatiotemporal_empty_right_unique.
+Print Assumptions temporal_functional.
+Print Assumptions concrete_satisfies_agrees.
+Print Assumptions concrete_spatial_comm.
+Print Assumptions points_to_requires_flushed.
+Print Assumptions concrete_points_to_cell.
+Print Assumptions concrete_pending_not_points_to.
+Print Assumptions temporal_rejects_pending_before_complete.
+Print Assumptions spatiotemporal_permits_pending_before_complete.
+Print Assumptions printed_conjecture1_false.
+Print Assumptions steps_domain_subset.
+Print Assumptions spatial_frame_recombination_sets.
+Print Assumptions spatial_frame_recombination_region.

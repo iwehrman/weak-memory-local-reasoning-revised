@@ -4,6 +4,11 @@ This is a checked, bounded implementation of the ownership-transfer repair.
 It is separate from `persistent_valid` and the printed safety predicate.
 It does not establish the full dissertation soundness theorem.
 
+The subsequent [private-resource extension](private-ownership.md) now carries
+separate private resources through acquisition/release and proves a
+post-release private load. The limits below describe this original prototype;
+the extension still leaves concurrency and temporal external frames open.
+
 ## What changes
 
 The assertion grammar in `Assertions.v` and the entire interpretation

@@ -28,8 +28,10 @@ The arbitrary-invariant unlock contract has a checked counterexample. A separate
 ownership protocol now proves general invariant transfer at acquire/release,
 soundness of a small calculus, and a heap-restoring critical section for all
 executions. It keeps assertion syntax and interpretation unchanged, but uses
-open/closed judgment indices and spatial external frames; general private
-payloads and concurrency are still open. See [the ownership protocol](notes/ownership-protocol.md) and
+open/closed judgment indices and spatial external frames. Its private-resource
+extension now carries arbitrary private assertions through acquisition/release
+and proves a post-release private load; concurrency and temporal external
+frames remain open. See [the private-resource extension](notes/private-ownership.md) and
 [the soundness status](notes/soundness-status.md) for exact claims and limits.
 
 ## Build and check
@@ -92,6 +94,11 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/OwnershipHeap.v` | Owned cell stores, fences, and release using its implicit buffer drain | Heap operations in the ownership protocol |
 | `theories/OwnershipCalculus.v` | Phase-indexed derivations and their soundness | Bounded ownership calculus |
 | `theories/OwnershipExamples.v` | All-execution heap restoration, concrete buffered traces, rejected unrestored release | Two-processor protocol checks |
+| `theories/PrivateOwnership.v` | Separate private/shared components and flushing preservation | Ownership protocol extended with private resources |
+| `theories/PrivateRules.v` | Arbitrary private-resource transfer, sequencing, and operational adequacy | Acquisition/release with private pre/postconditions |
+| `theories/PrivateHeap.v` | Framed stores/fences, buffered release, and post-release private loads | Checked spatial primitive framing |
+| `theories/PrivateCalculus.v` | Bounded sound calculus and derived whole-critical-section rule | Phase-indexed proof rules |
+| `theories/PrivateExamples.v` | Two-cell all-execution restoration and private load, concrete trace, rejected aliasing | Private resource preservation and accessibility |
 | `theories/UnlockCounterexample.v` | Two-processor failure of arbitrary-invariant unlock | Release-restoration obstruction |
 | `theories/PersistentCalculus.v` | Bounded derivation system and checked soundness | Partial corrected version of Theorem 1 |
 | `theories/PersistentExamples.v` | Store postcondition through flushing, wand repair, and derived lock round trip | Concrete checks of the current semantics and rules |
@@ -225,6 +232,12 @@ distinguishes this interpretation from both earlier models.
   execution and admissible spatial frame. `unrestored_release_invalid`
   rejects release with a wrong protected value. No assertion constructor or
   interpretation changes were needed; the specification has phase indices.
+- `private_calculus_sound` extends this design with genuine private local
+  resources on both sides of the closed boundary. `private_critical_section_rule`
+  is derived from body proofs. `private_restore_all_terminating_runs` proves
+  restoration of the shared cell and preservation/readback of a separate
+  private cell for every terminating run. `private_alias_rejected` excludes
+  duplicate shared/private ownership of one cell.
 
 The earlier message-passing examples in `Examples.v` check syntax and variable
 side conditions. Their general operational correctness remains open. The
@@ -385,10 +398,10 @@ See [the precise rule comparison and release problem](notes/persistent-semantics
 
 ## Remaining proof work
 
-1. Extend the checked ownership protocol to carry private resources through
-   acquisition/release and support concurrent owner/non-owner views. General
-   invariant transfer and a heap-restoring critical section now check in the
-   bounded spatial-frame model. See [its exact scope](notes/ownership-protocol.md).
+1. Extend the checked private-resource protocol with concurrent owner/non-owner
+   views and agreement on the shared pool's phase. Private-resource transfer,
+   a derived critical-section rule, and post-release private access now check.
+   See [its exact scope](notes/private-ownership.md).
 2. Implement capture-avoiding assertion substitution and its semantic lemma.
 3. Generalize constant-cell load/store to expression and framed forms, and
    check their freshness conditions and shared-invariant transfers. Extend

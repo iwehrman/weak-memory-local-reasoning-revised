@@ -202,6 +202,14 @@ payload at the closed boundary. Its assertion syntax and interpretation are
 unchanged. This is a checked bounded design, not the full general invariant
 rule. See [ownership-protocol.md](ownership-protocol.md).
 
+The subsequent `private_valid` semantics carries an explicit private component
+through the closed boundary. Acquisition/release accept arbitrary invariant
+and private assertions; framed cell operations and buffered release preserve
+private resources. A derived whole-critical-section rule and a checked
+two-cell example restore shared memory and read the retained private cell
+after release. Spatial external frames remain a restriction, and the full
+concurrency and frame rules remain open. See [private-ownership.md](private-ownership.md).
+
 Capture-avoiding assertion substitution, general expression/framed heap
 axioms, choice/loop, parallel, invariant, and frame rules remain open.
 The ownership condition is a requirement that each proof must construct; it

@@ -8,6 +8,7 @@ From WMLR Require Import GeneralizedFlushing AssertionFlushing PersistentAsserti
   FlushingCounterexample PersistentRules HeapRules LockRules UnlockCounterexample
   PersistentCalculus PersistentExamples.
 From WMLR Require Import OwnershipProtocol OwnershipRules OwnershipHeap OwnershipCalculus OwnershipExamples.
+From WMLR Require Import PrivateOwnership PrivateRules PrivateHeap PrivateCalculus PrivateExamples.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 Print Assumptions eval_expr_agrees.
@@ -180,3 +181,27 @@ Print Assumptions restore_program_trace.
 Print Assumptions intermediate_invariant_broken.
 Print Assumptions pending_restore_then_unlock.
 Print Assumptions unrestored_release_invalid.
+
+Print Assumptions full_spatial_intro.
+Print Assumptions full_spatial_elim.
+Print Assumptions private_environment_flush.
+Print Assumptions private_acquire_valid.
+Print Assumptions private_release_valid.
+Print Assumptions private_lift_open_primitive.
+Print Assumptions private_sequence_valid.
+Print Assumptions private_execution_no_abort.
+Print Assumptions private_execution_closed_post.
+Print Assumptions protocol_store_framed_cell_valid.
+Print Assumptions protocol_fence_framed_cell_valid.
+Print Assumptions private_store_cell_valid.
+Print Assumptions private_fence_cell_valid.
+Print Assumptions private_release_buffered_cell_valid.
+Print Assumptions private_closed_load_valid.
+Print Assumptions private_calculus_sound.
+Print Assumptions private_critical_section_rule.
+Print Assumptions private_initial_environment.
+Print Assumptions private_restore_derivable.
+Print Assumptions private_restore_no_abort.
+Print Assumptions private_restore_all_terminating_runs.
+Print Assumptions private_restore_trace.
+Print Assumptions private_alias_rejected.

@@ -30,6 +30,10 @@ theories/OwnershipProtocol.v
 theories/OwnershipRules.v
 theories/OwnershipHeap.v
 theories/OwnershipCalculus.v
+theories/PrivateOwnership.v
+theories/PrivateRules.v
+theories/PrivateHeap.v
+theories/PrivateCalculus.v
 theories/PersistentCalculus.v
 theories/SeparationExamples.v
 theories/FlushingCounterexample.v
@@ -38,6 +42,7 @@ theories/UnlockCounterexample.v
 theories/RepairedExamples.v
 theories/PersistentExamples.v
 theories/OwnershipExamples.v
+theories/PrivateExamples.v
 theories/Specifications.v
 theories/Examples.v
 theories/Audit.v

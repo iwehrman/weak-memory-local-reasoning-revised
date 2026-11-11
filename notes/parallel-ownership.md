@@ -156,10 +156,17 @@ assumption.
 ## Remaining work
 
 Nested parallel derivations, arbitrary numbers of threads, choice and loops,
-general frame rules, temporal external frames, and the full invariant rule remain
+integration of framing into parallel derivations, temporal external frames, and the full invariant rule remain
 outside this theorem. The current pair consumes the whole initial spatial
 decomposition; a further arbitrary external frame needs its own composition
 proof. The generic heap rules and complete corrected Theorem 1 remain open.
+
+The subsequent [framing work](framing-status.md) proves spatial framing for
+ordinary private semantic validity, plus temporal framing in a separate
+marked-resource prototype. Neither result adds a frame constructor to
+`private_derivation`, and the temporal prototype does not replace the semantics
+of this parallel theorem. Invariant transfer across overlapping history is
+the next integration problem.
 
 Ordinary arithmetic assignments and general expression-based loads/stores
 still need integration into the private calculus. Removing `memory_only`

@@ -112,8 +112,12 @@ The protocol uses spatial external frames. A subsequent
 between owner and non-owner views, preserves both private postconditions, and
 handles competing heap-restoring critical sections. It now permits register
 updates under the existing mutual variable-interference condition, including
-post-release private loads into distinct variables. Temporal external frames
-and general frame inference rules remain open.
+post-release private loads into distinct variables. General semantic spatial
+framing is now proved at closed entry in `PrivateFraming.v`, with arbitrary
+frame assertions and the usual variable condition. A separate marked-resource
+prototype proves temporal framing and fence, but integrating temporal external
+frames with these ownership rules remains open. See
+[the exact results and transfer obstruction](framing-status.md).
 
 The transfer rules accept arbitrary private assertions; the current checked
 heap rules are constant-cell rules. The example preserves its private cell;

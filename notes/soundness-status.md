@@ -9,8 +9,13 @@ future-aware wand interpretation has full assertion flushing closure and
 base heap/lock rules, with a restricted release rule. The subsequent ownership
 protocol proves protected-memory transfer with private resources, and a first
 parallel theorem composes two threads under explicit variable-interference
-conditions, including private loads into registers. General frame and
-concurrency rules remain open. See [the semantic changes](persistent-semantics.md)
+conditions, including private loads into registers. General spatial framing
+is now proved for private validity with closed entry. Temporal framing and
+fence are proved in a separate marked-resource prototype, with two checked
+obstructions to combining it with the ownership model. An alternative release
+transfer lemma addresses the overlapping-history example; the combined
+semantics and full concurrency rules remain open. See
+[the framing results](framing-status.md), [the semantic changes](persistent-semantics.md),
 and [the parallel theorem's exact premises](parallel-ownership.md).
 
 ## The assignment axiom fails against full safety
@@ -229,11 +234,25 @@ variables and proves both register results for every terminating execution.
 Variable-support bounds protect intermediate assertions and a finished
 thread's postcondition. A checked negative example uses the same destination
 twice and loses the first result, demonstrating the interference condition's
-role. The full concurrency and frame rules remain open. See
+role. General concurrency and integration with temporal framing remain open. See
 [parallel-ownership.md](parallel-ownership.md).
 
-Capture-avoiding assertion substitution, general expression/framed heap
-axioms, choice/loop, general parallel, invariant, and frame rules remain open.
+`private_spatial_frame_valid` subsequently proves the general semantic spatial
+rule at closed entry, with actual frame flushes and the ordinary variable
+condition. `private_temporal_frame_counterexample` shows that promoting local
+completeness to full cannot support the analogous semantic temporal rule.
+`prefix_temporal_frame_valid` proves that rule when local markings are retained,
+and a framed fence handles a pending write. However,
+`prefix_ownership_release_invalid` rejects restored-invariant release when a
+spatial shared pool sits outside overlapping temporal history.
+`temporal_history_release_transfer` proves an enabled release and invariant
+recomposition with history before the combined ownership region. This is a
+checked replacement lemma, not yet a combined safety model. See
+[framing-status.md](framing-status.md).
+
+Capture-avoiding assertion substitution, general expression-based heap
+axioms, choice/loop, general parallel, invariant rules, and integration of the
+spatial/temporal/strong-temporal frame rules remain open.
 The ownership condition is a requirement that each proof must construct; it
 does not establish suitable witnesses for every printed specification.
 Further rearrangement laws may be needed. See [frame-decomposition.md](frame-decomposition.md).

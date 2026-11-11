@@ -10,6 +10,8 @@ From WMLR Require Import GeneralizedFlushing AssertionFlushing PersistentAsserti
 From WMLR Require Import OwnershipProtocol OwnershipRules OwnershipHeap OwnershipCalculus OwnershipExamples.
 From WMLR Require Import PrivateOwnership PrivateRules PrivateHeap PrivateCalculus PrivateExamples.
 From WMLR Require Import SpatialExchange VariableSupport ThreadProgress SharedViews ParallelOwnership ParallelExamples ParallelLoads.
+From WMLR Require Import PrivateFraming SpatialFramingExamples TemporalFrameCounterexample TemporalSafety
+  TemporalFence TemporalFramingExamples TemporalTransfer TemporalOwnershipObstruction.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 Print Assumptions eval_expr_agrees.
@@ -256,3 +258,27 @@ Print Assumptions competing_readers_left_first.
 Print Assumptions competing_readers_right_first.
 Print Assumptions same_destination_rejected.
 Print Assumptions same_destination_loses_left_result.
+
+Print Assumptions spatial_flushes_split.
+Print Assumptions private_safe_spatial_frame.
+Print Assumptions private_spatial_frame_valid.
+Print Assumptions framed_restore_valid.
+Print Assumptions framed_restore_no_abort.
+Print Assumptions framed_restore_all_terminating_runs.
+Print Assumptions framed_restore_trace.
+Print Assumptions private_temporal_frame_counterexample.
+Print Assumptions prefix_safe_temporal_frame.
+Print Assumptions prefix_temporal_frame_valid.
+Print Assumptions prefix_skip_valid.
+Print Assumptions prefix_execution_no_abort.
+Print Assumptions prefix_execution_post.
+Print Assumptions prefix_fence_valid.
+Print Assumptions prefix_framed_fence_valid.
+Print Assumptions prefix_skip_cannot_invent_barrier.
+Print Assumptions pending_fence_no_abort.
+Print Assumptions pending_fence_all_terminating_runs.
+Print Assumptions pending_fence_trace.
+Print Assumptions prefix_ownership_release_invalid.
+Print Assumptions release_marked_invariant.
+Print Assumptions temporal_history_release_transfer.
+Print Assumptions overlapping_history_release_recomposes.

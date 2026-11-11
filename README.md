@@ -33,8 +33,13 @@ extension now carries arbitrary private assertions through acquisition/release
 and proves a post-release private load. A parallel rule now composes two
 threads under explicit variable-interference conditions, with consistent
 shared ownership and retained private postconditions. Competing protected
-writes followed by private loads check for all interleavings;
-general concurrency and temporal external frames remain open. See
+writes followed by private loads check for all interleavings. A general semantic
+spatial frame rule now holds at closed entry, including frames with pending
+writes. Temporal framing has a checked theorem in a separate semantics that
+retains completeness marks, and a checked fence example. Integration with
+ownership transfer exposed a further history/shared-pool obstruction; a
+replacement release-transfer lemma is proved, but the combined semantics and
+full soundness remain open. See [the framing results and next steps](notes/framing-status.md),
 [the parallel rule](notes/parallel-ownership.md),
 [the private-resource extension](notes/private-ownership.md), and
 [the soundness status](notes/soundness-status.md) for exact claims and limits.
@@ -105,6 +110,14 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/PrivateCalculus.v` | Bounded sound calculus and derived whole-critical-section rule | Phase-indexed proof rules |
 | `theories/PrivateExamples.v` | Two-cell all-execution restoration and private load, concrete trace, rejected aliasing | Private resource preservation and accessibility |
 | `theories/SpatialExchange.v` | Constructive spatial associativity and exchange of closed ownership views | Resource rearrangement for concurrency |
+| `theories/PrivateFraming.v` | General semantic spatial frame rule at closed entry, real component flushing and register agreement | Checked spatial framing for private validity |
+| `theories/SpatialFramingExamples.v` | Critical section and private load with an additional pending-write frame | All-execution results and a 14-step trace |
+| `theories/TemporalFrameCounterexample.v` | Full local completeness invalidates the general semantic temporal frame rule | Lost-marking obstruction, including the usual variable condition |
+| `theories/TemporalSafety.v` | Marked resources, temporal-prefix safety, general temporal frame rule, and adequacy | Separate prototype; not yet integrated with ownership |
+| `theories/TemporalFence.v` | Fence introduces guarded completeness; arbitrary past temporal framing | Checked fence rule without requiring initially drained history |
+| `theories/TemporalFramingExamples.v` | Rejected spurious barrier, pending-write fence example, all-execution safety/post and concrete trace | Nonvacuity of the marked prototype |
+| `theories/TemporalTransfer.v` | Mark-preserving invariant extraction and enabled unlock behind unchanged temporal history | Transfer lemma for history outside the ownership region |
+| `theories/TemporalOwnershipObstruction.v` | Restored-invariant release fails with a spatial pool outside temporal history; alternative arrangement recomposes | Checked integration obstruction and positive repair witness |
 | `theories/VariableSupport.v` | Bounds on assertion variables, invariant freshness, and static thread interfaces | Existing variable-interference condition supplies compatibility |
 | `theories/ThreadProgress.v` | Residual derivations with variable bounds, relevant-register agreement, and waiting-thread steps | Thread obligations for the parallel rule |
 | `theories/SharedViews.v` | One shared ownership decision, symmetric views, flushing and step preservation | Concurrent owner/non-owner agreement |
@@ -250,6 +263,16 @@ distinguishes this interpretation from both earlier models.
   restoration of the shared cell and preservation/readback of a separate
   private cell for every terminating run. `private_alias_rejected` excludes
   duplicate shared/private ownership of one cell.
+- `private_spatial_frame_valid` proves general semantic spatial framing with
+  closed entry, arbitrary final phase and frame assertion, and the usual
+  variable condition. A pending-write example preserves the frame through a
+  critical section and private load.
+- `prefix_temporal_frame_valid` proves temporal framing in a separate semantics
+  retaining local completeness. Fence and operational adequacy are checked.
+  Two counterexamples isolate lost completeness and incompatible placement of
+  shared ownership. `temporal_history_release_transfer` checks the alternative
+  release decomposition with history outside the ownership region. These
+  results are not yet a combined spatial/temporal/parallel calculus.
 
 The earlier message-passing examples in `Examples.v` check syntax and variable
 side conditions. Their general operational correctness remains open. The
@@ -360,13 +383,16 @@ spatial-frame argument under that additional, operationally justified
 hypothesis. The region variant permits transfers inside a larger region,
 such as the combined invariant and private state.
 
-This does **not** yet establish the full spatial frame rule. The original
-`safe` predicate is unchanged. The separate `repaired_safe` predicate now
+That recombination lemma alone does **not** establish a frame rule for the original
+`safe` predicate, which is unchanged. The separate `repaired_safe` predicate now
 requires post-step private and shared domains to remain within their prior
 combined region. `owned_spatial_recombination` connects those witnesses to
 the needed spatial result, and the proved primitive fragment supplies them.
 Other inference rules must still establish compatible witnesses and recursive
-safety. See [notes/frame-decomposition.md](notes/frame-decomposition.md).
+safety. The later `private_spatial_frame_valid` completes semantic spatial
+framing for `private_valid` at closed entry. See
+[notes/frame-decomposition.md](notes/frame-decomposition.md) and
+[the subsequent temporal work](notes/framing-status.md).
 
 ## Safety and candidate algebra repairs
 
@@ -410,19 +436,22 @@ See [the precise rule comparison and release problem](notes/persistent-semantics
 
 ## Remaining proof work
 
-1. Extend the two-thread parallel rule to nested parallel derivations and
+1. Integrate temporal framing with ownership transfer using generalized
+   completeness and history outside the shared/private region. Prove flush
+   preservation, acquire/release, both frame rules, and adequacy together;
+   then port the critical-section and parallel examples. The new transfer
+   lemma is a starting point, not this combined theorem. See
+   [the checked obstructions and exact next steps](notes/framing-status.md).
+2. Extend the two-thread parallel rule to nested parallel derivations and
    additional threads. It now permits private loads after release under the
    existing variable-interference condition, with checked preservation of
    intermediate assertions and both final register results.
    See [its exact scope](notes/parallel-ownership.md).
-2. Implement capture-avoiding assertion substitution and its semantic lemma.
-3. Generalize constant-cell load/store to expression and framed forms, and
+3. Implement capture-avoiding assertion substitution and its semantic lemma.
+4. Generalize constant-cell load/store to expression and framed forms, and
    check their freshness conditions and shared-invariant transfers. Integrate
    arithmetic assignments into the private calculus. Extend
    the checked critical-section example to multiple protected cells and private state.
-4. Complete the spatial and temporal frame rules: recombination is checked,
-   but recursive safety, assertion preservation, and the required rearrangement
-   laws remain to be established. No normalization from printed safety is claimed.
 5. Establish the full frame, concurrency, and invariant rules, then complete
    soundness by induction on derivations and the message-passing example.
 

@@ -4,6 +4,13 @@ The target is Lemma 21 (pp. 174-176), a step toward Theorem 1. The immediate
 problem is the use of Conjecture 1 to turn a spatiotemporal post-step
 decomposition into a spatial one.
 
+**Current status:** `private_spatial_frame_valid` now proves the semantic
+spatial frame rule for the later private ownership model at closed entry.
+The arguments below explain its ownership-domain foundation and why the
+printed predicate alone is insufficient. Subsequent temporal counterexamples,
+the marked-resource frame theorem, and an alternative invariant-transfer
+lemma are documented in [framing-status.md](framing-status.md).
+
 ## Checked obstruction
 
 `printed_conjecture1_false` formalizes the conjecture and its refutation.
@@ -91,9 +98,11 @@ bridge from the new witness condition to the replacement lemma.
 Actual silent steps construct these witnesses in `repaired_environment_flush`.
 The corrected assignment rule and the skip/sequence/consequence fragment
 supply them and have full validity proofs; adequacy is reproved for the revised
-predicate. Lock, invariant, concurrency, and frame rules still need proofs
-that maintain the ownership condition, assertion truth, and recursive safety.
-The spatial frame inference rule is therefore still open.
+predicate. This earlier `repaired_safe` fragment does not itself supply the
+general spatial frame rule. The later private ownership model supplies lock
+transfer and recursive safety, and `PrivateFraming.v` completes its semantic
+spatial frame rule with closed entry. No normalization theorem from printed
+safety is claimed.
 
 `OrderedSeparation.v` now proves one-step and finite flushing decomposition
 for a candidate separator using ordered buffer overriding. The transcription
@@ -104,7 +113,8 @@ temporal and spatiotemporal associativity on valid generalized resources, and
 preserve the stronger guard under actual component flushing.
 `GeneralizedFlushing.v` now handles the completeness sets and valid resource
 witnesses. Full assertion flushing closure is proved in the future-aware
-interpretation, and the remaining rearrangement/frame laws are still open.
-The new release counterexample makes shared/private transfers an explicit
-next design obligation; see [persistent-semantics.md](persistent-semantics.md).
+interpretation. The later temporal frame theorem retains completeness instead
+of promoting each component to full. Combining it with shared/private transfer
+still requires a different placement of temporal history; see
+[framing-status.md](framing-status.md).
 None of these laws is postulated as an axiom to make the replacement lemma compile.

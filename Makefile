@@ -5,7 +5,7 @@ ROCQ ?= rocq
 all: RocqMakefile
 	$(MAKE) -f RocqMakefile all
 
-RocqMakefile: _CoqProject
+RocqMakefile: _CoqProject Makefile
 	$(ROCQ) makefile --rocq-package weak-memory-local-reasoning -f _CoqProject -o RocqMakefile
 
 check: all

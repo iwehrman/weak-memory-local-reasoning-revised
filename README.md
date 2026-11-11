@@ -125,6 +125,11 @@ Ian Anthony Wehrman, *Weak-Memory Local Reasoning*, The University of Texas
 at Austin, December 2012. The inspected PDF contains 200 pages, including
 front matter. [Author-hosted dissertation](https://wehrman.org/pub/dissertation.pdf)
 
+The original LaTeX repository also contains the expression and concurrent
+assertion grammars used here. The inspected `dissertation.tex` blob is
+`ac4c24370dc22b3ca0892294206c2c6ac138d993`.
+[Original LaTeX source](https://github.com/iwehrman/Weak-Memory-Local-Reasoning/blob/master/dissertation.tex)
+
 SHA-256 of the inspected PDF, retrieved November 10, 2026
 
 ```text

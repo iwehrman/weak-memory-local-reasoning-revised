@@ -24,7 +24,12 @@ safety predicate with operational adequacy. A future-aware interpretation of
 wands now has flushing closure for the full assertion grammar. A bounded
 calculus including base load/store, fence, acquisition, and a restricted
 release rule has checked soundness. **Full corrected soundness remains open.**
-The arbitrary-invariant unlock contract has a checked counterexample. See
+The arbitrary-invariant unlock contract has a checked counterexample. A separate
+ownership protocol now proves general invariant transfer at acquire/release,
+soundness of a small calculus, and a heap-restoring critical section for all
+executions. It keeps assertion syntax and interpretation unchanged, but uses
+open/closed judgment indices and spatial external frames; general private
+payloads and concurrency are still open. See [the ownership protocol](notes/ownership-protocol.md) and
 [the soundness status](notes/soundness-status.md) for exact claims and limits.
 
 ## Build and check
@@ -82,6 +87,11 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/PersistentRules.v` | General invariant closure in primitive proofs, structural rules, and all three wand adjunctions | Corrected rule ingredients |
 | `theories/HeapRules.v` | Full validity of constant-cell load/store rules with arbitrary invariants | Checked base forms of heap axioms |
 | `theories/LockRules.v` | Fence and acquisition for arbitrary invariants; release with an explicit pure-invariant precondition | Checked lock rules and restricted release repair |
+| `theories/OwnershipProtocol.v` | Open/closed ownership safety with spatial external frames and flushing preservation | Separate repair of protected-resource ownership |
+| `theories/OwnershipRules.v` | Arbitrary-invariant acquisition/release, sequencing, and operational adequacy | Checked transfer protocol without new assertions |
+| `theories/OwnershipHeap.v` | Owned cell stores, fences, and release using its implicit buffer drain | Heap operations in the ownership protocol |
+| `theories/OwnershipCalculus.v` | Phase-indexed derivations and their soundness | Bounded ownership calculus |
+| `theories/OwnershipExamples.v` | All-execution heap restoration, concrete buffered traces, rejected unrestored release | Two-processor protocol checks |
 | `theories/UnlockCounterexample.v` | Two-processor failure of arbitrary-invariant unlock | Release-restoration obstruction |
 | `theories/PersistentCalculus.v` | Bounded derivation system and checked soundness | Partial corrected version of Theorem 1 |
 | `theories/PersistentExamples.v` | Store postcondition through flushing, wand repair, and derived lock round trip | Concrete checks of the current semantics and rules |
@@ -209,6 +219,12 @@ distinguishes this interpretation from both earlier models.
 - `arbitrary_invariant_unlock_invalid` shows why release needs a restoration
   obligation. A checked lock/unlock round trip and store postcondition after
   flushing exercise the positive rules. See the current repair notes.
+- `ownership_calculus_sound` proves the separate ownership protocol's bounded
+  calculus. `restore_program_all_terminating_runs` restores a heap invariant
+  temporarily violated inside the critical section, for every terminating
+  execution and admissible spatial frame. `unrestored_release_invalid`
+  rejects release with a wrong protected value. No assertion constructor or
+  interpretation changes were needed; the specification has phase indices.
 
 The earlier message-passing examples in `Examples.v` check syntax and variable
 side conditions. Their general operational correctness remains open. The
@@ -369,14 +385,14 @@ See [the precise rule comparison and release problem](notes/persistent-semantics
 
 ## Remaining proof work
 
-1. Repair protected-memory ownership and invariant restoration at release.
-   The old arbitrary-invariant unlock rule fails; a pure-invariant replacement
-   is checked. Full assertion flushing closure is now proved under the
-   explicit future-aware wand semantics.
+1. Extend the checked ownership protocol to carry private resources through
+   acquisition/release and support concurrent owner/non-owner views. General
+   invariant transfer and a heap-restoring critical section now check in the
+   bounded spatial-frame model. See [its exact scope](notes/ownership-protocol.md).
 2. Implement capture-avoiding assertion substitution and its semantic lemma.
 3. Generalize constant-cell load/store to expression and framed forms, and
-   check their freshness conditions and shared-invariant transfers. Prove
-   complete critical-section examples before treating the lock design as settled.
+   check their freshness conditions and shared-invariant transfers. Extend
+   the checked critical-section example to multiple protected cells and private state.
 4. Complete the spatial and temporal frame rules: recombination is checked,
    but recursive safety, assertion preservation, and the required rearrangement
    laws remain to be established. No normalization from printed safety is claimed.

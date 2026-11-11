@@ -7,6 +7,7 @@ From WMLR Require Import BufferSelections RepairedSeparation RepairedFlushing
 From WMLR Require Import GeneralizedFlushing AssertionFlushing PersistentAssertions
   FlushingCounterexample PersistentRules HeapRules LockRules UnlockCounterexample
   PersistentCalculus PersistentExamples.
+From WMLR Require Import OwnershipProtocol OwnershipRules OwnershipHeap OwnershipCalculus OwnershipExamples.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 Print Assumptions eval_expr_agrees.
@@ -157,3 +158,25 @@ Print Assumptions persistent_wand_rejects_unstable_model.
 Print Assumptions store_post_survives_flush.
 Print Assumptions lock_roundtrip_trace.
 Print Assumptions lock_roundtrip_no_abort.
+
+Print Assumptions protocol_environment_flush.
+Print Assumptions acquire_exposes_invariant.
+Print Assumptions release_returns_invariant.
+Print Assumptions protocol_acquire_valid.
+Print Assumptions protocol_release_valid.
+Print Assumptions protocol_sequence_valid.
+Print Assumptions protocol_execution_no_abort.
+Print Assumptions protocol_execution_closed_post.
+Print Assumptions protocol_store_cell_valid.
+Print Assumptions buffered_cell_drained.
+Print Assumptions protocol_fence_cell_valid.
+Print Assumptions protocol_release_buffered_cell_valid.
+Print Assumptions ownership_calculus_sound.
+Print Assumptions restore_program_derivable.
+Print Assumptions restore_using_unlock_fence_derivable.
+Print Assumptions restore_program_no_abort.
+Print Assumptions restore_program_all_terminating_runs.
+Print Assumptions restore_program_trace.
+Print Assumptions intermediate_invariant_broken.
+Print Assumptions pending_restore_then_unlock.
+Print Assumptions unrestored_release_invalid.

@@ -26,6 +26,10 @@ theories/RepairedRules.v
 theories/PersistentRules.v
 theories/HeapRules.v
 theories/LockRules.v
+theories/OwnershipProtocol.v
+theories/OwnershipRules.v
+theories/OwnershipHeap.v
+theories/OwnershipCalculus.v
 theories/PersistentCalculus.v
 theories/SeparationExamples.v
 theories/FlushingCounterexample.v
@@ -33,6 +37,7 @@ theories/SafetyExamples.v
 theories/UnlockCounterexample.v
 theories/RepairedExamples.v
 theories/PersistentExamples.v
+theories/OwnershipExamples.v
 theories/Specifications.v
 theories/Examples.v
 theories/Audit.v

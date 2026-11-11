@@ -195,8 +195,12 @@ preserves wand-free meanings, and satisfies all three wand adjunctions.
 General release is a separate obstruction. Safety permits a false invariant
 while locked, but the printed unlock contract does not restore it. A concrete
 two-processor instance is invalid. The proved release rule requires the truth
-of a pure invariant in the precondition; protected heap invariants still need
-an explicit ownership/transfer design.
+of a pure invariant in the precondition. A separate ownership protocol now
+proves acquisition/release for arbitrary assertions and a heap-restoring
+critical-section example, with spatial external frames and no separate private
+payload at the closed boundary. Its assertion syntax and interpretation are
+unchanged. This is a checked bounded design, not the full general invariant
+rule. See [ownership-protocol.md](ownership-protocol.md).
 
 Capture-avoiding assertion substitution, general expression/framed heap
 axioms, choice/loop, parallel, invariant, and frame rules remain open.

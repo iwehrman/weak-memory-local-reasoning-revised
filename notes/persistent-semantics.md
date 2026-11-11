@@ -119,3 +119,12 @@ and prove the corresponding transfers. A protocol in which protected state
 is either shared with `J` established or owned by the lock holder is a
 candidate. Its environment definition, contracts, and relation to the
 dissertation's invariant rule remain to be worked out and checked.
+
+A subsequent, separate [ownership protocol](ownership-protocol.md) now checks
+acquisition and release for arbitrary assertions, without extending assertion
+syntax or changing `persistent_models`. It proves a bounded calculus and a
+heap-restoring critical section for all executions, using spatial external
+frames and explicit open/closed judgment indices. General private payloads,
+temporal frames, and the full invariant/concurrency rules remain open. The
+counterexample and restricted release result above still describe
+`persistent_valid`; that older validity definition has not been changed.

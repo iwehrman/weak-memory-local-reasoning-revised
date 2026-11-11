@@ -8,7 +8,8 @@ adequacy, and derivation soundness for a bounded calculus. The latest
 future-aware wand interpretation has full assertion flushing closure and
 base heap/lock rules, with a restricted release rule. The subsequent ownership
 protocol proves protected-memory transfer with private resources, and a first
-parallel theorem composes two register-preserving threads. General frame and
+parallel theorem composes two threads under explicit variable-interference
+conditions, including private loads into registers. General frame and
 concurrency rules remain open. See [the semantic changes](persistent-semantics.md)
 and [the parallel theorem's exact premises](parallel-ownership.md).
 
@@ -213,7 +214,9 @@ after release. Spatial external frames remain a restriction. See
 [private-ownership.md](private-ownership.md).
 
 `private_parallel_rule` now composes two closed-to-closed derivations for
-distinct processors that do not modify registers. A single shared ownership
+distinct processors satisfying the existing mutual variable-interference
+condition. The earlier blanket register-preservation premise is removed;
+its theorem remains a corollary. A single shared ownership
 decision gives both processors consistent views through acquisition, flushing,
 and release. The proof also retains a terminated thread's private postcondition
 as a frame after the operational semantics erases the parallel node. It covers
@@ -221,8 +224,12 @@ all ordinary executions of the pair, proving no abort and, on termination,
 one restored invariant and the spatial conjunction of both private posts.
 The three-cell example has competing writers, checked traces in both orders,
 and a reachable state with a temporarily violated invariant and a blocked
-contender. The full concurrency and frame rules remain open; in particular,
-the register-preservation restriction must be relaxed. See
+contender. A further example performs post-release private loads into distinct
+variables and proves both register results for every terminating execution.
+Variable-support bounds protect intermediate assertions and a finished
+thread's postcondition. A checked negative example uses the same destination
+twice and loses the first result, demonstrating the interference condition's
+role. The full concurrency and frame rules remain open. See
 [parallel-ownership.md](parallel-ownership.md).
 
 Capture-avoiding assertion substitution, general expression/framed heap

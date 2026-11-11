@@ -35,6 +35,7 @@ theories/PrivateRules.v
 theories/PrivateHeap.v
 theories/PrivateCalculus.v
 theories/SpatialExchange.v
+theories/VariableSupport.v
 theories/ThreadProgress.v
 theories/SharedViews.v
 theories/ParallelOwnership.v
@@ -48,6 +49,7 @@ theories/PersistentExamples.v
 theories/OwnershipExamples.v
 theories/PrivateExamples.v
 theories/ParallelExamples.v
+theories/ParallelLoads.v
 theories/Specifications.v
 theories/Examples.v
 theories/Audit.v

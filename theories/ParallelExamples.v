@@ -85,7 +85,7 @@ Theorem competing_restorers_no_abort s n last t final :
   execution two_processors n competing_restorers s parallel_initial last t final ->
   ~ abort two_processors last (State t final).
 Proof.
-  intros Hrun. eapply (proj1 (private_parallel_rule two_processors 1%positive 2%positive
+  intros Hrun. eapply (proj1 (private_parallel_memory_only_rule two_processors 1%positive 2%positive
     protected_seven retained_assertion retained_assertion right_assertion right_assertion
     _ _ _ _ _ _ _ ltac:(discriminate) (restore_for_memory_only _ _) (restore_for_memory_only _ _)
     (restore_for_derivable _ _ _ _) (restore_for_derivable _ _ _ _)
@@ -98,7 +98,7 @@ Theorem competing_restorers_all_terminating_runs s n last t final :
     shared_heap final 2%positive = Some 11%Z /\ shared_heap final 3%positive = Some 13%Z.
 Proof.
   intros Hrun Hlast.
-  destruct (proj2 (private_parallel_rule two_processors 1%positive 2%positive
+  destruct (proj2 (private_parallel_memory_only_rule two_processors 1%positive 2%positive
     protected_seven retained_assertion retained_assertion right_assertion right_assertion
     _ _ _ _ _ _ _ ltac:(discriminate) (restore_for_memory_only _ _) (restore_for_memory_only _ _)
     (restore_for_derivable _ _ _ _) (restore_for_derivable _ _ _ _)

@@ -1,7 +1,8 @@
 # Two threads sharing one protected invariant
 
-`private_parallel_rule` proves a first concurrent composition rule for the
-private-resource calculus. It covers every finite execution of the ordinary
+`private_parallel_rule` proves concurrent composition for two threads in the
+private-resource calculus, including register updates from private loads.
+It covers every finite execution of the ordinary
 `Concurrent.Parallel` command, including all permitted flush schedules. It
 establishes absence of aborts and, on termination, a restored shared invariant
 and the spatial combination of the two private postconditions.
@@ -17,16 +18,19 @@ The schematic rule is:
 ```
 J |- {Closed; P} c_i {Closed; Q}
 J |- {Closed; R} d_j {Closed; S}
-i != j       modifies(c_i) = modifies(d_j) = empty
+i != j
+modifies(c_i) disjoint from FV(R, d_j, S)
+modifies(d_j) disjoint from FV(P, c_i, Q)
 ----------------------------------------------------
 {J * P * R} c_i || d_j {J * (Q * S)}
 ```
 
 The two premises are derivations in `private_derivation`, not arbitrary
 assumed Hoare-validity facts. That bounded calculus contains skip, sequencing,
-acquisition/release, and the owned constant-cell store/fence rules. It also
-contains private loads, but loads modify a register and thus do not satisfy
-this first parallel rule's `memory_only` premise.
+acquisition/release, the owned constant-cell store/fence rules, and private
+loads into registers. `parallel_variable_condition`, already defined in
+`Specifications.v`, supplies exactly the displayed mutual condition. The
+earlier register-free theorem follows as `private_parallel_memory_only_rule`.
 
 The initial whole memory must have the well-formed, unlocked decomposition
 required by `private_environment`: one shared pool satisfying `J`, the left
@@ -35,12 +39,35 @@ component satisfying `R`. Each private assertion is interpreted with the
 usual full processor-completeness marks. There are not two copies of `J`.
 `J`, `P`, `Q`, `R`, and `S` can use the full existing assertion grammar.
 
-The register restriction prevents either thread from changing variables in
-the invariant or the other thread's assertions. Replacing it with conventional
-free-variable interference conditions requires additional proofs; the
-present result does not silently assume those proofs. The owner identifiers
-are fixed and distinct. The processor domain itself can be arbitrary and is
-not required to be finite.
+Each thread may modify variables that the other's specification and code do
+not depend on. The private load rule already requires its destination to be
+absent from `FV(J)`. `private_derivation_modifies_invariant` proves that every
+derivation in this calculus respects that requirement; it is not a further
+unproved premise of the parallel theorem. The owner identifiers are fixed
+and distinct. The processor domain itself can be arbitrary and is not
+required to be finite.
+
+## Register interference through intermediate assertions
+
+`private_derivation_support` proves that the output assertion's free variables
+are contained in those of the invariant, input assertion, and command. The
+strengthened `private_derivation_step` constructs a residual derivation whose
+new input assertion obeys the same bound. This accounts for intermediate
+assertions hidden by sequencing, not just the initial and final assertions.
+
+`thread_interface` records a fixed variable set and write set for each thread.
+`specification_interface` computes them from the ordinary specification:
+`FV(J) ++ FV(P, c, Q)` and `modifies(c)`. They are proof bookkeeping; clients
+do not supply extra assertion syntax or per-step interference proofs.
+`specification_interfaces_compatible` derives the required compatibility from
+the existing mutual variable condition and the invariant-freshness theorem.
+
+At each step, the residual command's modified variables stay within its
+original write set. `thread_step_agrees` therefore establishes agreement on
+the other thread's variable set, and `thread_spec_transport` preserves its
+current assertion using `persistent_full_agrees` plus flushing closure.
+Register equality outside that set is unnecessary. The same bound protects
+a finished thread's postcondition while its sibling continues to execute.
 
 ## How the ownership views agree
 
@@ -61,8 +88,8 @@ or perform a load. `waiting_derivation_step` nevertheless allows structural
 steps and ordinary global flushes; the proof does not assume that a waiting
 thread takes no steps. The owner preserves the waiting thread's private
 assertion because its external frame evolves by actual flushes and every
-assertion is flushing closed. Pointwise register preservation supplies the
-remaining assertion-preservation obligation.
+assertion is flushing closed. Agreement on the waiting thread's relevant
+variables supplies the remaining assertion-preservation obligation.
 
 `joint_left_step` and `joint_right_step` maintain the shared ownership
 decision after every step. When one side reaches skip, the machine can erase
@@ -102,16 +129,40 @@ separate five-step prefix reaches a shared value of 9 with processor 2 blocked;
 that state. Thus the universal theorem is instantiated with real ownership
 handoff and a temporarily broken invariant, not just empty lock round trips.
 
+## Post-release loads and the need for the side condition
+
+`ParallelLoads.v` appends `x := [2]` to the left critical section and
+`y := [3]` to the right critical section, using different program variables
+(identifiers 0 and 1). Both commands modify registers and thus fail the old
+`memory_only` requirement. They satisfy the mutual variable condition.
+
+`competing_readers_no_abort` proves safety for all execution prefixes.
+`competing_readers_all_terminating_runs` proves, for every terminating run,
+that the lock is free, all three cells remain 7, 11, and 13, and the registers
+hold `x = 11` and `y = 13`. Two concrete 27-step traces cover opposite orders:
+the first thread has finished before the other writes its result. This checks
+preservation of the retired thread's postcondition as well as active views.
+
+`same_destination_rejected` proves that choosing `x` for both destinations
+violates the interference condition. `same_destination_loses_left_result`
+constructs a successful 27-step run ending with `x = 13`, contradicting the
+left thread's earlier `x = 11`. Thus unrestricted register interference cannot
+be admitted by simply dropping the condition.
+
 All principal results are imported by `Audit.v`. They use no admitted lemmas,
 declared axioms, classical choice, extensionality, or processor-finiteness
 assumption.
 
 ## Remaining work
 
-The next concurrency step is to permit register updates under explicit
-interference conditions, including private loads after release. Nested
-parallel derivations, arbitrary numbers of threads, choice and loops, general
-frame rules, temporal external frames, and the full invariant rule remain
+Nested parallel derivations, arbitrary numbers of threads, choice and loops,
+general frame rules, temporal external frames, and the full invariant rule remain
 outside this theorem. The current pair consumes the whole initial spatial
 decomposition; a further arbitrary external frame needs its own composition
 proof. The generic heap rules and complete corrected Theorem 1 remain open.
+
+Ordinary arithmetic assignments and general expression-based loads/stores
+still need integration into the private calculus. Removing `memory_only`
+does not add those derivation constructors. Extending the calculus also
+requires extending its variable-support proof; general consequence rules
+with additional intermediate variables need particular care.

@@ -9,7 +9,7 @@ From WMLR Require Import GeneralizedFlushing AssertionFlushing PersistentAsserti
   PersistentCalculus PersistentExamples.
 From WMLR Require Import OwnershipProtocol OwnershipRules OwnershipHeap OwnershipCalculus OwnershipExamples.
 From WMLR Require Import PrivateOwnership PrivateRules PrivateHeap PrivateCalculus PrivateExamples.
-From WMLR Require Import SpatialExchange ThreadProgress SharedViews ParallelOwnership ParallelExamples.
+From WMLR Require Import SpatialExchange VariableSupport ThreadProgress SharedViews ParallelOwnership ParallelExamples ParallelLoads.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 Print Assumptions eval_expr_agrees.
@@ -229,6 +229,7 @@ Print Assumptions parallel_certificate_step.
 Print Assumptions parallel_certificate_execution.
 Print Assumptions parallel_certificate_post.
 Print Assumptions private_parallel_rule.
+Print Assumptions private_parallel_memory_only_rule.
 Print Assumptions parallel_initial_environment.
 Print Assumptions restore_for_derivable.
 Print Assumptions competing_restorers_no_abort.
@@ -239,3 +240,19 @@ Print Assumptions competing_restorers_right_first.
 Print Assumptions competing_restorers_contended.
 Print Assumptions contended_value_and_blocking.
 Print Assumptions contended_waiter_cannot_acquire.
+
+Print Assumptions private_derivation_support.
+Print Assumptions private_derivation_modifies_invariant.
+Print Assumptions specification_interfaces_compatible.
+Print Assumptions thread_step_agrees.
+Print Assumptions thread_spec_initial.
+Print Assumptions restore_and_load_derivable.
+Print Assumptions competing_readers_variable_condition.
+Print Assumptions competing_readers_modify_registers.
+Print Assumptions competing_readers_no_abort.
+Print Assumptions competing_readers_all_terminating_runs.
+Print Assumptions restore_and_load_trace.
+Print Assumptions competing_readers_left_first.
+Print Assumptions competing_readers_right_first.
+Print Assumptions same_destination_rejected.
+Print Assumptions same_destination_loses_left_result.

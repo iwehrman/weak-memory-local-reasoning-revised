@@ -65,9 +65,12 @@ drop permanent protected/private assertion slots and retirement, and test
 explicit ownership rules with restricted temporal framing. This target is
 not yet proved. Checkpoint 2 now proves that invariants with heap-guarded pure
 assertions survive re-marking to the acquiring processor alone, have empty
-buffers, and cannot absorb pending writes at release. The frame-shape
-checkpoint remains before further safety development.
-See [the invariant-fragment checkpoint](review/checkpoint-2.md),
+buffers, and cannot absorb pending writes at release. Checkpoint 3 proves
+the temporal-only resource lemma but refutes the proposed generalization
+to external `#`, including an acquisition case. A replacement residual lemma
+is needed before further safety development.
+See [the frame-shape checkpoint](review/checkpoint-3.md),
+[the invariant-fragment checkpoint](review/checkpoint-2.md),
 [the response and development checkpoints](review/lead-response.md),
 [the independent review](review/independent-review.md),
 [retirement: earlier experiment and its limits](notes/retired-ownership.md),
@@ -167,6 +170,8 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/TransferredCells.v` | Owner-specific flushed-cell abbreviation, shape and private-mark construction | Existing assertion grammar with a weaker synchronization contract |
 | `theories/InvariantFragment.v` | Guarded invariant fragment, arbitrary nonempty re-marking, empty-buffer shape, and retained-write release obligation | Checkpoint 2; assertion results without a new safety model |
 | `theories/InvariantFragmentExamples.v` | Bare-pure release counterexample, nonempty cell with a pending foreign write, rejected foreign-barrier import, and container fragment | Concrete checkpoint-2 assertion checks |
+| `theories/FrameShape.v` | Temporal-only residual splitting and reassociation | Checkpoint-3 baseline; resource theorem without a new safety predicate |
+| `theories/FrameShapeCounterexample.v` | Failed `#` residual reconstruction under a footprint bound, for assume and acquisition | Checked auxiliary-lemma counterexamples, not proof-rule counterexamples |
 | `theories/OwnershipTransfer.v` | Protected-to-private withdrawal at fence/unlock; disjoint-history donation reassembly | Checked transfer rules and a restricted boundary lemma |
 | `theories/OwnershipTransferLimits.v` | Scoped cell versus ordinary points-to; general retained-history donation obstruction | Concrete invalid donation and positive disjoint-history instance |
 | `theories/TransferExamples.v` | Known-present withdrawal, release, private load and retained foreign write | All-run proofs, concrete traces, rejected all-processor transfer postcondition |
@@ -502,8 +507,10 @@ See [the precise rule comparison and release problem](notes/persistent-semantics
 
 1. Continue the [independent-review checkpoints](review/lead-response.md).
    The review response and [guarded invariant results](review/checkpoint-2.md)
-   are complete. State the frame-shape lemma precisely, search small buffers
-   for a counterexample, and report the outcome before a general proof.
+   are complete. [Checkpoint 3](review/checkpoint-3.md) proves the temporal
+   baseline but refutes the proposed `#` residual lemma. Agree and test a
+   replacement that prevents reassignment of buffered occurrences before
+   proceeding to the safety proofs.
    The candidate replaces INV with explicit
    ownership rules, preserves `emp`, and initially restricts FRAME-TM to
    unlock-free commands. Do not extend the retirement interpretation or add

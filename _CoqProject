@@ -13,6 +13,7 @@ theories/OperationalSemantics.v
 theories/FrameDecomposition.v
 theories/RepairedFlushing.v
 theories/GeneralizedFlushing.v
+theories/FrameShape.v
 theories/ExecutionExamples.v
 theories/Assertions.v
 theories/AssertionSemantics.v
@@ -75,6 +76,7 @@ theories/SeparatedExamples.v
 theories/OwnershipTransferLimits.v
 theories/TransferExamples.v
 theories/InvariantFragmentExamples.v
+theories/FrameShapeCounterexample.v
 theories/RetiredHeaps.v
 theories/RetiredSafety.v
 theories/RetiredTransfer.v

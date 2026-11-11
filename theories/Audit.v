@@ -17,9 +17,15 @@ From WMLR Require Import RegionalResources RegionalSafety RegionalCalculus Regio
 From WMLR Require Import SeparatedSafety SeparatedRules SeparatedHeap SeparatedCalculus SeparatedExamples.
 From WMLR Require Import TransferredCells OwnershipTransfer OwnershipTransferLimits TransferExamples.
 From WMLR Require Import InvariantFragment InvariantFragmentExamples.
+From WMLR Require Import FrameShape FrameShapeCounterexample.
 From WMLR Require Import RetiredHeaps RetiredSafety RetiredTransfer RetiredRules RetiredExamples RetirementFlushing.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
+Print Assumptions temporal_frame_shape.
+Print Assumptions FrameShapeCounterexample.no_reconstruction.
+Print Assumptions FrameShapeCounterexample.overlap_frame_shape_counterexample.
+Print Assumptions FrameShapeCounterexample.overlap_acquire_frame_shape_counterexample.
+
 Print Assumptions writer_points_to_shape.
 Print Assumptions writer_points_to_from_shape.
 Print Assumptions invariant_fragment_shape.

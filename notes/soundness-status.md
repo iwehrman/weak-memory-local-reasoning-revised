@@ -9,8 +9,11 @@ the target design. The proposed rule-level replacement is not proved.
 Checkpoint 2 now proves acquisition re-marking and buffer-freeness for
 invariants with heap-guarded pure assertions, and proves that their release
 premise retains every pending write outside the donated invariant. The
-frame-shape checkpoint still precedes further safety development. See
-[checkpoint 2](../review/checkpoint-2.md), [the review](../review/independent-review.md)
+frame-shape checkpoint now proves the temporal-only resource lemma but
+refutes the proposed `#` reconstruction under a footprint bound, including
+acquisition. This refutes an auxiliary lemma, not design D's proof rules;
+the replacement residual argument remains open. See
+[checkpoint 3](../review/checkpoint-3.md), [checkpoint 2](../review/checkpoint-2.md), [the review](../review/independent-review.md)
 and [the response](../review/lead-response.md). The results below describe
 distinct earlier models, not one integrated calculus.
 

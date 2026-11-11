@@ -4,8 +4,11 @@ The revised full soundness theorem is **not proved**. The current development
 contains checked negative results about the printed claims and a separate
 repaired model. The repaired model has associative generalized-memory
 operations, actual flushing decomposition, ownership-aware safety, operational
-adequacy, and derivation soundness for a small pure assertion fragment. These
-results do not establish the memory, locking, parallel, or frame rules.
+adequacy, and derivation soundness for a bounded calculus. The latest
+future-aware wand interpretation has full assertion flushing closure and
+base heap/lock rules, with a restricted release rule. General frame, parallel,
+and protected-memory release rules remain open. See
+[the exact semantic changes and side conditions](persistent-semantics.md).
 
 ## The assignment axiom fails against full safety
 
@@ -42,7 +45,10 @@ The separate `repaired_pure_assignment_valid` now proves full validity in the
 repaired model when the invariant is pure and does not mention the assigned
 variable. It covers every safety index, admissible frame, and silent flush,
 using proved flushing closure of pure assertions. General spatial/temporal
-invariants still require their own flushing-closure theorem.
+invariants require their own flushing-closure theorem in that pointwise model.
+The newer `persistent_assignment_valid` uses the proved full closure theorem
+for future-aware assertions and permits an arbitrary invariant, with the same
+free-variable side condition and a pure postcondition.
 
 ## Lookup-only list overriding is not associative
 
@@ -179,15 +185,21 @@ terminating execution from that initial state, independently of flush scheduling
 
 ## What still prevents a full positive soundness claim
 
-The combined operations and a small calculus fragment are now checked, but
-full assertion flushing closure remains open, especially for temporal
-composition, generalized completeness changes, and separating implications.
-Capture-avoiding assertion substitution is also still needed.
+The pointwise temporal wand is not flushing closed: a two-processor example
+becomes false when flushing enables a composition with a barrier. The newer
+future-aware interpretation repairs this, proves closure for all formulas,
+preserves wand-free meanings, and satisfies all three wand adjunctions.
+`persistent_calculus_sound` now covers the base rules documented in
+[persistent-semantics.md](persistent-semantics.md).
 
-The remaining primitive, choice/loop, parallel, invariant, and frame rules must
-be stated and proved against the repaired semantics. The ownership condition
-is a requirement that each such proof must construct; it is not a proof that
-all printed specifications admit suitable witnesses. Further rearrangement
-laws may also be needed. See [frame-decomposition.md](frame-decomposition.md).
-The stronger compatibility guard's suitability for the intended weak-memory
-examples is not yet settled.
+General release is a separate obstruction. Safety permits a false invariant
+while locked, but the printed unlock contract does not restore it. A concrete
+two-processor instance is invalid. The proved release rule requires the truth
+of a pure invariant in the precondition; protected heap invariants still need
+an explicit ownership/transfer design.
+
+Capture-avoiding assertion substitution, general expression/framed heap
+axioms, choice/loop, parallel, invariant, and frame rules remain open.
+The ownership condition is a requirement that each proof must construct; it
+does not establish suitable witnesses for every printed specification.
+Further rearrangement laws may be needed. See [frame-decomposition.md](frame-decomposition.md).

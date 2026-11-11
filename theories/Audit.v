@@ -4,6 +4,9 @@ From WMLR Require Import BufferRelations Separation FrameDecomposition ConcreteA
 From WMLR Require Import OrderedBuffers OrderedSeparation StableCompatibility Safety SafetyExamples.
 From WMLR Require Import BufferSelections RepairedSeparation RepairedFlushing
   RepairedAssertions RepairedSafety RepairedRules RepairedExamples.
+From WMLR Require Import GeneralizedFlushing AssertionFlushing PersistentAssertions
+  FlushingCounterexample PersistentRules HeapRules LockRules UnlockCounterexample
+  PersistentCalculus PersistentExamples.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 Print Assumptions eval_expr_agrees.
@@ -119,3 +122,38 @@ Print Assumptions pure_fragment_sound.
 Print Assumptions repaired_points_to_cell.
 Print Assumptions register_program_flush_trace.
 Print Assumptions register_program_all_terminating_runs.
+
+Print Assumptions pointwise_temporal_wand_not_flush_closed.
+Print Assumptions generalized_future_well_formed.
+Print Assumptions generalized_spatial_future_split.
+Print Assumptions generalized_temporal_future_split.
+Print Assumptions resource_spatial_future_split.
+Print Assumptions resource_temporal_future_split.
+Print Assumptions empty_atom_future.
+Print Assumptions barrier_atom_future.
+Print Assumptions lock_atom_future.
+Print Assumptions write_atom_future.
+Print Assumptions repaired_future_model_laws.
+Print Assumptions persistent_assertion_flushing_closed.
+Print Assumptions persistent_full_flushing_closed.
+Print Assumptions persistent_wand_free_unchanged.
+Print Assumptions future_satisfies_agrees.
+Print Assumptions persistent_spatial_wand_adjoint.
+Print Assumptions persistent_temporal_wand_left_adjoint.
+Print Assumptions persistent_temporal_wand_right_adjoint.
+Print Assumptions persistent_skip_valid.
+Print Assumptions persistent_assignment_valid.
+Print Assumptions persistent_assume_valid.
+Print Assumptions persistent_assert_valid.
+Print Assumptions persistent_load_cell_valid.
+Print Assumptions persistent_store_cell_valid.
+Print Assumptions persistent_fence_valid.
+Print Assumptions persistent_lock_valid.
+Print Assumptions persistent_unlock_pure_valid.
+Print Assumptions arbitrary_invariant_unlock_invalid.
+Print Assumptions persistent_calculus_sound.
+Print Assumptions persistent_derivation_no_abort.
+Print Assumptions persistent_wand_rejects_unstable_model.
+Print Assumptions store_post_survives_flush.
+Print Assumptions lock_roundtrip_trace.
+Print Assumptions lock_roundtrip_no_abort.

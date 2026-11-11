@@ -101,6 +101,10 @@ remains unchanged. Two separate associativity obstructions and their candidate
 repairs are detailed in [soundness-status.md](soundness-status.md).
 `RepairedSeparation.v` and `RepairedFlushing.v` now combine the repairs, prove
 temporal and spatiotemporal associativity on valid generalized resources, and
-preserve the stronger guard under actual component flushing. Full assertion
-flushing closure and the remaining rearrangement laws are still obligations.
-None is postulated as an axiom to make the replacement lemma compile.
+preserve the stronger guard under actual component flushing.
+`GeneralizedFlushing.v` now handles the completeness sets and valid resource
+witnesses. Full assertion flushing closure is proved in the future-aware
+interpretation, and the remaining rearrangement/frame laws are still open.
+The new release counterexample makes shared/private transfers an explicit
+next design obligation; see [persistent-semantics.md](persistent-semantics.md).
+None of these laws is postulated as an axiom to make the replacement lemma compile.

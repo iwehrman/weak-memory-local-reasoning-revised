@@ -20,9 +20,11 @@ axiom against that full semantics, so **Theorem 1 cannot hold as printed**.
 There are also checked counterexamples to two claimed associativity properties.
 The combined repair now has generalized-memory associativity, flushing
 decomposition, a separate assertion interpretation, and an ownership-aware
-safety predicate with operational adequacy. A small corrected calculus for
-pure assertions, skip, assignment, sequencing, and consequence has a checked
-soundness theorem. **Full corrected soundness remains open.** See
+safety predicate with operational adequacy. A future-aware interpretation of
+wands now has flushing closure for the full assertion grammar. A bounded
+calculus including base load/store, fence, acquisition, and a restricted
+release rule has checked soundness. **Full corrected soundness remains open.**
+The arbitrary-invariant unlock contract has a checked counterexample. See
 [the soundness status](notes/soundness-status.md) for exact claims and limits.
 
 ## Build and check
@@ -73,6 +75,16 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/RepairedSafety.v` | Ownership-aware safety, flushing witnesses, full pure-assignment validity, operational adequacy, frame-recombination bridge | Explicit alternative to Section 4.5.2 |
 | `theories/RepairedRules.v` | Consequence, disjunction and sequencing; soundness of a pure assertion derivation fragment | Checked subset of a corrected calculus |
 | `theories/RepairedExamples.v` | Points-to witness, derived register program, nonempty initial environment and execution with an intervening flush | Nonvacuity and operational checks of the repair |
+| `theories/GeneralizedFlushing.v` | Indexed component flushing, completeness growth, decomposition on valid generalized resources | Definition 6 and flushing-closure proof obligations |
+| `theories/AssertionFlushing.v` | Flushing preservation for all atomic assertions | Proposition 9 ingredients |
+| `theories/FlushingCounterexample.v` | Two-processor failure of pointwise temporal-wand closure | Obstruction to Proposition 9 under pointwise wands |
+| `theories/PersistentAssertions.v` | Future-aware wands, full assertion flushing closure, free-variable theorem, equivalence for wand-free assertions | Explicit additional semantic repair |
+| `theories/PersistentRules.v` | General invariant closure in primitive proofs, structural rules, and all three wand adjunctions | Corrected rule ingredients |
+| `theories/HeapRules.v` | Full validity of constant-cell load/store rules with arbitrary invariants | Checked base forms of heap axioms |
+| `theories/LockRules.v` | Fence and acquisition for arbitrary invariants; release with an explicit pure-invariant precondition | Checked lock rules and restricted release repair |
+| `theories/UnlockCounterexample.v` | Two-processor failure of arbitrary-invariant unlock | Release-restoration obstruction |
+| `theories/PersistentCalculus.v` | Bounded derivation system and checked soundness | Partial corrected version of Theorem 1 |
+| `theories/PersistentExamples.v` | Store postcondition through flushing, wand repair, and derived lock round trip | Concrete checks of the current semantics and rules |
 | `theories/SafetyExamples.v` | Refutation of a printed assignment-axiom instance against full safety | Figure 4.7, p. 124 |
 | `theories/SeparationExamples.v` | Concrete assertion witnesses, completeness checks, and a checked refutation of Conjecture 1 | Sections 4.3-4.4 and p. 174 |
 | `theories/Specifications.v` | Specification records, variable side conditions, invariant-preservation lemma | §3.6, §4.5, Figure 4.8 |
@@ -85,6 +97,11 @@ assertion theorem quantifies over every such interpretation. `ConcreteAssertions
 instantiates it with the subtype of well-formed generalized multiprocessor
 memories, including for the resources quantified by separating implications.
 The interface assumes no algebraic laws.
+
+`PersistentAssertions` uses the same atoms and repaired composition relations,
+but makes each wand quantify over future resources. Its atomic and composition
+closure laws are proved. [Exact changes and side conditions](notes/persistent-semantics.md)
+distinguishes this interpretation from both earlier models.
 
 ## Proved results
 
@@ -179,6 +196,19 @@ The interface assumes no algebraic laws.
   nonempty initial environment to prove the result of every terminating
   execution of `x := 1; x := x + 1`; a checked run flushes a pending write
   between the assignments.
+- `persistent_assertion_flushing_closed` proves generalized flushing closure
+  for the whole assertion grammar under future-aware wands. The pointwise
+  temporal wand has a checked two-processor counterexample, and
+  `persistent_wand_free_unchanged` proves that wand-free formulas keep their
+  previous meaning. All three wand adjunctions are proved.
+- `persistent_calculus_sound` extends the checked calculus with arbitrary
+  invariants, assume/assert, base constant-cell load/store, fence, lock
+  acquisition, and release for a pure invariant explicitly asserted in the
+  precondition. General assertion substitution and framed heap axioms remain
+  open. `persistent_derivation_no_abort` connects derivations to execution.
+- `arbitrary_invariant_unlock_invalid` shows why release needs a restoration
+  obligation. A checked lock/unlock round trip and store postcondition after
+  flushing exercise the positive rules. See the current repair notes.
 
 The earlier message-passing examples in `Examples.v` check syntax and variable
 side conditions. Their general operational correctness remains open. The
@@ -326,18 +356,27 @@ The stronger guard excludes some old compositions and therefore restricts
 the environments quantified by safety. Relation inclusion does **not** imply
 that repaired validity entails printed validity. Operational adequacy has
 been reproved independently. Whether the stronger guard preserves the
-intended load/store/lock specifications remains an open expressiveness check.
+general framed load/store/lock specifications remains an open expressiveness
+check. Base heap operations, fence, and acquisition now check; unrestricted
+release fails because it does not establish the invariant on unlocking.
+
+The current additional repair uses `persistent_models` and `persistent_valid`.
+Only wand interpretation changes from the previous repaired model; ordinary
+machine steps and the ownership-aware safety predicate are reused. Full
+assertion closure and the bounded calculus soundness theorem are proved.
+Here `persistent` means preserved by generalized flushing, not duplicable.
+See [the precise rule comparison and release problem](notes/persistent-semantics.md).
 
 ## Remaining proof work
 
-1. Prove generalized flushing closure for the full repaired assertion
-   language, including temporal composition, completeness sets, and wands.
-   Pure assertion closure and memory flushing decomposition are already proved.
+1. Repair protected-memory ownership and invariant restoration at release.
+   The old arbitrary-invariant unlock rule fails; a pure-invariant replacement
+   is checked. Full assertion flushing closure is now proved under the
+   explicit future-aware wand semantics.
 2. Implement capture-avoiding assertion substitution and its semantic lemma.
-3. Extend the corrected calculus beyond the proved pure fragment. Check
-   load/store/fence/lock/unlock axioms, including variable freshness and
-   shared-invariant transfers. Test locked-update examples against the
-   stronger compatibility guard before treating it as a settled repair.
+3. Generalize constant-cell load/store to expression and framed forms, and
+   check their freshness conditions and shared-invariant transfers. Prove
+   complete critical-section examples before treating the lock design as settled.
 4. Complete the spatial and temporal frame rules: recombination is checked,
    but recursive safety, assertion preservation, and the required rearrangement
    laws remain to be established. No normalization from printed safety is claimed.

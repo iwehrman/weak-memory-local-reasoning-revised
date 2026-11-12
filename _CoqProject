@@ -24,6 +24,7 @@ theories/LockRepresentation.v
 theories/AssertionFlushing.v
 theories/RepairedAssertions.v
 theories/PersistentAssertions.v
+theories/AssertionSubstitution.v
 theories/Safety.v
 theories/RepairedSafety.v
 theories/RepairedRules.v
@@ -60,6 +61,10 @@ theories/OwnedRules.v
 theories/OwnedFraming.v
 theories/OwnedInterference.v
 theories/OwnedParallel.v
+theories/OwnedStructural.v
+theories/OwnedPrimitives.v
+theories/OwnedHeapResources.v
+theories/OwnedHeap.v
 theories/SeparatedHeap.v
 theories/OwnershipTransfer.v
 theories/SeparatedCalculus.v
@@ -91,6 +96,8 @@ theories/OwnedAcceptance.v
 theories/StrongTemporalCounterexample.v
 theories/OwnedFramingExamples.v
 theories/OwnedParallelExamples.v
+theories/OwnedRoutineExamples.v
+theories/OwnedHeapExamples.v
 theories/FrameShapeCounterexample.v
 theories/FixedFrameExamples.v
 theories/RetiredHeaps.v

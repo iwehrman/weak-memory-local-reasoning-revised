@@ -24,9 +24,81 @@ From WMLR Require Import ProgramSteps OwnedSafety OwnedAdequacy OwnedResources O
 From WMLR Require Import OwnedRules StrongTemporalCounterexample.
 From WMLR Require Import OwnedFraming OwnedFramingExamples.
 From WMLR Require Import OwnedInterference OwnedParallel OwnedParallelExamples.
+From WMLR Require Import AssertionSubstitution OwnedStructural OwnedPrimitives OwnedHeapResources OwnedHeap OwnedRoutineExamples OwnedHeapExamples.
 From WMLR Require Import RetiredHeaps RetiredSafety RetiredTransfer RetiredRules RetiredExamples RetirementFlushing.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
+
+Print Assumptions eval_substitute_expression.
+Print Assumptions eval_substitute_boolean.
+Print Assumptions substitution_binder_agrees.
+Print Assumptions future_satisfies_substitute.
+Print Assumptions future_satisfies_subst.
+Print Assumptions persistent_assertion_subst.
+Print Assumptions owned_skip_valid.
+Print Assumptions owned_consequence_valid.
+Print Assumptions owned_disjunction_valid.
+Print Assumptions owned_safe_sequence.
+Print Assumptions owned_sequence_valid.
+Print Assumptions owned_safe_choice.
+Print Assumptions owned_choice_valid.
+Print Assumptions owned_loop_valid.
+Print Assumptions owned_primitive_rule.
+Print Assumptions owned_environment_update_stack.
+Print Assumptions owned_assignment_valid.
+Print Assumptions owned_assume_valid.
+Print Assumptions owned_assert_valid.
+Print Assumptions owned_environment_mark.
+Print Assumptions owned_fence_update.
+Print Assumptions owned_environment_empty_buffer.
+Print Assumptions owned_fence_valid.
+Print Assumptions owned_fence_general_valid.
+Print Assumptions buffer_lookup_some_domain.
+Print Assumptions local_read_some_domain.
+Print Assumptions spatial_read_right.
+Print Assumptions repaired_read_right.
+Print Assumptions owned_read_preserved.
+Print Assumptions write_atom_read.
+Print Assumptions write_atom_foreign_empty.
+Print Assumptions spatial_foreign_empty.
+Print Assumptions repaired_enqueue_read_right.
+Print Assumptions owned_environment_enqueue_read.
+Print Assumptions owned_enqueue_read_update.
+Print Assumptions owned_enqueue_temporal_post.
+Print Assumptions writer_points_to_fv.
+Print Assumptions spatial_write_access.
+Print Assumptions spatial_cell_access.
+Print Assumptions owned_load_from_read.
+Print Assumptions owned_store_from_access.
+Print Assumptions owned_load_valid.
+Print Assumptions owned_store_valid.
+Print Assumptions owned_load_any_writer_valid.
+Print Assumptions owned_store_any_writer_valid.
+Print Assumptions persistent_spatial_emp_right.
+Print Assumptions persistent_strong_emp_right.
+Print Assumptions owned_load_cell_valid.
+Print Assumptions owned_store_cell_valid.
+Print Assumptions substitution_capture_regression.
+Print Assumptions owned_capture_assignment_valid.
+Print Assumptions owned_pending_fence_valid.
+Print Assumptions owned_pending_fence_initial.
+Print Assumptions owned_pending_fence_trace.
+Print Assumptions owned_pending_fence_waits.
+Print Assumptions owned_foreign_writer_load_valid.
+Print Assumptions heap_foreign_cell_environment.
+Print Assumptions owned_foreign_writer_load_enabled.
+Print Assumptions heap_foreign_cell_not_second_write.
+Print Assumptions owned_foreign_writer_store_valid.
+Print Assumptions owned_foreign_writer_store_enabled.
+Print Assumptions owned_buffered_load_store_valid.
+Print Assumptions heap_pending_models.
+Print Assumptions heap_duplicate_pending_environment.
+Print Assumptions owned_buffered_load_store_trace.
+Print Assumptions heap_same_write_models.
+Print Assumptions heap_cell_temporal_self.
+Print Assumptions heap_store_independent_witnesses.
+Print Assumptions owned_independent_witness_store_valid.
+Print Assumptions owned_independent_witness_store_enabled.
 
 Print Assumptions stack_agrees_incl.
 Print Assumptions stack_agrees_sym.

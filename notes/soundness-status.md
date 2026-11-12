@@ -39,11 +39,16 @@ adds the agreed requirement that neither command modifies invariant
 variables. Stack-agreement transport supports register-changing threads;
 finished threads use the proved spatial frame rule. Checked examples cover
 acquisition followed by a blocked sibling's private store, both finished
-branch cases, and distinct register assignments. All 510 audited declarations
-are closed. The safety predicate is unchanged. The general structural and
-primitive rule suite, the full container derivation, the original
-strong-temporal LOAD/STORE axioms for this target, and full soundness remain
-open. See [the parallel checkpoint](../review/checkpoint-8.md),
+branch cases, and distinct register assignments. The requested routine rules
+now check, with capture-avoiding substitution for the whole assertion grammar.
+The printed strong-temporal LOAD/STORE forms and explicit any-writer cell
+extensions are proved in both modes; LOAD's destination and invariant
+freshness conditions are explicit. The existing `⋉` abbreviation suffices,
+and the safety predicate remains unchanged. All 580 audited declarations
+are closed. The container derivation, any further printed rules such as EX
+and SHARE, and full calculus soundness remain open. See
+[the routine and heap-rule checkpoint](../review/checkpoint-9.md),
+[the parallel checkpoint](../review/checkpoint-8.md),
 [the general framing checkpoint](../review/checkpoint-7.md),
 [the lock rules and FRAME-STM counterexample](../review/checkpoint-6.md),
 [the implementation checkpoint](../review/checkpoint-5-implementation.md),
@@ -350,9 +355,12 @@ integrate spatial framing/concurrency or port the combined-footprint bound.
 The foreign-pending-barrier counterexample has not yet been rechecked in a
 buffered retirement model. See [retired-ownership.md](retired-ownership.md).
 
-Capture-avoiding assertion substitution, general expression-based heap
-axioms, choice/loop, general parallel, invariant rules, and integration of the
-spatial/temporal/strong-temporal frame rules remain open.
+For the active `owned_valid` target, capture-avoiding assertion substitution,
+expression-based heap rules, choice/loop, parallel, explicit ownership
+transfer and spatial/temporal framing are now proved. FRAME-STM is omitted,
+and the existing strong-temporal assertion abbreviation is unchanged.
+The container, remaining rules such as EX and SHARE, and a derivation system
+with calculus-level soundness are still open.
 The ownership condition is a requirement that each proof must construct; it
 does not establish suitable witnesses for every printed specification.
 Further rearrangement laws may be needed. See [frame-decomposition.md](frame-decomposition.md).

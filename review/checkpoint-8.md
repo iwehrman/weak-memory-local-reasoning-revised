@@ -1,5 +1,10 @@
 # Checkpoint 8 — parallel composition proved
 
+**Subsequent result:** [checkpoint 9](checkpoint-9.md) proves the requested
+routine rules, printed strong-temporal LOAD/STORE forms, and explicit
+any-writer cell extensions. The report below records checkpoint 8's scope
+and the work that was open then.
+
 **The semantic parallel rule is proved in both ownership modes.** The only
 addition to the printed variable condition is the agreed requirement that
 neither command modifies variables free in the shared invariant. The safety

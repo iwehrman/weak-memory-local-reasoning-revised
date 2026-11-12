@@ -93,9 +93,17 @@ holds in both modes**, including register updates and either thread
 finishing first. Its only addition to the printed interference condition is
 that neither command modifies variables free in the shared invariant.
 Checked examples include acquisition followed by a sibling store while
-blocked and two threads updating distinct registers. No further safety or
-assertion change was needed. Full corrected soundness remains open.
-See [the parallel checkpoint](review/checkpoint-8.md),
+blocked and two threads updating distinct registers. The requested routine
+rules now check, including assignment with capture-avoiding substitution
+for arbitrary assertions. **The printed strong-temporal LOAD/STORE forms
+and explicit any-writer cell extensions are proved in both modes.** Their
+proofs preserve the existing conjunction abbreviation for `⋉`; LOAD makes
+destination and invariant freshness explicit. Checked examples include
+buffer forwarding behind duplicate older writes and cross-processor cell
+access without gaining new completeness marks. No further safety or assertion
+change was needed. Full corrected soundness remains open.
+See [the routine and heap-rule checkpoint](review/checkpoint-9.md),
+[the parallel checkpoint](review/checkpoint-8.md),
 [the general framing checkpoint](review/checkpoint-7.md),
 [the lock rules and FRAME-STM counterexample](review/checkpoint-6.md),
 [the implementation checkpoint](review/checkpoint-5-implementation.md),
@@ -157,6 +165,7 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/ExecutionExamples.v` | Complete store-buffering, fence, and lock/unlock traces, blocked operations and faults | Concrete checks of §4.2's execution rules |
 | `theories/Assertions.v` | Both assertion grammars, named quantifiers, spatial and temporal connectives, all three wands, points-to abbreviations | §3.5, pp. 60–69 and §4.4, pp. 113–119 |
 | `theories/AssertionSemantics.v` | Interpretation of the concurrent assertion grammar over a supplied resource model | Figure 4.4, p. 115 |
+| `theories/AssertionSubstitution.v` | Total capture-avoiding simultaneous substitution and its semantic theorem, including quantifiers and wands | General ASSIGN support without a capture side condition |
 | `theories/ConcreteAssertions.v` | Figure 4.4 instantiated over valid generalized memories; points-to denotes a flushed cell | Sections 4.4.1-4.4.2, pp. 114-119 |
 | `theories/RepairedAssertions.v` | Separate interpretation using stable temporal composition; temporal assertion associativity and pure flushing closure | Candidate corrected assertion semantics |
 | `theories/Safety.v` | Printed safety and validity, index/postcondition monotonicity, consequence/disjunction rules, operational adequacy, assignment-action repair | Section 4.5.2, pp. 131-132 |
@@ -217,10 +226,16 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/OwnedFraming.v` | General FRAME-SP in both modes; FRAME-TM from overlap validity; exact-frame reconstruction and mark preservation | Checked semantic frame rules for the active target |
 | `theories/OwnedInterference.v` | Program, abort, environment and full owned-safety transport between agreeing stacks | General support for private register changes |
 | `theories/OwnedParallel.v` | Same-index parallel safety and semantic parallel validity in both modes; finished-thread spatial framing | Printed interference plus invariant-variable freshness |
+| `theories/OwnedStructural.v` | Skip, consequence, disjunction, sequence, choice and loop for the active predicate | General rules in both modes |
+| `theories/OwnedPrimitives.v` | Full-assertion assignment, assume, assert, small and general fence | Invariant freshness for assignment; actual fence earns its own mark |
+| `theories/OwnedHeapResources.v` | Preserved local reads and enqueueing with a pending or flushed allocation witness | Exact external frame and pool; whole-resource temporal store post |
+| `theories/OwnedHeap.v` | Printed strong-temporal LOAD/STORE and explicit any-writer cell forms, with expression arguments | Existing `⋉` semantics; explicit destination freshness |
 | `theories/OwnedAcceptance.v` | All three fixed acceptance tests, double acquisition, split-token fault, and externally blocked local future | Checked checkpoint-5 implementation regressions |
 | `theories/StrongTemporalCounterexample.v` | Valid unframed release and invalid strong-temporally framed instance, with independent spatial/temporal witnesses | Counterexample to unrestricted FRAME-STM in disjoint mode |
 | `theories/OwnedFramingExamples.v` | Spatially framed donation and private store; temporal acquisition with a genuine foreign pending write | Applications of the proved frame rules |
 | `theories/OwnedParallelExamples.v` | Acquire then blocked sibling store, either finished branch, and distinct register assignments | General-rule applications with concrete enabled starts |
+| `theories/OwnedRoutineExamples.v` | Variable-capture regression and a pending-write fence that waits for an actual flush | Assignment and fence nonvacuity |
+| `theories/OwnedHeapExamples.v` | Foreign-writer cell access without new marks, buffered load/store behind duplicates, and independently witnessed strong conjunction | Heap-rule applications with inhabited environments and traces |
 | `theories/OwnershipTransfer.v` | Protected-to-private withdrawal at fence/unlock; disjoint-history donation reassembly | Checked transfer rules and a restricted boundary lemma |
 | `theories/OwnershipTransferLimits.v` | Scoped cell versus ordinary points-to; general retained-history donation obstruction | Concrete invalid donation and positive disjoint-history instance |
 | `theories/TransferExamples.v` | Known-present withdrawal, release, private load and retained foreign write | All-run proofs, concrete traces, rejected all-processor transfer postcondition |
@@ -259,6 +274,14 @@ distinguishes this interpretation from both earlier models.
 
 ## Proved results
 
+- `owned_load_valid` and `owned_store_valid` prove the printed
+  strong-temporal heap forms. `owned_load_any_writer_valid` and
+  `owned_store_any_writer_valid` add the required forms for writer-existential
+  flushed cells. All hold in both modes with the existing `⋉` abbreviation.
+- `owned_assignment_valid` uses `persistent_assertion_subst` to support
+  arbitrary postconditions, including quantifiers and wands. General
+  sequence, consequence, disjunction, choice, loop and fence rules now hold
+  for the same active predicate.
 - `owned_parallel_valid` proves the general semantic parallel rule for
   `owned_safe` in both modes, with the printed interference condition and
   invariant-variable freshness. `owned_safe_parallel` supplies the same-index
@@ -362,8 +385,9 @@ distinguishes this interpretation from both earlier models.
 - `persistent_calculus_sound` extends the checked calculus with arbitrary
   invariants, assume/assert, base constant-cell load/store, fence, lock
   acquisition, and release for a pure invariant explicitly asserted in the
-  precondition. General assertion substitution and framed heap axioms remain
-  open. `persistent_derivation_no_abort` connects derivations to execution.
+  precondition. That earlier calculus retains its pure-assignment and
+  constant-cell scope; the newer general rules target `owned_valid`.
+  `persistent_derivation_no_abort` connects its derivations to execution.
 - `arbitrary_invariant_unlock_invalid` shows why release needs a restoration
   obligation. A checked lock/unlock round trip and store postcondition after
   flushing exercise the positive rules. See the current repair notes.
@@ -413,9 +437,9 @@ an invalid specification under the complete `safe_n` predicate.
 - Free and modified variable sets are represented by lists, interpreted
   through membership. Duplicates and list order carry no semantic meaning.
 - Quantifiers retain named binders and remove the bound name from the free
-  variables. General capture-avoiding assertion substitution is pending.
-  The concurrent points-to abbreviation already chooses a provably fresh
-  processor name automatically.
+  variables. General assertion substitution freshens binders automatically,
+  with a semantic theorem covering the complete grammar. Both points-to
+  abbreviations also choose a provably fresh processor name automatically.
 - Concurrent primitives keep expression-valued processor annotations.
   The sequential grammar omits the stray processor subscript on
   p. 44, following that chapter's uniprocessor semantics.
@@ -560,21 +584,15 @@ the approved single-resource ownership semantics described above.
 
 ## Remaining proof work
 
-1. Complete the general structural and primitive rules for `owned_safe`:
-   sequencing, consequence, disjunction, choice, loop, assignment, base
-   load/store and fence. The active target already has general lock,
-   unlock, spatial/temporal frame, and parallel rules; results for earlier
-   safety predicates do not fill the remaining gaps.
-2. Implement capture-avoiding assertion substitution and its semantic lemma
-   where required by expression-based primitive rules.
-3. Check LOAD and STORE in the dissertation's strong-temporal form. FRAME-STM
-   remains omitted; the existing `⋉` abbreviation has not been changed.
-4. Derive the container example with acquisition, removal, release, private
+1. Derive the container example with acquisition, removal, release, private
    use and return, while a foreign write is pending.
-5. Define a calculus that tracks overlap-mode validity for FRAME-TM, then
+2. Justify any additional printed rules included in the eventual calculus.
+   EX and SHARE are not established for `owned_valid`; INV remains removed
+   and FRAME-STM remains omitted.
+3. Define a calculus that tracks overlap-mode validity for FRAME-TM, then
    prove soundness by induction on derivations and apply operational
    adequacy. Continue the [review checkpoints](review/lead-response.md);
-   [checkpoint 8](review/checkpoint-8.md) records the current exact scope.
+   [checkpoint 9](review/checkpoint-9.md) records the current exact scope.
 
 The dissertation identifies its soundness proof as incomplete on pp. 9–10.
 The present project starts with the core grammars and Figures 4.7–4.8 as the

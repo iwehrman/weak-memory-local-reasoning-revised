@@ -27,6 +27,28 @@ short comparison with later work. Differences from the dissertation are in
 the foreground. So the most valuable proof work is whatever lets the paper
 make an exact statement about the original, in the original's own terms.
 
+## Order of work (revised)
+
+Ian and the reviewer agreed to move the assertion proof system ahead of the
+derivations, so that the derivations are written in it once instead of being
+proved semantically and then redone. The priority numbers below are kept as
+labels; the order is now:
+
+1. Priority 4 part A: the audit of Figures 4.5 and 4.6.
+2. Priority 4 part B: the rule set, seeded from the audit and from the 16
+   entailments the container already needed.
+3. Priority 4 part C: the one-item container with no semantic entailment
+   premises.
+4. Priority 1: the Section 4.1 example, derived in the system.
+5. Priority 2: the ambitious derivation, derived in the system.
+6. Priority 3 items may be done at any point.
+
+The rule set is expected to grow during steps 4 and 5. Adding a rule with a
+soundness proof is normal and needs no check-in; list the additions in the
+next report. A step that cannot be derived and is left as a semantic
+premise must be named in the report. A law that would need a change to the
+assertion grammar or interpretation is still a stop-and-report.
+
 ## Priority 1: the dissertation's own example (Section 4.1)
 
 The dissertation's worked concurrent example is a message-passing program:
@@ -174,9 +196,9 @@ Approved by Ian. The dissertation's "Contributions and Status" section names
 two major components left unfinished: a proof system for the assertion
 language, and the soundness proof. The second is done. This is the first.
 
-It has three parts. Part A is independent and may start at any time. Parts B
-and C come after priorities 1 and 2, because those derivations show which
-laws recur.
+It has three parts and now comes first; see "Order of work" above. The rule
+set starts from the audit and the container's entailments and is extended
+as the later derivations need.
 
 **Part A: audit the dissertation's algebra.** Figures 4.5 and 4.6 (the
 "Concurrent Algebra" subsection) list about twenty equivalences and

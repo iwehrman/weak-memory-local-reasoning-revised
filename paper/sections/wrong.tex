@@ -75,54 +75,53 @@ subsection shows that it calls for different rules.
 \subsection{The printed rules are inconsistent}
 \label{sec:inconsistent}
 
-Write $x \fwrote{k} v$ for a write by processor $k$ that has flushed,
-$x \fwrite{k} v \fseq \fbar{k}$. It is an assertion of the printed grammar
-and denotes one heap cell, with $k$ buffer-complete.
+The derivations below use the dissertation's own points-to, $x \fpointsto
+v$, and are checked against its own interpretation of assertions.
 
 \paragraph{History can be invented.}
 A model is a memory, not a record of how the memory came about. So a
 current cell is also a model of any stale value followed by that cell:
 \begin{equation}
   \label{eq:invent}
-  x \fwrote{k} 7 \fsep \flock{i}
+  x \fpointsto 7 \fsep \flock{i}
   \;\sentails\;
-  x \fwrote{k} 5 \fseq (x \fwrote{k} 7 \fsep \flock{i}).
+  x \fpointsto 5 \fseq (x \fpointsto 7 \fsep \flock{i}).
 \end{equation}
 The stale cell is overridden by the later one, and nothing remains of it.
 This is the non-cancellativity that the dissertation notes in passing.
 
 \paragraph{A $\cskip$ that changes memory.}
-Let $J$ be $\femp \disj x \fwrote{k} 7$. The following is a derivation in
+Let $J$ be $\femp \disj x \fpointsto 7$. The following is a derivation in
 the printed calculus.
 \begin{enumerate}[nosep]
-  \item $\spec{\femp}{J \fsep x \fwrote{k} 7 \fsep \flock{i}}{\cskip_i}
+  \item $\spec{\femp}{J \fsep x \fpointsto 7 \fsep \flock{i}}{\cskip_i}
         {J \fsep \femp \fsep \flock{i}}$,
         by \rn{skip} and \rn{cons}: $J$ cannot be its second disjunct, since
         the cell would occur twice, and in the first disjunct the cell can
         be reassigned to $J$.
-  \item $\spec{J}{x \fwrote{k} 7 \fsep \flock{i}}{\cskip_i}
+  \item $\spec{J}{x \fpointsto 7 \fsep \flock{i}}{\cskip_i}
         {\femp \fsep \flock{i}}$, by \rn{inv}. The thread has given its
         cell to the invariant.
-  \item $\spec{J}{x \fwrote{k} 5 \fseq (x \fwrote{k} 7 \fsep \flock{i})}
-        {\cskip_i}{x \fwrote{k} 5 \fseq (\femp \fsep \flock{i})}$,
+  \item $\spec{J}{x \fpointsto 5 \fseq (x \fpointsto 7 \fsep \flock{i})}
+        {\cskip_i}{x \fpointsto 5 \fseq (\femp \fsep \flock{i})}$,
         by \rn{frame-tm}.
-  \item $\spec{J}{x \fwrote{k} 7 \fsep \flock{i}}{\cskip_i}
-        {x \fwrote{k} 5 \fsep \flock{i}}$, by \rn{cons}, using
+  \item $\spec{J}{x \fpointsto 7 \fsep \flock{i}}{\cskip_i}
+        {x \fpointsto 5 \fsep \flock{i}}$, by \rn{cons}, using
         \eqref{eq:invent} on the left and the unit law for $\femp$ on the
         right.
 \end{enumerate}
 The conclusion says that a thread holding the lock and a cell containing
 $7$ may do nothing and then own that cell containing $5$. In the state
 where processor $1$ holds the lock and $x$ contains $7$, the precondition
-holds and the postcondition does not. (\rocq{printed_calculus_stale_value_unsound};
-the mechanized statement parses \rn{inv}'s premise as
-$J \fsep (P \fsep \flock{i})$.)
+holds and the postcondition does not.
+(\rocq{printed_points_stale_value_unsound}; the mechanized statement parses
+\rn{inv}'s premise as $J \fsep (P \fsep \flock{i})$.)
 
 \paragraph{A $\cskip$ that drains another processor's buffer.}
 Spatial conjunction takes the union of the completeness sets and does not
-require them to be disjoint, so an empty neighbour can copy a cell's mark:
-$x \fwrote{2} 7 \fsep \femp \sentails x \fwrote{2} 7 \fsep \fbar{2}$. With
-$J$ the cell $x \fwrote{2} 7$, \rn{skip}, \rn{cons} and \rn{inv} give
+require them to be disjoint, so an empty neighbour can copy a cell's marks:
+$x \fpointsto 7 \fsep \femp \sentails x \fpointsto 7 \fsep \fbar{2}$. With
+$J$ the cell $x \fpointsto 7$, \rn{skip}, \rn{cons} and \rn{inv} give
 $\spec{J}{\femp \fsep \flock{1}}{\cskip_1}{\fbar{2} \fsep \flock{1}}$, and
 \rn{frame-tm} with a pending write $R = y \fwrite{2} 17$ gives
 \[
@@ -131,16 +130,24 @@ $\spec{J}{\femp \fsep \flock{1}}{\cskip_1}{\fbar{2} \fsep \flock{1}}$, and
 \]
 When processor $1$ holds the lock and processor $2$'s write to $y$ is still
 buffered, the precondition holds. The postcondition places a barrier for
-processor $2$ after its pending write, which no memory satisfies while the
-write is pending. (\rocq{printed_calculus_foreign_barrier_unsound}.)
+processor $2$ after its pending write, which that memory does not satisfy.
+(\rocq{printed_points_foreign_barrier_unsound}.)
 
-Both derivations use the owner-specific cell rather than the all-processor
-points-to; the rules range over arbitrary assertions, so these are legal
-instances. \pending{the same two derivations with $\fpointsto$}
-Both conclusions are also invalid for the printed predicate $\safe{n}{}$,
-but that is the lesser point. They are false under the dissertation's
-informal reading of a specification, and under any semantics for which a
-true specification describes what the program does.
+\paragraph{The strong temporal frame rule does not escape.}
+One might hope that \rn{frame-stm} is safe, since its frame is also
+spatially separate. It is not, because $R \fsseq P$ abbreviates
+$(R \fsep P) \conj (R \fseq P)$ and the two conjuncts may be witnessed by
+different splits. Take $R = \femp \disj x \fpointsto 5$. In the state above,
+the spatial conjunct of $R \fsseq (x \fpointsto 7 \fsep \flock{1})$ holds
+with $R$ empty, and the temporal conjunct holds with $R$ the stale cell.
+Applying \rn{frame-stm} to step~2 yields a postcondition that the unchanged
+state cannot satisfy. (\rocq{printed_strong_frame_counterexample}; this
+derivation uses \rn{inv} and \rn{frame-stm} but not \rn{frame-tm}.)
+
+All three conclusions are also invalid for the printed predicate
+$\safe{n}{}$, but that is the lesser point. They are false under the
+dissertation's informal reading of a specification, and under any semantics
+for which a true specification describes what the program does.
 
 \subsection{Why no semantics could repair it}
 \label{sec:trilemma}

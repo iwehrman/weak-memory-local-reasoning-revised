@@ -100,9 +100,14 @@ and explicit any-writer cell extensions are proved in both modes.** Their
 proofs preserve the existing conjunction abbreviation for `⋉`; LOAD makes
 destination and invariant freshness explicit. Checked examples include
 buffer forwarding behind duplicate older writes and cross-processor cell
-access without gaining new completeness marks. No further safety or assertion
-change was needed. Full corrected soundness remains open.
-See [the routine and heap-rule checkpoint](review/checkpoint-9.md),
+access without gaining new completeness marks. **The container derivation
+now checks**, including private use after release and subsequent reacquisition,
+with a complete 24-step trace that keeps a foreign write pending. Spatial
+framing carries that write around the whole program; temporal framing
+accounts for the private buffered write at reacquisition. No further safety
+or assertion change was needed. Full corrected soundness remains open.
+See [the container checkpoint](review/checkpoint-10.md),
+[the routine and heap-rule checkpoint](review/checkpoint-9.md),
 [the parallel checkpoint](review/checkpoint-8.md),
 [the general framing checkpoint](review/checkpoint-7.md),
 [the lock rules and FRAME-STM counterexample](review/checkpoint-6.md),
@@ -236,6 +241,9 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/OwnedParallelExamples.v` | Acquire then blocked sibling store, either finished branch, and distinct register assignments | General-rule applications with concrete enabled starts |
 | `theories/OwnedRoutineExamples.v` | Variable-capture regression and a pending-write fence that waits for an actual flush | Assignment and fence nonvacuity |
 | `theories/OwnedHeapExamples.v` | Foreign-writer cell access without new marks, buffered load/store behind duplicates, and independently witnessed strong conjunction | Heap-rule applications with inhabited environments and traces |
+| `theories/OwnedContainerEntailments.v` | Spatial assertion algebra, barrier distribution, cell history completion and finite-heap reconstruction | Entailments in the unchanged assertion interpretation |
+| `theories/OwnedContainer.v` | Acquire, remove, release, private store, reacquire and return, derived from the proved semantic rules | One spatial foreign frame; temporal framing at reacquisition |
+| `theories/OwnedContainerTrace.v` | Nonempty free-pool start, complete 24-step execution, pending foreign write and all-run adequacy | Container nonvacuity and concrete final contents |
 | `theories/OwnershipTransfer.v` | Protected-to-private withdrawal at fence/unlock; disjoint-history donation reassembly | Checked transfer rules and a restricted boundary lemma |
 | `theories/OwnershipTransferLimits.v` | Scoped cell versus ordinary points-to; general retained-history donation obstruction | Concrete invalid donation and positive disjoint-history instance |
 | `theories/TransferExamples.v` | Known-present withdrawal, release, private load and retained foreign write | All-run proofs, concrete traces, rejected all-processor transfer postcondition |
@@ -274,6 +282,11 @@ distinguishes this interpretation from both earlier models.
 
 ## Proved results
 
+- `owned_container_valid` derives the shared-container example with an
+  unrelated foreign write framed spatially around the whole program.
+  `owned_container_trace` keeps that write pending while the private item
+  is removed, updated and returned; `owned_container_all_runs_safe` applies
+  the same safety predicate's adequacy theorem to every finite execution.
 - `owned_load_valid` and `owned_store_valid` prove the printed
   strong-temporal heap forms. `owned_load_any_writer_valid` and
   `owned_store_any_writer_valid` add the required forms for writer-existential
@@ -584,15 +597,13 @@ the approved single-resource ownership semantics described above.
 
 ## Remaining proof work
 
-1. Derive the container example with acquisition, removal, release, private
-   use and return, while a foreign write is pending.
-2. Justify any additional printed rules included in the eventual calculus.
+1. Justify any additional printed rules included in the eventual calculus.
    EX and SHARE are not established for `owned_valid`; INV remains removed
    and FRAME-STM remains omitted.
-3. Define a calculus that tracks overlap-mode validity for FRAME-TM, then
+2. Define a calculus that tracks overlap-mode validity for FRAME-TM, then
    prove soundness by induction on derivations and apply operational
    adequacy. Continue the [review checkpoints](review/lead-response.md);
-   [checkpoint 9](review/checkpoint-9.md) records the current exact scope.
+   [checkpoint 10](review/checkpoint-10.md) records the current exact scope.
 
 The dissertation identifies its soundness proof as incomplete on pp. 9–10.
 The present project starts with the core grammars and Figures 4.7–4.8 as the

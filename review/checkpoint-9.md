@@ -1,5 +1,9 @@
 # Checkpoint 9 — routine rules and heap rules proved
 
+**Subsequent result:** [checkpoint 10](checkpoint-10.md) proves the container
+derivation and its complete execution with the foreign write still pending.
+The report below records checkpoint 9's scope and remaining work at that time.
+
 **The requested routine rules, the printed strong-temporal LOAD/STORE
 forms, and the any-writer cell forms are proved for `owned_valid` in both
 modes.** The existing `⋉` abbreviation is sufficient. No safety definition,

@@ -44,9 +44,13 @@ now check, with capture-avoiding substitution for the whole assertion grammar.
 The printed strong-temporal LOAD/STORE forms and explicit any-writer cell
 extensions are proved in both modes; LOAD's destination and invariant
 freshness conditions are explicit. The existing `⋉` abbreviation suffices,
-and the safety predicate remains unchanged. All 580 audited declarations
-are closed. The container derivation, any further printed rules such as EX
-and SHARE, and full calculus soundness remain open. See
+and the safety predicate remains unchanged. The container derivation now
+checks, with a complete 24-step trace from a nonempty free invariant pool
+that keeps a foreign write pending. A single spatial frame carries that
+write through both releases; temporal framing handles the private write at
+reacquisition. All 626 audited declarations are closed. Any further printed
+rules such as EX and SHARE, and full calculus soundness remain open. See
+[the container checkpoint](../review/checkpoint-10.md),
 [the routine and heap-rule checkpoint](../review/checkpoint-9.md),
 [the parallel checkpoint](../review/checkpoint-8.md),
 [the general framing checkpoint](../review/checkpoint-7.md),
@@ -359,8 +363,8 @@ For the active `owned_valid` target, capture-avoiding assertion substitution,
 expression-based heap rules, choice/loop, parallel, explicit ownership
 transfer and spatial/temporal framing are now proved. FRAME-STM is omitted,
 and the existing strong-temporal assertion abbreviation is unchanged.
-The container, remaining rules such as EX and SHARE, and a derivation system
-with calculus-level soundness are still open.
+The container is proved using those rules. Remaining rules such as EX and
+SHARE, and a derivation system with calculus-level soundness, are still open.
 The ownership condition is a requirement that each proof must construct; it
 does not establish suitable witnesses for every printed specification.
 Further rearrangement laws may be needed. See [frame-decomposition.md](frame-decomposition.md).

@@ -98,6 +98,9 @@ theories/OwnedFramingExamples.v
 theories/OwnedParallelExamples.v
 theories/OwnedRoutineExamples.v
 theories/OwnedHeapExamples.v
+theories/OwnedContainerEntailments.v
+theories/OwnedContainer.v
+theories/OwnedContainerTrace.v
 theories/FrameShapeCounterexample.v
 theories/FixedFrameExamples.v
 theories/RetiredHeaps.v

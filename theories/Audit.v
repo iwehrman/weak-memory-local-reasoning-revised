@@ -25,9 +25,57 @@ From WMLR Require Import OwnedRules StrongTemporalCounterexample.
 From WMLR Require Import OwnedFraming OwnedFramingExamples.
 From WMLR Require Import OwnedInterference OwnedParallel OwnedParallelExamples.
 From WMLR Require Import AssertionSubstitution OwnedStructural OwnedPrimitives OwnedHeapResources OwnedHeap OwnedRoutineExamples OwnedHeapExamples.
+From WMLR Require Import OwnedContainerEntailments OwnedContainer OwnedContainerTrace.
 From WMLR Require Import RetiredHeaps RetiredSafety RetiredTransfer RetiredRules RetiredExamples RetirementFlushing.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
+
+Print Assumptions container_spatial_mono.
+Print Assumptions container_temporal_mono.
+Print Assumptions container_spatial_comm.
+Print Assumptions container_spatial_assoc.
+Print Assumptions container_spatial_emp_elim.
+Print Assumptions container_barrier_spatial.
+Print Assumptions container_cell_shape.
+Print Assumptions container_some_cell_models.
+Print Assumptions container_cell_some.
+Print Assumptions container_history_complete.
+Print Assumptions container_history_drained.
+Print Assumptions container_heap_models.
+Print Assumptions container_heap_domain.
+Print Assumptions container_locked_pair_from_shape.
+Print Assumptions container_invariant_fragment.
+Print Assumptions container_invariant_closed.
+Print Assumptions container_held_swap.
+Print Assumptions container_held_restore.
+Print Assumptions container_spatial_pure.
+Print Assumptions container_read_flag_valid.
+Print Assumptions container_read_cases_valid.
+Print Assumptions container_select_one_valid.
+Print Assumptions container_select_zero_valid.
+Print Assumptions container_store_known_valid.
+Print Assumptions container_store_some_valid.
+Print Assumptions container_store_flag_valid.
+Print Assumptions container_first_acquire_entails.
+Print Assumptions container_remove_unlock_entails.
+Print Assumptions container_return_unlock_entails.
+Print Assumptions container_remove_valid.
+Print Assumptions container_reacquire_entails.
+Print Assumptions container_return_valid.
+Print Assumptions container_core_valid.
+Print Assumptions owned_container_valid.
+Print Assumptions container_full_pool_models.
+Print Assumptions container_initial_split.
+Print Assumptions owned_container_initial.
+Print Assumptions container_execution_sequence.
+Print Assumptions container_select_trace.
+Print Assumptions container_remove_trace.
+Print Assumptions container_return_trace.
+Print Assumptions owned_container_trace.
+Print Assumptions owned_container_reacquire_waits.
+Print Assumptions owned_container_foreign_pending_throughout.
+Print Assumptions owned_container_final_contents.
+Print Assumptions owned_container_all_runs_safe.
 
 Print Assumptions eval_substitute_expression.
 Print Assumptions eval_substitute_boolean.

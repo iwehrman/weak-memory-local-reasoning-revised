@@ -1,0 +1,10 @@
+{"bounds": "Bounded screening for the paper algebra audit, not a semantic proof.\n\nTwo processors; up to two addresses; value 0; up to one pending write per\nprocessor; arbitrary marks; lock tokens included. Compositions outside the\nfinite universe are omitted. Every reported failure needs a Rocq witness.\n", "formulas": 65, "resources": 468, "scope": "bounded interpretation; not a proof"}
+{"formulas": {"i": 1, "j": 2}, "law": "E6:sp", "witness": {"blocked": 3, "buffers": [[], []], "heap": [null, null, null], "marks": 0}}
+{"formulas": {"i": 2, "j": 1}, "law": "E6:sp", "witness": {"blocked": 3, "buffers": [[], []], "heap": [null, null, null], "marks": 0}}
+{"formulas": {"i": 1, "j": 2}, "law": "E6:tm", "witness": {"blocked": 3, "buffers": [[], []], "heap": [null, null, null], "marks": 0}}
+{"formulas": {"i": 2, "j": 1}, "law": "E6:tm", "witness": {"blocked": 3, "buffers": [[], []], "heap": [null, null, null], "marks": 0}}
+{"formulas": {"i": 1, "j": 2}, "law": "E6:stm", "witness": {"blocked": 3, "buffers": [[], []], "heap": [null, null, null], "marks": 0}}
+{"formulas": {"i": 2, "j": 1}, "law": "E6:stm", "witness": {"blocked": 3, "buffers": [[], []], "heap": [null, null, null], "marks": 0}}
+{"formulas": {"P": "true", "Q": "bar1", "R": "(emp or W(1,1,0))"}, "law": "E3:stm:right-to-left", "witness": {"blocked": 0, "buffers": [[[1, 0]], []], "heap": [0, null, null], "marks": 1}}
+{"formulas": {"P": "true", "Q": "W(1,1,0)", "R": "(bar1 or W(2,2,0))"}, "law": "E3:stm:left-to-right", "witness": {"blocked": 0, "buffers": [[[1, 0]], [[2, 0]]], "heap": [null, 0, null], "marks": 1}}
+{"law": "E3:stm", "triples_checked": 6240, "counterexample_directions": ["left-to-right", "right-to-left"]}

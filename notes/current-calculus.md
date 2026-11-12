@@ -116,8 +116,14 @@ ownership of all acquired cells when working in DJ.
 The first paper algebra audit proves `emp` is a two-sided unit for `*`, `;`
 and `⋉` for the entire assertion grammar, including wands, on every
 processor domain. `AssertionUnits.v` removes the wand-free limitation of
-earlier unit helpers; no semantic definition changes. Other printed
-algebra laws remain under audit.
+earlier unit helpers; no semantic definition changes. The next batch proves
+spatial/temporal associativity and further barrier laws, but refutes
+strong-temporal associativity and unrestricted lock multiplication. Both
+countermodels also hold in the original interpretation. The lock witness
+has no admissible machine environment; same-owner lock exclusivity still
+holds under the standing two-processor assumption. See the
+[algebra audit progress](../review/paper-algebra-progress.md) for the exact
+statements and remaining laws.
 
 The grammar has no recursive predicates. The invariant fragment therefore
 does not describe an unbounded linked container. That expressiveness limit

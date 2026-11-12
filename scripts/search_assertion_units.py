@@ -51,9 +51,10 @@ def main():
             and r.buffers == ((), ()) and r.blocked == (3 ^ (1 << i)))
         for v in (0, 1):
             formulas[f"write{i+1}:{v}"] = sat(lambda r:
-                r.blocked == 0 and ((r.heap == (None, None, None)
+                ((r.heap == (None, None, None) and not (r.blocked & ~(1 << i))
                     and r.buffers[i] == ((1, v),) and not r.buffers[1-i])
-                or (r.heap == (v, None, None) and r.buffers == ((), ()) and r.marks & (1 << i))))
+                or (r.heap == (v, None, None) and r.buffers == ((), ())
+                    and r.blocked == 0 and r.marks & (1 << i))))
     for v in (0, 1):
         formulas[f"cell{v}"] = sat(lambda r: r.heap == (v, None, None)
             and r.buffers == ((), ()) and r.blocked == 0 and r.marks != 0)

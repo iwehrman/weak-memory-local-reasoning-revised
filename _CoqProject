@@ -108,6 +108,8 @@ theories/OwnedCalculus.v
 theories/OwnedDerivedRules.v
 theories/OwnedBufferedLoad.v
 theories/OwnedBufferedLoadExamples.v
+theories/AssertionAlgebra.v
+theories/AssertionAlgebraCounterexamples.v
 theories/OwnedContainerDerivation.v
 theories/OwnedRetryContainer.v
 theories/OwnedExecution.v

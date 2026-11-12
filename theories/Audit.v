@@ -30,6 +30,7 @@ From WMLR Require Import RetiredHeaps RetiredSafety RetiredTransfer RetiredRules
 
 From WMLR Require Import OwnedExists OwnedCalculus OwnedDerivedRules OwnedContainerDerivation OwnedRetryContainer OwnedExecution OwnedRetryTrace.
 From WMLR Require Import AssertionResourceEquivalence AssertionUnits OwnedBufferedLoad OwnedBufferedLoadExamples.
+From WMLR Require Import AssertionAlgebra AssertionAlgebraCounterexamples.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 
@@ -776,3 +777,49 @@ Print Assumptions buffered_load_pending_enabled.
 Print Assumptions buffered_load_flush_future.
 Print Assumptions buffered_load_after_flush_enabled.
 Print Assumptions buffered_load_other_processor_reads_old.
+
+(** Paper algebra audit: surviving laws and checked countermodels. *)
+Print Assumptions assertion_conjunction_unit_right.
+Print Assumptions assertion_conjunction_unit_left.
+Print Assumptions assertion_conjunction_mono.
+Print Assumptions assertion_lock_common_blocker.
+Print Assumptions assertion_lock_multiplication_common_blocker.
+Print Assumptions assertion_same_lock_exclusive.
+Print Assumptions assertion_spatial_associative.
+Print Assumptions assertion_temporal_associative.
+Print Assumptions assertion_spatial_commutative.
+Print Assumptions assertion_barrier_entails_emp.
+Print Assumptions assertion_strong_entails_spatial.
+Print Assumptions assertion_strong_entails_temporal.
+Print Assumptions assertion_empty_domain.
+Print Assumptions assertion_temporal_empty_right_spatial.
+Print Assumptions assertion_temporal_empty_left_spatial.
+Print Assumptions assertion_strong_barrier_temporal.
+Print Assumptions assertion_barrier_suffix_elim.
+Print Assumptions assertion_barrier_suffix_buffer.
+Print Assumptions assertion_wand_free_in_printed.
+Print Assumptions assertion_empty_self_spatial.
+Print Assumptions assertion_spatial_empty_buffers_temporal.
+Print Assumptions assertion_barrier_idempotent.
+Print Assumptions assertion_lock_barrier_temporal_spatial.
+Print Assumptions assertion_write_domain.
+Print Assumptions assertion_spatial_writes_exclusive.
+Print Assumptions algebra_bar_models.
+Print Assumptions algebra_bar_inner_models.
+Print Assumptions algebra_pending_inner_models.
+Print Assumptions algebra_whole_spatial_bar.
+Print Assumptions algebra_heap_pending_temporal.
+Print Assumptions assertion_strong_associativity_right_model.
+Print Assumptions assertion_strong_associativity_left_not_model.
+Print Assumptions assertion_associativity_countermodel_environment.
+Print Assumptions assertion_strong_associativity_refuted.
+Print Assumptions assertion_small_exchange_strong_refuted.
+Print Assumptions algebra_lock_models.
+Print Assumptions algebra_lock_split.
+Print Assumptions assertion_lock_multiplication_model.
+Print Assumptions assertion_lock_multiplication_refuted.
+Print Assumptions assertion_lock_countermodel_not_lock_complete.
+Print Assumptions assertion_lock_countermodel_no_environment.
+Print Assumptions assertion_strong_associativity_printed_right_model.
+Print Assumptions assertion_strong_associativity_printed_left_not_model.
+Print Assumptions assertion_lock_multiplication_printed_model.

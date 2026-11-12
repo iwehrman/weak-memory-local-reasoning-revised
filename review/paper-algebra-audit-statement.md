@@ -11,6 +11,11 @@ proves all six unit equivalences for arbitrary assertions, including wands,
 and derives reading one's own buffered write using the existing calculus.
 The remaining rows below have not yet been classified by this audit.
 
+**Further progress:** [associativity and lock countermodels](paper-algebra-progress.md)
+classifies additional instances, including checked failures of E3 for `⋉`,
+T7 for `(⋉,⋉)`, and E6 for all three conjunctions. That report gives the
+surviving laws and explicitly lists the still-unclassified instances.
+
 ## Interpretation and scope
 
 Every result must concern `persistent_models` / `persistent_entails`, with

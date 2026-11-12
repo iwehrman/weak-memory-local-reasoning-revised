@@ -20,9 +20,38 @@ From WMLR Require Import InvariantFragment InvariantFragmentExamples.
 From WMLR Require Import FrameShape FrameShapeCounterexample.
 From WMLR Require Import ResidualUniqueness FlushAttribution FixedFrameExamples.
 From WMLR Require Import LockRepresentation.
+From WMLR Require Import ProgramSteps OwnedSafety OwnedAdequacy OwnedResources OwnedAcceptance.
 From WMLR Require Import RetiredHeaps RetiredSafety RetiredTransfer RetiredRules RetiredExamples RetirementFlushing.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
+Print Assumptions program_step_erases.
+Print Assumptions step_program_or_flush.
+Print Assumptions owned_safe_future.
+Print Assumptions owned_safe_mark_extension.
+Print Assumptions owned_safe_index_mono.
+Print Assumptions owned_environment_flush_attribution.
+Print Assumptions owned_empty_frame_flush.
+Print Assumptions owned_execution_empty_frame.
+Print Assumptions owned_empty_frame_intro.
+Print Assumptions owned_empty_frame_elim.
+Print Assumptions owned_final_ownership.
+Print Assumptions owned_valid_adequacy.
+Print Assumptions owned_update_preserves_disjoint.
+Print Assumptions owned_safe_overlap_disjoint.
+Print Assumptions owned_valid_overlap_disjoint.
+Print Assumptions owned_disjoint_donation_environment.
+Print Assumptions owned_disjoint_donation_valid.
+Print Assumptions owned_overlap_donation_invalid.
+Print Assumptions owned_foreign_barrier_invalid.
+Print Assumptions owned_private_store_valid.
+Print Assumptions owned_holder_skip_valid.
+Print Assumptions owned_foreign_holder_store_witness.
+Print Assumptions owned_foreign_holder_both_safe.
+Print Assumptions owned_blocked_local_future_regression.
+Print Assumptions owned_split_token_not_vacuous.
+Print Assumptions owned_held_reacquire_safe.
+Print Assumptions double_acquire_stuck.
+
 Print Assumptions free_held_characterization.
 Print Assumptions singleton_emp_lock_equivalent.
 Print Assumptions singleton_acquire_still_free.

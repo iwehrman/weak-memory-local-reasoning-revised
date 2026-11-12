@@ -1,7 +1,13 @@
-# Checkpoint 5 — proposed safety definition, with a lock-encoding decision open
+# Checkpoint 5 — reviewed safety definition proposal
 
-**This is a definition proposal, not a completed checkpoint or a soundness
-result.** No replacement safety predicate or proof rule has been implemented.
+**Status update:** the user approved this definition with two distinct
+active processors. It is now implemented, with closure, adequacy, mode
+inclusion, and all fixed acceptance tests checked. See the
+[implementation checkpoint](checkpoint-5-implementation.md). The text below
+records the original proposal and the decisions presented for review.
+
+**Original status:** this is a definition proposal, not a completed checkpoint or a soundness
+result. No replacement safety predicate or proof rule has been implemented.
 The three requested [acceptance tests](checkpoint-5-acceptance.md) are fixed
 before rule proofs. The proposal below addresses changing environments,
 completeness marks, disjointness, and empty-frame adequacy.

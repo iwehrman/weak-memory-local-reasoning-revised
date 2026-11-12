@@ -14,12 +14,17 @@ refutes the proposed `#` reconstruction under a footprint bound, including
 acquisition. This refutes an auxiliary lemma, not design D's proof rules.
 Checkpoint 4 proves fixed-frame buffer uniqueness and attribution of actual
 machine flushes to the frame or local resource while fixing the other and
-the buffer-free pool. These support a new single safety target, which has
-not been defined; integrated framing and soundness remain open. Checkpoint 5
-now records the proposed definition and fixed acceptance tests. Its checked
-lock diagnostics expose singleton free/held ambiguity and partial blocked
-sets that must not be excluded from all environments. No new processor
-assumption or safety predicate has been installed. See
+the buffer-free pool. The approved checkpoint-5 target is now implemented
+as `owned_safe` / `owned_valid`, replacing the separated path as the active
+development target. Full generalized-future closure, empty-frame operational
+adequacy, and overlap-to-disjoint mode inclusion are proved. All three fixed
+acceptance tests pass, with additional checked regressions for double acquire,
+split-token contexts, and a local future blocked by an external lock.
+The approved two-distinct-active-processors hypothesis is explicit on
+lock-specific results and client adequacy; no finiteness assumption, new
+assertion atom, or entailment change was added. Integrated framing,
+concurrency, the general transfer rules, and full soundness remain open. See
+[the implementation checkpoint](../review/checkpoint-5-implementation.md),
 [checkpoint 5](../review/checkpoint-5.md),
 [checkpoint 4](../review/checkpoint-4.md), [checkpoint 3](../review/checkpoint-3.md),
 [checkpoint 2](../review/checkpoint-2.md), [the review](../review/independent-review.md)

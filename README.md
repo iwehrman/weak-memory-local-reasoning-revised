@@ -60,22 +60,28 @@ lemma supports extending this design to buffered histories, but that combined
 model and integration with spatial framing/concurrency remain open.
 The independent review subsequently proves two unsound specifications from
 the printed rules and identifies an additional cell-erasure defect in the
-retirement interpretation. Development will now preserve `emp`'s unit laws,
-drop permanent protected/private assertion slots and retirement, and test
-explicit ownership rules with restricted temporal framing. This target is
-not yet proved. Checkpoint 2 now proves that invariants with heap-guarded pure
+retirement interpretation. The subsequent target preserves `emp`'s unit laws,
+drops permanent protected/private assertion slots and retirement, and uses
+explicit ownership rules with restricted temporal framing. Full calculus
+soundness is not yet proved. Checkpoint 2 now proves that invariants with heap-guarded pure
 assertions survive re-marking to the acquiring processor alone, have empty
 buffers, and cannot absorb pending writes at release. Checkpoint 3 proves
 the temporal-only resource lemma but refutes the proposed generalization
 to external `#`, including an acquisition case. Checkpoint 4 proves that a
 fixed frame determines the local buffers and that actual machine flushes
 can be attributed to one component with the other and the pool unchanged.
-Checkpoint 5 records a concrete safety proposal and three fixed acceptance
-tests, before implementation. New checked diagnostics identify singleton
-lock ambiguity and admissible compositions of partial lock information.
-The processor-domain decision, single safety replacement, and its
-frame/concurrency proofs remain open.
-See [the definition proposal](review/checkpoint-5.md),
+Checkpoint 5's approved single safety target, `owned_safe` / `owned_valid`,
+is now implemented. It has closure under the full generalized-future
+relation, empty-frame operational adequacy, and mode inclusion. All three
+fixed acceptance tests pass: disjoint-only donation, rejected foreign-barrier
+import, and a safe private store while another thread holds the lock.
+Additional checked regressions cover double acquisition, split-token
+contexts, and a local flush blocked by an external token. The approved scope
+requires two distinct active processors for lock-specific reasoning and the
+client adequacy theorem; it does not require finiteness. General rule,
+frame, and concurrency proofs remain open for this target.
+See [the implementation checkpoint](review/checkpoint-5-implementation.md),
+[the definition proposal](review/checkpoint-5.md),
 [its acceptance tests](review/checkpoint-5-acceptance.md),
 [the fixed-frame and flush checkpoint](review/checkpoint-4.md),
 [the frame-shape checkpoint](review/checkpoint-3.md),
@@ -185,6 +191,11 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/FlushAttribution.v` | A machine flush belongs to the frame or local resource, with precise marks and the buffer-free pool fixed | Checkpoint-4 attribution for arbitrary resources and invariant pools |
 | `theories/FixedFrameExamples.v` | The unchanged frame excludes checkpoint 3's bad assume and acquisition residuals | Direct checks of the proposed repair |
 | `theories/LockRepresentation.v` | Singleton free/held ambiguity and complete locks assembled from partial blocked sets | Checked diagnostics for the checkpoint-5 definition proposal |
+| `theories/ProgramSteps.v` | Non-flush action labels, erasure, and classification of every existing machine step | Approved fixed-frame program-step semantics |
+| `theories/OwnedSafety.v` | The single owned-resource safety target, full future closure, mark budget, and two frame modes | Active replacement for the separated development path |
+| `theories/OwnedAdequacy.v` | Actual flush attribution, exact empty-frame execution, and operational adequacy | Partial correctness without mode-specific client premises |
+| `theories/OwnedResources.v` | Local updates, donation reassembly, disjointness preservation, and mode inclusion | Resource lemmas for the active target |
+| `theories/OwnedAcceptance.v` | All three fixed acceptance tests, double acquisition, split-token fault, and externally blocked local future | Checked checkpoint-5 implementation regressions |
 | `theories/OwnershipTransfer.v` | Protected-to-private withdrawal at fence/unlock; disjoint-history donation reassembly | Checked transfer rules and a restricted boundary lemma |
 | `theories/OwnershipTransferLimits.v` | Scoped cell versus ordinary points-to; general retained-history donation obstruction | Concrete invalid donation and positive disjoint-history instance |
 | `theories/TransferExamples.v` | Known-present withdrawal, release, private load and retained foreign write | All-run proofs, concrete traces, rejected all-processor transfer postcondition |
@@ -509,12 +520,14 @@ general framed load/store/lock specifications remains an open expressiveness
 check. Base heap operations, fence, and acquisition now check; unrestricted
 release fails because it does not establish the invariant on unlocking.
 
-The current additional repair uses `persistent_models` and `persistent_valid`.
+The earlier future-aware repair uses `persistent_models` and `persistent_valid`.
 Only wand interpretation changes from the previous repaired model; ordinary
 machine steps and the ownership-aware safety predicate are reused. Full
 assertion closure and the bounded calculus soundness theorem are proved.
 Here `persistent` means preserved by generalized flushing, not duplicable.
 See [the precise rule comparison and release problem](notes/persistent-semantics.md).
+The active `owned_valid` target retains that assertion interpretation but uses
+the approved single-resource ownership semantics described above.
 
 ## Remaining proof work
 
@@ -522,25 +535,25 @@ See [the precise rule comparison and release problem](notes/persistent-semantics
    The review response and [guarded invariant results](review/checkpoint-2.md)
    are complete. [Checkpoint 3](review/checkpoint-3.md) refutes the arbitrary
    residual lemma; [checkpoint 4](review/checkpoint-4.md) proves fixed-frame
-   buffer uniqueness and actual flush attribution. [Checkpoint 5](review/checkpoint-5.md)
-   proposes the exact single safety target replacing the `separated_safe`
-   development path and fixes its acceptance tests. Resolve the singleton
-   lock-domain decision and review the definition before implementing it.
+   buffer uniqueness and actual flush attribution. The approved
+   [checkpoint-5 implementation](review/checkpoint-5-implementation.md) now
+   proves closure, adequacy, mode inclusion, and the fixed acceptance tests
+   for `owned_safe`. Review this implementation, then prove the general
+   ownership-transfer rules and frame reconstruction for that single target.
    The candidate replaces INV with explicit
    ownership rules, preserves `emp`, and initially restricts FRAME-TM to
    unlock-free commands. Do not extend the retirement interpretation or add
    another validity predicate without a checkpoint.
-2. Extend the two-thread parallel rule to nested parallel derivations and
-   additional threads. It now permits private loads after release under the
-   existing variable-interference condition, with checked preservation of
-   intermediate assertions and both final register results.
-   See [its exact scope](notes/parallel-ownership.md).
+2. Prove concurrency for `owned_safe`, including nested parallel derivations
+   and the accepted variable-interference conditions. The earlier model's
+   parallel rule permits private loads after release, but does not transfer
+   automatically to this target. See [its scope](notes/parallel-ownership.md).
 3. Implement capture-avoiding assertion substitution and its semantic lemma.
 4. Generalize constant-cell load/store to expression and framed forms, and
    check their freshness conditions and shared-invariant transfers. Integrate
-   arithmetic assignments into the private calculus. Extend
+   arithmetic assignments into the active target. Extend
    the checked critical-section example to multiple protected cells and private state.
-5. Establish the full frame, concurrency, and invariant rules, then complete
+5. Establish the full frame, concurrency, and explicit ownership-transfer rules, then complete
    soundness by induction on derivations and the message-passing example.
 
 The dissertation identifies its soundness proof as incomplete on pp. 9–10.

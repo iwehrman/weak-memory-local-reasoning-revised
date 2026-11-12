@@ -10,6 +10,7 @@ theories/OrderedSeparation.v
 theories/StableCompatibility.v
 theories/RepairedSeparation.v
 theories/OperationalSemantics.v
+theories/ProgramSteps.v
 theories/FrameDecomposition.v
 theories/RepairedFlushing.v
 theories/GeneralizedFlushing.v
@@ -52,6 +53,9 @@ theories/SeparatedRules.v
 theories/TransferredCells.v
 theories/InvariantFragment.v
 theories/FlushAttribution.v
+theories/OwnedSafety.v
+theories/OwnedAdequacy.v
+theories/OwnedResources.v
 theories/SeparatedHeap.v
 theories/OwnershipTransfer.v
 theories/SeparatedCalculus.v
@@ -79,6 +83,7 @@ theories/SeparatedExamples.v
 theories/OwnershipTransferLimits.v
 theories/TransferExamples.v
 theories/InvariantFragmentExamples.v
+theories/OwnedAcceptance.v
 theories/FrameShapeCounterexample.v
 theories/FixedFrameExamples.v
 theories/RetiredHeaps.v

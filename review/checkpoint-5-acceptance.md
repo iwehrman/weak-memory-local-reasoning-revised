@@ -1,8 +1,10 @@
 # Checkpoint 5 — fixed acceptance tests
 
-These are theorem targets for the [proposed single safety definition](checkpoint-5.md),
-recorded before implementing that predicate or proving its rules. They are
-**not yet checked validity results**. `C(x,v)` abbreviates `writer_points_to`,
+These theorem targets were recorded for the [single safety definition](checkpoint-5.md)
+before implementing the predicate or proving its rules. **All three now
+have checked results** in [OwnedAcceptance.v](../theories/OwnedAcceptance.v);
+see the [implementation report](checkpoint-5-implementation.md) for their
+statements, scope, and additional regressions. `C(x,v)` abbreviates `writer_points_to`,
 and `W_i(x,v)` abbreviates the original `LeadsTo` atom. All examples use
 constant addresses/values and processor annotations. No register condition
 is being hidden in them.

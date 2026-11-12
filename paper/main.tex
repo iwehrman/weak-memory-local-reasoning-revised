@@ -1,0 +1,62 @@
+%% Weak-Memory Local Reasoning, Revisited.
+%% Build: latexmk -pdf main   (or: tectonic main.tex)
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{mathpartir}
+\usepackage{xcolor}
+\usepackage[bookmarks=true,colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref}
+
+%% The dissertation's own notation, unchanged.
+\input{notation}
+\input{definitions}
+%% Notation added for this report.
+\input{macros}
+
+\title{Weak-Memory Local Reasoning, Revisited}
+\author{Ian Wehrman}
+\date{Draft of \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+My 2012 dissertation proposed a program logic for local reasoning about
+concurrent programs on an x86-like, total-store-order memory model. It left
+two components unfinished: the soundness proof, and a proof system for
+assertions. This report returns to both with a mechanization in Rocq. The
+soundness theorem does not hold as printed: four of the printed rules derive
+false specifications. A repaired calculus is sound, with operational
+adequacy, and keeps the assertion language, the unit law for $\femp$, the
+temporal frame rule and the printed load and store axioms. The report
+explains what was wrong, what had to change and why, and what the repaired
+logic can prove.
+\end{abstract}
+
+\input{sections/intro}
+\input{sections/original}
+\input{sections/wrong}
+\input{sections/changes}
+\input{sections/model}
+\input{sections/calculus}
+\input{sections/results}
+\input{sections/proofs}
+\input{sections/mechanization}
+\input{sections/related}
+\input{sections/open}
+
+\begin{thebibliography}{9}
+\bibitem{wehrman12}
+Ian Wehrman.
+\newblock \emph{Weak-Memory Local Reasoning}.
+\newblock PhD dissertation, The University of Texas at Austin, December 2012.
+\end{thebibliography}
+
+\appendix
+\input{sections/appendix}
+
+\end{document}

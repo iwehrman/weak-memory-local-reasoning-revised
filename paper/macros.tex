@@ -1,0 +1,21 @@
+%% Notation that is not in the dissertation.
+
+%% Rocq identifiers: typewriter, underscores allowed, may break at them.
+\newcommand{\rocq}[1]{\nolinkurl{#1}}
+
+%% A write by processor i that has flushed: (e ~>_i e') <| bar_i.
+%% The dissertation's macro file already defines \fwrote{i} as a tailed
+%% arrow with a subscript; we give it this meaning.
+\newcommand{\fwroteu}{\ensuremath{\rightarrowtail}}
+
+%% Ownership modes of the repaired judgment.
+\newcommand{\modeov}{\ensuremath{\mathsf{ov}}}
+\newcommand{\modedj}{\ensuremath{\mathsf{dj}}}
+\newcommand{\mspec}[5]{\ensuremath{#1\,\vdash^{#2}\,\set{#3}\;#4\;\set{#5}}}
+\newcommand{\mtruespec}[5]{\ensuremath{#1\,\models^{#2}\,\set{#3}\;#4\;\set{#5}}}
+
+%% Rule names in running text.
+\newcommand{\rn}[1]{\textsc{#1}}
+
+%% Status notes while drafting. Remove before circulating.
+\newcommand{\pending}[1]{\textcolor{red}{[\emph{pending:} #1]}}

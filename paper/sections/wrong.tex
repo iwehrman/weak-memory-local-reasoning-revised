@@ -1,0 +1,203 @@
+\section{What was wrong}
+\label{sec:wrong}
+
+The problems are presented from the most local to the most structural,
+which is also the order in which the mechanization found them. Each is a
+theorem checked by Rocq against a transcription of the printed definitions;
+the theorem's name is given so that the statement can be inspected.
+
+\subsection{Local errors with local repairs}
+\label{sec:local-errors}
+
+Table~\ref{tab:local} lists six printed claims that are false as stated.
+None is deep, and each has a repair that leaves the design intact.
+
+\begin{table}[t]
+\small
+\begin{tabularx}{\textwidth}{@{}p{0.27\textwidth}X p{0.23\textwidth}@{}}
+\toprule
+Printed claim & Counterexample & Repair \\
+\midrule
+\rn{assign} is sound for every invariant
+  & With $J$ the assertion $x = 0$, the axiom derives
+    $\spec{J}{\bexpt}{\cassign{x}{1}_1}{\bexpt}$, and the assignment
+    falsifies $J$ with the lock free.
+    \rocq{printed_assignment_invalid}
+  & Require $x \notin \fv{J}$. \\[2pt]
+Buffer overriding is associative (Prop.~2)
+  & Three one-element buffers writing $1$, $2$, $3$ to one address: the
+    list $[2,1,3]$ is in $a \override (b \override c)$ but not in
+    $(a \override b) \override c$.
+    \rocq{printed_buffer_override_not_associative}
+  & A write from the later buffer may be taken only after the earlier
+    buffer's writes to that address. \\[2pt]
+Spatiotemporal separation is associative
+  & Compatibility ignores blocked processors, so whether two memories
+    compose can depend on a third that supplies the blocking fact.
+    \rocq{printed_spatiotemporal_not_associative}
+  & Check conflicts whether or not the processor is blocked. \\[2pt]
+Assertions are closed under flushing (Prop.~9)
+  & $\bexpf \fseqri \fbar{1}$ holds vacuously while processor $1$ has a
+    pending write, and fails once the write flushes.
+    \rocq{pointwise_temporal_wand_not_flush_closed}
+  & Implications quantify over all futures of the current memory. \\[2pt]
+Conjecture~1
+  & A cell duplicated across $\shash$ with equal values is not a spatial
+    split. \rocq{printed_conjecture1_false}
+  & Not needed by the final proof. \\[2pt]
+\rn{unlock} is sound for every invariant
+  & With $J = \bexpf$ and the lock held, $\cunlock_i$ is enabled and
+    nothing restores $J$. \rocq{arbitrary_invariant_unlock_invalid}
+  & See Section~\ref{sec:changes}. \\
+\bottomrule
+\end{tabularx}
+\caption{Printed claims that fail, each with a checked counterexample.}
+\label{tab:local}
+\end{table}
+
+Two remarks. The repaired compatibility relation is stronger than the
+printed one, so it rejects some compositions the dissertation admits. Those
+are states in which a blocked processor has a pending write to a cell that
+someone else owns, which arise only under the ``daring'' rules that the
+dissertation proposed and did not adopt. And the repaired implications are
+the ordinary Kripke reading of implication over the flushing preorder; the
+three adjunctions between conjunctions and implications still hold.
+
+The failure of \rn{unlock} points at something larger. The printed safety
+predicate asks for the invariant only while the lock is free. Once a
+thread holds the lock, the predicate has forgotten that $J$ held at the
+moment of acquisition, so neither \rn{unlock} nor \rn{inv} can be justified
+from it. That alone would call for a different predicate. The next
+subsection shows that it calls for different rules.
+
+\subsection{The printed rules are inconsistent}
+\label{sec:inconsistent}
+
+Write $x \fwrote{k} v$ for a write by processor $k$ that has flushed,
+$x \fwrite{k} v \fseq \fbar{k}$. It is an assertion of the printed grammar
+and denotes one heap cell, with $k$ buffer-complete.
+
+\paragraph{History can be invented.}
+A model is a memory, not a record of how the memory came about. So a
+current cell is also a model of any stale value followed by that cell:
+\begin{equation}
+  \label{eq:invent}
+  x \fwrote{k} 7 \fsep \flock{i}
+  \;\sentails\;
+  x \fwrote{k} 5 \fseq (x \fwrote{k} 7 \fsep \flock{i}).
+\end{equation}
+The stale cell is overridden by the later one, and nothing remains of it.
+This is the non-cancellativity that the dissertation notes in passing.
+
+\paragraph{A $\cskip$ that changes memory.}
+Let $J$ be $\femp \disj x \fwrote{k} 7$. The following is a derivation in
+the printed calculus.
+\begin{enumerate}[nosep]
+  \item $\spec{\femp}{J \fsep x \fwrote{k} 7 \fsep \flock{i}}{\cskip_i}
+        {J \fsep \femp \fsep \flock{i}}$,
+        by \rn{skip} and \rn{cons}: $J$ cannot be its second disjunct, since
+        the cell would occur twice, and in the first disjunct the cell can
+        be reassigned to $J$.
+  \item $\spec{J}{x \fwrote{k} 7 \fsep \flock{i}}{\cskip_i}
+        {\femp \fsep \flock{i}}$, by \rn{inv}. The thread has given its
+        cell to the invariant.
+  \item $\spec{J}{x \fwrote{k} 5 \fseq (x \fwrote{k} 7 \fsep \flock{i})}
+        {\cskip_i}{x \fwrote{k} 5 \fseq (\femp \fsep \flock{i})}$,
+        by \rn{frame-tm}.
+  \item $\spec{J}{x \fwrote{k} 7 \fsep \flock{i}}{\cskip_i}
+        {x \fwrote{k} 5 \fsep \flock{i}}$, by \rn{cons}, using
+        \eqref{eq:invent} on the left and the unit law for $\femp$ on the
+        right.
+\end{enumerate}
+The conclusion says that a thread holding the lock and a cell containing
+$7$ may do nothing and then own that cell containing $5$. In the state
+where processor $1$ holds the lock and $x$ contains $7$, the precondition
+holds and the postcondition does not. (\rocq{printed_calculus_stale_value_unsound};
+the mechanized statement parses \rn{inv}'s premise as
+$J \fsep (P \fsep \flock{i})$.)
+
+\paragraph{A $\cskip$ that drains another processor's buffer.}
+Spatial conjunction takes the union of the completeness sets and does not
+require them to be disjoint, so an empty neighbour can copy a cell's mark:
+$x \fwrote{2} 7 \fsep \femp \sentails x \fwrote{2} 7 \fsep \fbar{2}$. With
+$J$ the cell $x \fwrote{2} 7$, \rn{skip}, \rn{cons} and \rn{inv} give
+$\spec{J}{\femp \fsep \flock{1}}{\cskip_1}{\fbar{2} \fsep \flock{1}}$, and
+\rn{frame-tm} with a pending write $R = y \fwrite{2} 17$ gives
+\[
+  \spec{J}{R \fseq (\femp \fsep \flock{1})}{\cskip_1}
+          {R \fseq (\fbar{2} \fsep \flock{1})}.
+\]
+When processor $1$ holds the lock and processor $2$'s write to $y$ is still
+buffered, the precondition holds. The postcondition places a barrier for
+processor $2$ after its pending write, which no memory satisfies while the
+write is pending. (\rocq{printed_calculus_foreign_barrier_unsound}.)
+
+Both derivations use the owner-specific cell rather than the all-processor
+points-to; the rules range over arbitrary assertions, so these are legal
+instances. \pending{the same two derivations with $\fpointsto$}
+Both conclusions are also invalid for the printed predicate $\safe{n}{}$,
+but that is the lesser point. They are false under the dissertation's
+informal reading of a specification, and under any semantics for which a
+true specification describes what the program does.
+
+\subsection{Why no semantics could repair it}
+\label{sec:trilemma}
+
+The first derivation is an instance of a general conflict.
+
+\begin{proposition}[\rocq{trilemma}]
+\label{prop:trilemma}
+Suppose a logic of triples has an unrestricted temporal frame rule, the
+rule of consequence, and the entailment $R \fseq \femp \sentails R$.
+Suppose $\htriple{P}{c}{\femp}$ is provable. Then $\htriple{R \fseq P}{c}{R}$
+is provable for every $R$. Hence if some execution of $c$ starts in a state
+satisfying $R \fseq P$ and ends in a state that does not satisfy $R$, the
+logic is unsound.
+\end{proposition}
+
+The proof is two rule applications. The content is in the last sentence. A
+triple $\htriple{P}{c}{\femp}$ with $P$ owning a cell is a \emph{transfer-out
+contract}: after $c$, the cell belongs to someone else. Whenever temporal
+conjunction lets later values override earlier ones, $R$ may describe an
+older state of the same cell, as the store axiom's own postcondition does.
+Framing $R$ across the transfer then hands the thread a stale copy of a
+cell it no longer owns.
+
+So four things cannot all be kept: the unrestricted temporal frame rule,
+the right-unit law, transfer-out contracts ending in $\femp$, and
+overlapping temporal history. A sound logic must give one up, and the
+choice determines its character:
+\begin{itemize}[nosep]
+  \item \emph{No transfer out.} Cells may be taken from the invariant and
+        never returned. This is sound and useless for a shared container.
+  \item \emph{No right unit.} Let $\femp$ record that a cell was given
+        away. Framing survives, and every postcondition that mentions
+        $\femp$ changes meaning.
+  \item \emph{Transfer leaves a mark.} Return an explicit tombstone
+        assertion instead of $\femp$. The algebra survives; every later
+        specification carries the tombstones.
+  \item \emph{Restrict the frame.} Forbid temporal frames that overlap the
+        cells being given away. Everything else is kept.
+\end{itemize}
+The first two were built and abandoned during this work, for the reasons
+given. The repaired calculus takes the fourth, and by
+Proposition~\ref{prop:trilemma} that restriction cannot be weakened: every
+frame that overlaps a released cell yields a false specification.
+
+The second derivation has a different cause and a different repair. The
+all-processor completeness of points-to, and more generally the
+completeness marks of whatever the invariant holds, should not pass to a
+thread that acquires the lock. A thread can vouch only for its own buffer.
+
+\subsection{The dissertation's own example}
+\label{sec:own-example}
+
+Section~4.1 of the dissertation proves a small message-passing program
+correct, using an invariant that mentions two registers and the derived
+rule \rn{atomic}. That proof does not carry over to the repaired calculus:
+\rn{atomic}, \rn{share} and auxiliary-variable elimination are not
+available, and the concurrency rule now forbids either thread from
+modifying a variable free in the invariant. This shows that the proof does
+not port, not that its conclusion is false.
+\pending{the repaired derivation of the same program, and the recovery of
+its original conclusion}

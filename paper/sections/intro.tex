@@ -1,0 +1,77 @@
+\section{Introduction}
+\label{sec:intro}
+
+The dissertation~\cite{wehrman12} set out to give a local reasoning
+principle for programs running on an x86-like machine, where each processor
+buffers its writes and other processors cannot see a write until it leaves
+the buffer. Its logic has three separating conjunctions. Spatial
+conjunction $P \fsep Q$ splits memory by address, as in separation logic.
+Temporal conjunction $P \fseq Q$ splits it by time: $P$ describes earlier
+writes and $Q$ later ones, possibly to the same addresses. Strong temporal
+conjunction $P \fsseq Q$ requires both. Each has a frame rule, and a
+concurrency rule and a shared invariant in the style of concurrent
+separation logic sit on top.
+
+The dissertation was candid about where it stopped. Its statement of
+contributions lists two major components as unfinished and admits a third
+gap:
+\begin{enumerate}[nosep]
+  \item there is no proof system for the assertion language;
+  \item the soundness proof for the specification logic is incomplete; and
+  \item the document ``gives little indication of how proofs ought to
+        proceed in the logic.''
+\end{enumerate}
+It also hypothesized that the logic was sound and that the remaining proofs
+were ``mostly straightforward inductions.''
+
+This report returns to those three items, fourteen years later, with a
+mechanization in the Rocq prover. Its findings are as follows.
+
+\paragraph{The soundness theorem does not hold as printed.}
+Several auxiliary claims are false, and each has a local repair
+(Section~\ref{sec:local-errors}). More seriously, the rules themselves are
+inconsistent with any adequate semantics: from \rn{skip}, \rn{cons},
+\rn{inv} and \rn{frame-tm} alone one can derive that a $\cskip$ changes the
+contents of a memory cell (Section~\ref{sec:inconsistent}). No choice of
+safety predicate can repair that.
+
+\paragraph{The cause is general.}
+An unrestricted temporal frame rule, a right unit for temporal conjunction,
+the rule of consequence, and any command that gives away ownership of a
+cell cannot coexist (Section~\ref{sec:trilemma}). The observation is
+independent of the memory model. It applies to any logic that combines a
+non-cancellative sequential conjunction with ownership transfer.
+
+\paragraph{A repaired calculus is sound.}
+The repair replaces the invariant rule by lock and unlock rules that
+transfer the invariant, restricts the temporal frame rule to specifications
+that tolerate overlapping history, and adjusts four side conditions
+(Section~\ref{sec:changes}). The repaired calculus is proved sound by
+induction on derivations, with an adequacy theorem for the dissertation's
+machine (Section~\ref{sec:results}). The proofs are checked by the Rocq
+kernel and use no axioms.
+
+\paragraph{Most of the design survives.}
+The machine, the assertion language and its interpretation of atoms, the
+unit laws for $\femp$, overlapping temporal history, the temporal and
+spatial frame rules, the concurrency rule, and the printed load and store
+axioms are all retained. The strong temporal frame rule is not.
+\pending{exact list of surviving assertion laws, from the algebra audit}
+
+\paragraph{The logic can be used.}
+Section~\ref{sec:proofs} derives a shared container in which a thread
+acquires the lock, removes a cell, releases the lock, writes the cell
+privately, and later returns it, while another processor's write stays
+buffered throughout.
+\pending{the Section 4.1 example; the larger derivation; the assertion
+proof system}
+
+\medskip
+The report assumes a reader who knows the dissertation and has forgotten
+its details. Section~\ref{sec:original} recalls the original model and
+calculus in the original notation. Sections~\ref{sec:wrong}
+and~\ref{sec:changes} say what was wrong and what changed.
+Sections~\ref{sec:model} to~\ref{sec:proofs} present the repaired model,
+calculus, results and derivations. Proofs are not reproduced; every claim
+cites the name of its Rocq theorem, and the appendix gives fuller
+statements.

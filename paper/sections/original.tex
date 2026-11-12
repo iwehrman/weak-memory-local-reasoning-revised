@@ -1,0 +1,208 @@
+\section{The original model and calculus}
+\label{sec:original}
+
+This section recalls Chapter~4 of the dissertation, in its notation. Nothing
+here is new. Page and figure numbers refer to the dissertation.
+
+\subsection{The machine}
+
+A \emph{memory system} is a triple $\mu = (h,B,K)$: a heap
+$h : \setlocations \pfun \setvalues$, an array of write buffers
+$B : \setprocessors \tfun \listof{(\setlocations \times \setvalues)}$ with
+the oldest write first, and a set $K \subseteq \setprocessors$ of
+\emph{blocked} processors. A state pairs a stack $s$ with a memory system.
+The lock is not a separate component: it is free when $K = \nil$ and held
+by $i$ when $K = \setprocessors \setminus \set{i}$.
+
+Primitive commands carry the identifier of the processor that executes
+them. Their behaviour on processor $i$ is as follows.
+\begin{itemize}[nosep]
+  \item $\cstore{e}{e'}_i$ appends a write to $B(i)$. The address must be
+        allocated, in the heap or in $B(i)$. A blocked processor may still
+        store.
+  \item $\cload{x}{e}_i$ requires $i \notin K$ and returns the newest write
+        to that address in $B(i)$, or else the heap value.
+  \item $\cfence_i$, $\clock_i$ and $\cunlock_i$ require $B(i) = \lnil$.
+        $\clock_i$ additionally requires $K = \nil$ and sets
+        $K = \setprocessors \setminus \set{i}$; $\cunlock_i$ reverses this.
+  \item A silent step $\taustep$ moves the oldest write of some unblocked
+        processor from its buffer to the heap.
+\end{itemize}
+Commands are built from primitives by sequencing $\cseq{c}{c'}$, choice
+$\cchoice{c}{c'}$, iteration $\cloop{c}$ and parallel composition
+$\cpar{c}{c'}$. There is no allocation. While a processor holds the lock,
+no other processor can load or flush, but others may continue to store and
+to assign to registers.
+
+\subsection{Generalized memories and separation}
+
+A \emph{generalized memory system} $\nu = (h,B,K,\Gamma)$ adds a
+\emph{buffer-completeness} set $\Gamma \subseteq \setprocessors$, with
+$h = \nil$ whenever $\Gamma = \nil$. Membership $i \in \Gamma$ means that
+buffer $i$ is complete: nothing may be placed before it.
+
+Three operations combine generalized memories. Write $\nu_k =
+(h_k,B_k,K_k,\Gamma_k)$. All three take $K_0 \cup K_1$ and
+$\Gamma_0 \cup \Gamma_1$ and require $K_0 \cap K_1 = \nil$.
+\begin{description}[nosep,leftmargin=1.5em]
+  \item[Spatial, $\nu_0 \msep \nu_1$.] The address domains of the two
+    sides, counting both heaps and buffers, are disjoint. The heap is
+    $h_0 \uplus h_1$ and each buffer is an interleaving of the two.
+  \item[Temporal, $\nu_0 \mseq \nu_1$.] The heap is $h_0 \override h_1$, so
+    later values win, and each buffer is $B_0(i) \lapp B_1(i)$. The sides
+    may share addresses, subject to a compatibility condition: an unblocked
+    pending write in $\nu_0$ may not target an address in the heap of
+    $\nu_1$, nor an address pending on a different unblocked processor in
+    $\nu_1$. Finally $B_0(i) = \lnil$ for every $i \in \Gamma_1$.
+  \item[Spatiotemporal, $\nu_0 \mhash \nu_1$.] As temporal, but each buffer
+    is any interleaving whose lookup function agrees with
+    $B_0(i) \lapp B_1(i)$, and the condition on $\Gamma_1$ is dropped. It
+    contains both of the others and is used only in the semantics of
+    specifications.
+\end{description}
+\emph{Strong temporal} separation $\nu_0 \msseq \nu_1$ is $\nu_0 \mseq
+\nu_1$ restricted to pairs that are also spatially compatible.
+
+\subsection{Assertions}
+
+Assertions are given by
+\[
+  P \bnfdef b \bnfbar P \disj P \bnfbar P \conj P \bnfbar \exists x \st P
+    \bnfbar \forall x \st P \bnfbar \femp \bnfbar \fbar{e} \bnfbar
+    \flock{e} \bnfbar e \fwrite{e'} e'' \bnfbar P \fsep P \bnfbar
+    P \fseq P \bnfbar P \fsepi P \bnfbar P \fseqli P \bnfbar P \fseqri P
+\]
+and are interpreted over a stack and a generalized memory. The atoms are:
+\begin{itemize}[nosep]
+  \item $\femp$: empty heap, empty buffers, $K = \nil$; $\Gamma$ is
+        unconstrained.
+  \item $\fbar{i}$: as $\femp$, with $i \in \Gamma$ when $i$ is a processor.
+  \item $\flock{i}$: empty heap and buffers, with
+        $K = \setprocessors \setminus \set{i}$.
+  \item $e \fwrite{i} e'$ (``leads to''): either a single \emph{pending}
+        write $(e,e')$ in $B(i)$ and nothing else, or a single
+        \emph{flushed} heap cell $e \mapsto e'$ with $i \in \Gamma$.
+\end{itemize}
+$P \fsep Q$ and $P \fseq Q$ hold of $\nu$ when $\nu$ is a spatial,
+respectively temporal, combination of a model of $P$ and a model of $Q$.
+The three implications are the corresponding adjoints. Two abbreviations
+matter below:
+\[
+  P \fsseq Q \eqdef (P \fsep Q) \conj (P \fseq Q)
+  \qquad\qquad
+  e \fpointsto e' \eqdef (\exists x \st e \fwrite{x} e') \fseq
+                         (\forall x \st \fbar{x}).
+\]
+Points-to therefore describes a flushed cell with \emph{every} processor
+buffer-complete. The dissertation claims that every assertion is closed
+under flushing (Proposition~9), and that each conjunction is associative
+with $\femp$ as a unit (Figure~4.5).
+
+\subsection{Specifications and rules}
+
+A specification $\spec{J}{P}{c}{Q}$ has an invariant $J$ for shared state
+and a private precondition and postcondition. Figure~\ref{fig:printed}
+reproduces the axioms and rules.
+
+\begin{figure}[t]
+\small
+\begin{mathpar}
+\inferrule[skip]{ }{\spec{J}{P}{\cskip_i}{P}}
+\and
+\inferrule[assume]{ }{\spec{J}{\neg b \disj P}{\cassume{b}_i}{P}}
+\and
+\inferrule[assert]{ }{\spec{J}{b \conj P}{\cassert{b}_i}{P}}
+\and
+\inferrule[assign]{ }{\spec{J}{P\subst{e}{x}}{\cassign{x}{e}_i}{P}}
+\and
+\inferrule[fence]{ }{\spec{J}{\femp}{\cfence_i}{\fbar{i}}}
+\and
+\inferrule[lock]{ }{\spec{J}{\femp}{\clock_i}{\flock{i}}}
+\and
+\inferrule[unlock]{ }{\spec{J}{\flock{i}}{\cunlock_i}{\femp}}
+\and
+\inferrule[load]{ }
+  {\spec{J}{e \fwrite{i} e' \fsseq P}{\cload{x}{e}_i}
+        {(e \fwrite{i} e' \fsseq P) \conj x = e'}}
+\and
+\inferrule[store]{ }
+  {\spec{J}{e \fwrite{i} e'' \fsseq P}{\cstore{e}{e'}_i}
+        {(e \fwrite{i} e'' \fsseq P) \fseq e \fwrite{i} e'}}
+\and
+\inferrule[frame-$\bullet$]
+  {\spec{J}{P}{c}{Q} \\ \mod{c} \cap \fv{R} = \nil}
+  {\spec{J}{R \fgen P}{c}{R \fgen Q}}
+\and
+\inferrule[cons]
+  {P \sentails P' \\ \spec{J}{P'}{c}{Q'} \\ Q' \sentails Q}
+  {\spec{J}{P}{c}{Q}}
+\and
+\inferrule[seq]
+  {\spec{J}{P}{c}{R} \\ \spec{J}{R}{c'}{Q}}
+  {\spec{J}{P}{\cseq{c}{c'}}{Q}}
+\and
+\inferrule[choice]
+  {\spec{J}{P}{c}{Q} \\ \spec{J}{P}{c'}{Q}}
+  {\spec{J}{P}{\cchoice{c}{c'}}{Q}}
+\and
+\inferrule[loop]{\spec{J}{P}{c}{P}}{\spec{J}{P}{\cloop{c}}{P}}
+\and
+\inferrule[disj]
+  {\spec{J}{P}{c}{Q} \\ \spec{J}{P'}{c}{Q}}
+  {\spec{J}{P \disj P'}{c}{Q}}
+\and
+\inferrule[ex]
+  {\spec{J}{P}{c}{Q} \\ x \notin \fv{c,Q}}
+  {\spec{J}{\exists x \st P}{c}{Q}}
+\and
+\inferrule[conc]
+  {\spec{J}{P_k}{c_k}{Q_k} \\ \fv{P_k,c_k,Q_k} \cap \mod{c_{1-k}} = \nil
+   \quad (k = 0,1)}
+  {\spec{J}{P_0 \fsep P_1}{\cpar{c_0}{c_1}}{Q_0 \fsep Q_1}}
+\and
+\inferrule[share]
+  {\spec{J}{P}{c}{Q}}
+  {\spec{\femp}{J \fsep P}{c}{J \fsep Q}}
+\and
+\inferrule[inv]
+  {\spec{\femp}{J \fsep P \fsep \flock{i}}{c}{J \fsep Q \fsep \flock{i}}}
+  {\spec{J}{P \fsep \flock{i}}{c}{Q \fsep \flock{i}}}
+\end{mathpar}
+\caption{The printed axioms and rules (Figures~4.7 and~4.8).
+\rn{frame-$\bullet$} stands for three rules, \rn{frame-sp}, \rn{frame-tm}
+and \rn{frame-stm}, with $\bullet$ read as $\fsep$, $\fseq$ and $\fsseq$.}
+\label{fig:printed}
+\end{figure}
+
+Three features of the design are worth recalling, because the repair turns
+on them. First, \rn{lock} and \rn{unlock} produce and consume only the
+token $\flock{i}$. The invariant reaches the lock holder through \rn{inv},
+which may be applied to any command executed while the lock is held and
+allows the private state to exchange cells with $J$. Second, \rn{frame-tm}
+has only the usual variable condition: any history $R$ may be placed before
+any specification. Third, temporal conjunction is not cancellative, as the
+dissertation remarks: $\mu \sseq \mu_0 = \mu \sseq \mu_1$ does not imply
+$\mu_0 = \mu_1$.
+
+\subsection{Semantics and status}
+
+Truth of a specification is defined through a family of predicates
+$\safe{n}{c,s,\mu,J,Q}$ after Vafeiadis. The predicate holds at $n+1$ when:
+if $c$ is $\cskip$ then $(s,\mu,\setprocessors) \sentails Q$; and for every
+$\mu_J$, $\mu_F$ and $\mu_0 \in \mu_J \ssep (\mu_F \shash \mu)$ that is
+lock-complete, with either $(s,\mu_J,\setprocessors) \sentails J$ or the
+lock held in $\mu_0$, the configuration does not abort, and every step to
+$(c',s',\mu_1)$ admits a new decomposition
+$\mu_1 \in \mu'_J \ssep (\mu'_F \shash \mu')$ with
+$\mu'_F \taurefines \mu_F$, the same condition on $J$, and
+$\safe{n}{c',s',\mu',J,Q}$. A specification is true,
+$\truespec{J}{P}{c}{Q}$, when $(s,\mu,\setprocessors) \sentails P$ implies
+$\safe{n}{c,s,\mu,J,Q}$ for all $n$. Local states are always read at full
+completeness, $\Gamma = \setprocessors$.
+
+Theorem~1 states that provable specifications are true. The dissertation
+proves the axioms sound in an appendix, sketches a frame lemma for the
+spatiotemporal operator $\shash$, and reduces the spatial frame rule to
+Conjecture~1, which is left open. Associativity of buffer overriding
+(Proposition~2) and of the three separations, and flushing closure of
+assertions (Proposition~9), are stated with at most a sketch.

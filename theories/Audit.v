@@ -1289,3 +1289,96 @@ Print Assumptions NamedLockExamples.named_lock_two_initial_inhabited.
 Print Assumptions NamedLockExamples.named_lock_nested_trace.
 Print Assumptions NamedLockExamples.named_lock_nested_state.
 Print Assumptions NamedLockExamples.named_lock_nested_all_runs.
+
+From WMLR Require Import OwnedRetryRules.
+Print Assumptions OwnedRetryRules.owned_assertion_set_frame.
+Print Assumptions OwnedRetryRules.retry_assert_continue.
+Print Assumptions OwnedRetryRules.retry_assert_finish.
+Print Assumptions OwnedRetryRules.owned_assertion_retry.
+
+From WMLR Require Import NamedBufferedAssertions.
+Print Assumptions NamedBufferedAssertions.nl_assert_distribute_three.
+Print Assumptions NamedBufferedAssertions.nl_assert_take_retained.
+Print Assumptions NamedBufferedAssertions.nl_assert_retry_retained.
+Print Assumptions NamedBufferedAssertions.nl_assert_buffered_return_open.
+Print Assumptions NamedBufferedAssertions.nl_assert_buffered_return_closed.
+
+From WMLR Require Import NamedBufferedRules.
+Print Assumptions NamedBufferedRules.nl_acquire_cases_retained.
+Print Assumptions NamedBufferedRules.nl_read_cases_derived.
+Print Assumptions NamedBufferedRules.nl_attempt_retained_derived.
+Print Assumptions NamedBufferedRules.named_lock_acquire_retained_family.
+Print Assumptions NamedBufferedRules.nl_release_buffered_derived.
+Print Assumptions NamedBufferedRules.named_lock_release_buffered_family.
+
+From WMLR Require Import RegionRules.
+Print Assumptions RegionRules.cell_history_fv.
+Print Assumptions RegionRules.history_family_fv.
+Print Assumptions RegionRules.history_family_complete.
+Print Assumptions RegionRules.cell_family_contraction.
+Print Assumptions RegionRules.fill_region_derived.
+Print Assumptions RegionRules.read_region_derived.
+Print Assumptions RegionRules.fill_region_modifies.
+Print Assumptions RegionRules.fill_region_fv.
+Print Assumptions RegionRules.read_region_modifies.
+Print Assumptions RegionRules.read_region_fv.
+
+From WMLR Require Import MailboxSyntax.
+Print Assumptions MailboxSyntax.mailbox_flag_fv.
+Print Assumptions MailboxSyntax.mailbox_invariant_fv.
+Print Assumptions MailboxSyntax.mailbox_pool_fv.
+Print Assumptions MailboxSyntax.mailbox_pool_fragment.
+Print Assumptions MailboxSyntax.mailbox_producer_modifies.
+Print Assumptions MailboxSyntax.mailbox_producer_fv.
+Print Assumptions MailboxSyntax.mailbox_consumer_modifies.
+Print Assumptions MailboxSyntax.mailbox_consumer_fv.
+
+From WMLR Require Import MailboxAssertions.
+Print Assumptions MailboxAssertions.assert_derive_exclusive_extensions.
+Print Assumptions MailboxAssertions.mailbox_exclusive.
+Print Assumptions MailboxAssertions.mailbox_assert_producer_acquired.
+Print Assumptions MailboxAssertions.mailbox_assert_publish_complete.
+Print Assumptions MailboxAssertions.mailbox_assert_withdraw_complete.
+Print Assumptions MailboxAssertions.mailbox_assert_select_one.
+Print Assumptions MailboxAssertions.mailbox_assert_select_not_one.
+
+From WMLR Require Import MailboxDerivation.
+Print Assumptions MailboxDerivation.mailbox_publish_derived.
+Print Assumptions MailboxDerivation.mailbox_producer_derived.
+Print Assumptions MailboxDerivation.mailbox_read_derived.
+Print Assumptions MailboxDerivation.mailbox_take_yes_derived.
+Print Assumptions MailboxDerivation.mailbox_take_no_derived.
+Print Assumptions MailboxDerivation.mailbox_attempt_derived.
+Print Assumptions MailboxDerivation.mailbox_consumer_derived.
+Print Assumptions MailboxDerivation.mailbox_parallel_derived.
+Print Assumptions MailboxDerivation.mailbox_parallel_valid.
+
+From WMLR Require Import MailboxAdequacy.
+Print Assumptions MailboxAdequacy.mailbox_two_active.
+Print Assumptions MailboxAdequacy.zero_items_addresses.
+Print Assumptions MailboxAdequacy.mailbox_pending_domain.
+Print Assumptions MailboxAdequacy.mailbox_local_models.
+Print Assumptions MailboxAdequacy.mailbox_pool_initial_assertion.
+Print Assumptions MailboxAdequacy.mailbox_pool_initial_models.
+Print Assumptions MailboxAdequacy.mailbox_initial_split.
+Print Assumptions MailboxAdequacy.mailbox_framed_derived.
+Print Assumptions MailboxAdequacy.mailbox_all_runs.
+
+From WMLR Require Import MailboxTrace.
+Print Assumptions MailboxTrace.mailbox_sequence_to.
+Print Assumptions MailboxTrace.mb_fill_trace.
+Print Assumptions MailboxTrace.mb_acquire_after_fill_trace.
+Print Assumptions MailboxTrace.mb_publish_release_trace.
+Print Assumptions MailboxTrace.mailbox_producer_trace.
+Print Assumptions MailboxTrace.mb_take_release_trace.
+Print Assumptions MailboxTrace.mailbox_take_success_trace.
+Print Assumptions MailboxTrace.mb_retry_success_trace.
+Print Assumptions MailboxTrace.mb_private_reads_trace.
+Print Assumptions MailboxTrace.mailbox_consumer_trace.
+Print Assumptions MailboxTrace.mailbox_parallel_trace.
+Print Assumptions MailboxTrace.mailbox_take_failure_trace.
+Print Assumptions MailboxTrace.mailbox_failed_iteration_retries.
+Print Assumptions MailboxTrace.nl_write_foreign_buffer.
+Print Assumptions MailboxTrace.mailbox_foreign_pending_throughout.
+Print Assumptions MailboxTrace.mailbox_trace_contents.
+Print Assumptions MailboxTrace.mailbox_example_all_runs.

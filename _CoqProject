@@ -171,4 +171,13 @@ theories/NamedLockAssertions.v
 theories/NamedLockRules.v
 theories/NamedLockTrace.v
 theories/NamedLockExamples.v
+theories/OwnedRetryRules.v
+theories/NamedBufferedAssertions.v
+theories/NamedBufferedRules.v
+theories/RegionRules.v
+theories/MailboxSyntax.v
+theories/MailboxAssertions.v
+theories/MailboxDerivation.v
+theories/MailboxAdequacy.v
+theories/MailboxTrace.v
 theories/Audit.v

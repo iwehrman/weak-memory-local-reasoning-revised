@@ -41,7 +41,9 @@ including CONS/UNLOCK and the cell access helpers. The dissertation's
 in that system, with its original one-cell execution conclusion, original
 points-to postcondition and both outcome traces. [Named spinlocks](review/paper-named-locks.md)
 are now derived for finite families, with retry and nested-lock traces.
-No rule was added. The
+The [producer/consumer mailbox](review/paper-mailbox.md) transfers a message
+of arbitrary length without a producer fence, with a checked 95-step trace
+that keeps an unrelated third-processor write pending. No rule was added. The
 [review response](review/lead-response-after-algebra-audit.md) also checks
 the requested remaining counterexamples in the original interpretation.
 [Independent follow-up](review/paper-independent-results.md) derives the
@@ -65,6 +67,7 @@ errors, repair choices and remaining scope.
 | All six conjunction unit laws for arbitrary assertions, including wands | [AssertionUnits.v](theories/AssertionUnits.v) |
 | Reading one's own buffered write, with arbitrary history and spatial tail | [OwnedBufferedLoad.v](theories/OwnedBufferedLoad.v) |
 | Store/fence cell rule, unfenced counterexample and a complete trace | [OwnedFenceExamples.v](theories/OwnedFenceExamples.v) |
+| Arbitrary-length mailbox client, buffered named-lock contracts and foreign pending-write trace | [MailboxDerivation.v](theories/MailboxDerivation.v), [MailboxAdequacy.v](theories/MailboxAdequacy.v), [MailboxTrace.v](theories/MailboxTrace.v) |
 | Named spinlocks for finite families, retry and nested-lock traces | [NamedLockRules.v](theories/NamedLockRules.v), [NamedLockTrace.v](theories/NamedLockTrace.v), [NamedLockExamples.v](theories/NamedLockExamples.v) |
 | Original message-passing derivation, token-free all-run theorem and both outcome traces | [MessagePassingDerivation.v](theories/MessagePassingDerivation.v), [MessagePassingAdequacy.v](theories/MessagePassingAdequacy.v), [MessagePassingTrace.v](theories/MessagePassingTrace.v) |
 | Exact heap-or-buffer address-domain preservation for every execution | [ExecutionDomain.v](theories/ExecutionDomain.v) |
@@ -100,7 +103,7 @@ make check
 
 `make` compiles every file in `_CoqProject`. `make check` additionally runs
 `rocq check` on `WMLR.Audit` and its dependencies. The audit currently reports
-**1,157 declarations closed under the global context**, including every new
+**1,232 declarations closed under the global context**, including every new
 lemma/theorem in the final calculus, retrying container, paper algebra audit
 and independent follow-up work.
 There are no admitted proofs or declared axioms. The proofs do not require
@@ -117,8 +120,8 @@ conversion, value hiding and drained-history collapse. The selected-branch
 container now uses these rules for every assertion obligation. The separate
 retrying variant remains checked but retains some semantic entailment proofs.
 The dissertation's message-passing example now uses that system and has
-the original one-cell execution conclusion. Named spinlocks for finite families are now derived too; next is the
-producer/consumer region client. Completeness and proof
+the original one-cell execution conclusion. Named spinlocks and the arbitrary-length producer/consumer mailbox are
+derived too. Restricted SHARE is the remaining main queue item. Completeness and proof
 automation are outside the current work queue. Expression-valued lock schemas,
 recursive predicates and Chapter 5's experimental extensions are outside the
 proved calculus. LOCK/UNLOCK currently use constant positive processor IDs;

@@ -253,15 +253,26 @@ are classified in the [design diagnosis](../review/paper-priority-1-design.md).
 | Two named locks held while physical lock free | `named_lock_nested_trace`, `named_lock_nested_state`, [NamedLockExamples.v](../theories/NamedLockExamples.v) | 59-step nested run; protected values unchanged, flags zero on completion. |
 | Finite cell products and exclusivity | `cell_family_models`, `cell_family_exclusive`, [CellFamilies.v](../theories/CellFamilies.v) | Rocq families of existing assertions; no recursive assertion constructor. |
 
+## Arbitrary-length mailbox
+
+| Result | Declaration and source | Scope |
+| --- | --- | --- |
+| Buffered named-lock interfaces | `named_lock_acquire_retained_family`, `named_lock_release_buffered_family`, [NamedBufferedRules.v](../theories/NamedBufferedRules.v) | Same implementation, DJ; expose retained draining and accept a completion proof on return. |
+| Fill/read arbitrary finite regions | `fill_region_derived`, `read_region_derived`, `history_family_complete`, [RegionRules.v](../theories/RegionRules.v) | List-parameterized, including empty lists; all assertion premises derived. |
+| Producer/consumer parallel derivation | `mailbox_parallel_derived`, [MailboxDerivation.v](../theories/MailboxDerivation.v) | No producer fence; retrying consumer ends owning the specified value region. |
+| Concrete initial-memory adequacy for arbitrary lists | `mailbox_all_runs`, [MailboxAdequacy.v](../theories/MailboxAdequacy.v) | Distinct flags, message and foreign address; three processors; every finite run safe, terminal invariant restored and region owned. |
+| Complete transfer and failed retry | `mailbox_parallel_trace`, `mailbox_failed_iteration_retries`, [MailboxTrace.v](../theories/MailboxTrace.v) | 95-step two-cell successful run and 41-step failed iteration. |
+| Unrelated write remains pending in witnesses | `mailbox_foreign_pending_throughout`, `mailbox_trace_contents`, same file | Includes internal physical lock/store/flush states; all-run theorem permits the foreign write to flush. |
+
 ## Mechanization figures and outstanding work
 
-At this batch, `make check` passes with **1,157 audited declarations closed**,
-no axioms and no admitted proofs, using Rocq 9.3.0. There are **173 theory
-files and 27,816 physical lines** listed in `_CoqProject`, including comments,
+At this batch, `make check` passes with **1,232 audited declarations closed**,
+no axioms and no admitted proofs, using Rocq 9.3.0. There are **182 theory
+files and 28,865 physical lines** listed in `_CoqProject`, including comments,
 blank lines, the audit commands, original transcriptions and superseded
 experiments. This is the entire checked development, not a claim that the
-active soundness proof alone is that large. The seven new named-lock/helper files have 699 physical lines and
-50 newly audited declarations.
+active soundness proof alone is that large. The nine new mailbox/helper files have 956 physical lines and
+75 newly audited declarations.
 Declaration totals count
 `Print Assumptions` entries, not every generated inductive eliminator.
 
@@ -275,11 +286,11 @@ bounded-search output for common splitting is in
 The assertion soundness and [4C reconstruction](../review/paper-container-assertions.md)
 checkpoints and the [message-passing result](../review/paper-message-passing.md)
 and the [named-lock result](../review/paper-named-locks.md) are complete and
-ready for review. Remaining main work is the mailbox region client, using
-assertion derivations. The separate retrying container's remaining semantic
+ready for review. The [mailbox region client](../review/paper-mailbox.md) is
+now complete too. Restricted SHARE is the remaining main queue item. The separate retrying container's remaining semantic
 entailments have not been reconstructed in this batch.
 Restricted SHARE's semantic lock-free pre/post premises are approved;
-its proof and mode scope remain open and are deferred until after the named-lock/client work.
+its proof and mode scope remain open and are next in the queue.
 Fenced Dekker lacks a shared-access rule; see the scope paragraph in the
 [batch report](../review/paper-independent-batch.md). No completeness or
 automation claim is made for the sound assertion system.

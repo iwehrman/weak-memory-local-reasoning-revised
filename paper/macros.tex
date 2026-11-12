@@ -19,3 +19,12 @@
 
 %% Status notes while drafting. Remove before circulating.
 \newcommand{\pending}[1]{\textcolor{red}{[\emph{pending:} #1]}}
+
+%% The repaired cell: a write that has flushed, by whichever processor
+%% wrote it. The dissertation's all-processor points-to keeps \fpointsto.
+\DeclareMathOperator{\fcell}{\!\rightarrowtail\!}
+
+%% Kinds of change, for the differences table.
+\newcommand{\kerr}{\textsf{error}}
+\newcommand{\kchoice}{\textsf{choice}}
+\newcommand{\kforced}{\textsf{forced}}

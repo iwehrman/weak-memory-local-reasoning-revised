@@ -1,4 +1,114 @@
 \section{How proofs proceed}
 \label{sec:proofs}
 
-\pending{to be written}
+The dissertation gave few examples. This section gives three, in increasing
+size. All are derivations in the calculus of Section~\ref{sec:calculus},
+checked by Rocq.
+
+\subsection{A store, with and without a fence}
+
+For any invariant and either mode,
+\[
+  \mspec{J}{m}{x \fcell u}{\cseq{\cstore{x}{v}_i}{\cfence_i}}{x \fcell v}
+\]
+is derivable (\rocq{owned_derive_store_fence_cell}): \rn{store-any} gives
+$x \fcell u \fseq x \fwrite{i} v$, \rn{frame-tm} carries that history
+across $\cfence_i$, and a drained history collapses to its last write. This
+is the store rule of ordinary separation logic. The same specification
+without the fence is \emph{invalid} (\rocq{owned_plain_store_cell_invalid}):
+the store may terminate with its write still buffered, and a cell assertion
+has no buffered writes. The logic is the difference between these two.
+
+\subsection{Reading a buffered write}
+
+After $\cstore{x}{v}_i$ the thread holds $R \fseq x \fwrite{i} v$, where
+$R$ describes the older state of $x$. The load axiom wants the loaded write
+to be spatially separate from the rest, and an old cell cannot be separated
+spatially from a newer write to the same address. The temporal frame rule
+is what resolves this. The newest write alone satisfies the axiom's
+precondition, with $\femp$ for $P$; the older history is a temporal frame:
+\[
+\inferrule*[right=frame-tm]
+  {\mspec{J}{\modeov}{x \fwrite{i} v}{\cload{r}{x}_i}
+         {x \fwrite{i} v \conj r = v}}
+  {\mspec{J}{\modeov}{R \fseq x \fwrite{i} v}{\cload{r}{x}_i}
+         {R \fseq (x \fwrite{i} v \conj r = v)}}
+\]
+(\rocq{owned_derive_load_after_history}). Store-to-load forwarding, the
+behaviour most characteristic of the machine, is thus an instance of the
+rule that most distinguishes the logic, and the reason it was worth
+keeping.
+
+\subsection{A shared container}
+
+One cell $x$ is shared through a flag $f$. With
+$X = \exists v \st x \fcell v$, the invariant is
+\[
+  J \;=\; f \fcell 0 \;\disj\; (f \fcell 1 \fsep X).
+\]
+A thread on processor $1$ takes the item, writes to it privately, and
+returns it:
+\begin{align*}
+ & \clock_1;\ \cload{r}{f}_1;\ \cassume{r = 1}_1;\ \cstore{f}{0}_1;\
+   \cunlock_1; \\
+ & \cstore{x}{9}_1; \\
+ & \clock_1;\ \cload{r}{f}_1;\ \cassume{r = 0}_1;\ \cstore{f}{1}_1;\
+   \cunlock_1 .
+\end{align*}
+Meanwhile processor $2$ has an unrelated write $R = y \fwrite{2} 17$
+buffered. The derived specification is
+$\mspec{J}{\modedj}{R}{c}{R}$ (\rocq{owned_container_derived}). Writing
+$H(a,v)$ for $(\exists u \st a \fcell u) \fseq a \fwrite{1} v$, the proof
+passes through these assertions, each with $R$ as a spatial frame:
+\begin{center}\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+After & The thread holds \\
+\midrule
+first load and assume & $\flock{1} \fsep (f \fcell 1 \fsep X)$ \\
+$\cstore{f}{0}$ & $\flock{1} \fsep (H(f,0) \fsep X)$ \\
+first unlock & $X$ \\
+$\cstore{x}{9}$ & $H(x,9)$ \\
+second lock & $H(x,9) \fseq ((\flock{1} \fsep J) \fseq \fbar{1})$ \\
+second load and assume & $\flock{1} \fsep (f \fcell 0 \fsep x \fcell 9)$ \\
+$\cstore{f}{1}$ & $\flock{1} \fsep (H(f,1) \fsep x \fcell 9)$ \\
+second unlock & $\femp$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+Three things are visible in it.
+
+\emph{The foreign write costs one rule application.} $R$ concerns an
+address the thread never touches, so a single \rn{frame-sp} around the
+entire program carries it, across both releases.
+
+\emph{The temporal frame rule carries the private write across the second
+acquisition.} $H(x,9)$ is overlapping history, possibly still buffered.
+\rn{frame-tm} places it before the acquired state, and the barrier that
+\rn{lock} delivers then drains it, leaving $x \fcell 9$.
+
+\emph{Releases use entailment, not framing.} The two \rn{unlock} premises
+are $(H(f,0) \fsep X) \fseq \fbar{1} \sentails J \fsep X$ and
+$(H(f,1) \fsep x \fcell 9) \fseq \fbar{1} \sentails J \fsep \femp$. The
+first keeps the item and the second donates it.
+
+The example is not vacuous. From a memory with the lock free, $f = 1$,
+$x = 7$ and processor $2$'s write pending, there is a complete 24-step
+execution in which that write is pending in every state
+(\rocq{owned_container_foreign_pending_throughout}), and by adequacy every
+execution from that memory is safe and, if it completes, restores the
+invariant.
+
+A second version replaces each $\cassume{}$ by a loop that releases the
+lock and retries when the flag is wrong (\rocq{owned_retrying_container_derived}).
+Its return loop has a branch for ``the container is already full'', and
+that branch is derived from $\bexpf$: the thread holds $x$, so the pool
+cannot.
+
+\paragraph{The cost.}
+The container's derivation applies \rn{cons} ten times and needs sixteen
+entailments that are not identities, proved here semantically. Most are
+rearrangements, a few are the laws about barriers and histories used
+above, and one, at the second acquisition, takes fifty lines.
+\pending{the same derivation with syntactic entailments; the Section 4.1
+example; named locks and a producer/consumer client}

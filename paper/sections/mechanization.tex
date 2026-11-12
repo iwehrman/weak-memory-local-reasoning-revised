@@ -1,4 +1,22 @@
 \section{The mechanization}
 \label{sec:mechanization}
 
-\pending{to be written}
+The development is about 25,000 lines of Rocq in 148 files, using only the
+standard library. It declares no axioms and admits no proofs. An audit file
+prints the assumptions of every principal result, 947 at the time of
+writing, and the build checks the compiled proof objects independently.
+The proofs need neither extensionality nor choice nor a finite set of
+processors. \pending{final figures}
+
+The transcription of the printed definitions is kept separate from every
+repair, so that each claim in Section~\ref{sec:wrong} is a theorem about
+the dissertation's own definitions and not about an approximation of them.
+
+The work was done with AI assistance, in a loop that turned out to matter.
+One model developed the proofs; a second reviewed them independently and
+proposed the design; each rule or lemma was stated before it was proved,
+and where a bounded search was cheap it was run first. Twice the search or
+the proof attempt refuted a confident argument on paper: a frame lemma that
+let the frame evolve freely, and the soundness of \rn{frame-stm}. Both now
+appear above as counterexamples. I do not think either would have been
+caught by reading. \pending{Ian to confirm how this paragraph should read}

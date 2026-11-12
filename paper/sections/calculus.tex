@@ -1,4 +1,86 @@
 \section{The repaired calculus}
 \label{sec:calculus}
 
-\pending{to be written}
+The judgment is $\mspec{J}{m}{P}{c}{Q}$, where $m$ is $\modeov$ or
+$\modedj$. It has 21 rules. The rules \rn{skip}, \rn{assume}, \rn{assert},
+\rn{fence}, \rn{store}, \rn{seq}, \rn{cons}, \rn{disj}, \rn{choice},
+\rn{loop} and \rn{frame-sp} are those of Figure~\ref{fig:printed} at either
+mode. Figure~\ref{fig:repaired} shows the rest; Appendix~\ref{app:rules}
+has the complete system.
+
+\begin{figure}[!ht]
+\small
+\begin{mathpar}
+\inferrule[lock]{ }
+  {\mspec{J}{m}{\femp}{\clock_i}{(\flock{i} \fsep J) \fseq \fbar{i}}}
+\and
+\inferrule[unlock]
+  {A \fseq \fbar{i} \sentails J \fsep B}
+  {\mspec{J}{\modedj}{\flock{i} \fsep A}{\cunlock_i}{B}}
+\and
+\inferrule[frame-tm]
+  {\mspec{J}{\modeov}{P}{c}{Q} \\ \mod{c} \cap \fv{R} = \nil}
+  {\mspec{J}{\modeov}{R \fseq P}{c}{R \fseq Q}}
+\and
+\inferrule[weaken]
+  {\mspec{J}{\modeov}{P}{c}{Q}}
+  {\mspec{J}{\modedj}{P}{c}{Q}}
+\and
+\inferrule[load-any]
+  {x \notin \fv{J,e,e',P}}
+  {\mspec{J}{m}{e \fcell e' \fsseq P}{\cload{x}{e}_i}
+         {(e \fcell e' \fsseq P) \conj x = e'}}
+\and
+\inferrule[store-any]{ }
+  {\mspec{J}{m}{e \fcell e'' \fsseq P}{\cstore{e}{e'}_i}
+         {(e \fcell e'' \fsseq P) \fseq e \fwrite{i} e'}}
+\and
+\inferrule[assign]
+  {x \notin \fv{J}}
+  {\mspec{J}{m}{P\subst{e}{x}}{\cassign{x}{e}_i}{P}}
+\and
+\inferrule[ex]
+  {\mspec{J}{m}{P}{c}{Q} \\ x \notin \fv{J,c,Q}}
+  {\mspec{J}{m}{\exists x \st P}{c}{Q}}
+\end{mathpar}
+\caption{Rules of the repaired calculus that differ from
+Figure~\ref{fig:printed}. \rn{load} is the printed axiom with
+$x \notin \fv{J,e,i,e',P}$, and \rn{conc} is the printed rule at a common
+mode with $\mod{c_k} \cap \fv{J} = \nil$ added.}
+\label{fig:repaired}
+\end{figure}
+
+\paragraph{Lock and unlock.}
+\rn{lock} delivers the invariant together with the acquirer's barrier.
+\rn{unlock} takes the whole of the thread's state $A$, notes that releasing
+drains the thread's buffer, and asks for a split into something satisfying
+$J$ and a remainder $B$. Because $A$ is arbitrary, nothing needs to be
+framed around a release: whatever the thread wants to keep goes into $A$
+and comes out in $B$.
+
+\paragraph{Invariants.}
+The soundness theorem requires $J$ to come from the fragment
+\[
+  H \bnfdef \femp \bnfbar e \fcell e' \bnfbar H \fsep H \bnfbar H \disj H
+    \bnfbar \exists x \st H \bnfbar b \conj H .
+\]
+A pure formula may appear only alongside a heap formula. A bare $\bexpt$
+is not buffer-free: it holds of a memory with pending writes, and an
+invariant containing it could swallow them at release.
+
+\paragraph{Modes in practice.}
+A specification for a command that never releases can be derived in overlap
+mode and framed temporally. Once a release is sequenced in, the whole is in
+disjoint mode and can only be framed spatially. Overlap-mode pieces are
+weakened before sequencing. At top level the distinction disappears
+(Section~\ref{sec:results}).
+
+\paragraph{What became of the derived rules.}
+The dissertation lists a dozen derived and alternative rules. In the
+repaired calculus \rn{load-p} is derived exactly as displayed, with the
+printed points-to; \rn{fence-g} is derived as displayed; \rn{lock-g},
+\rn{lock-b} and the \rn{locked} and \rn{atomic} wrappers are derived in a
+form that carries the transferred invariant; and the unlock variants are
+derived for the empty invariant, the general case being \rn{unlock} itself.
+The ``daring'' rules for unlocked access to shared state remain
+unavailable. Appendix~\ref{app:derived} has the table.

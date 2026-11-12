@@ -1,4 +1,87 @@
 \section{The repaired model}
 \label{sec:model}
 
-\pending{to be written}
+The machine is unchanged. What changes is the predicate that says when a
+command is safe.
+
+\paragraph{Resources.}
+A thread's local state is a generalized memory $\nu$ with its \emph{actual}
+completeness set. The printed predicate read every local state at
+$\Gamma = \setprocessors$, which is why it could not distinguish a barrier
+the thread had earned from one it had not. A mark $i \in \Gamma$ now means
+what the dissertation said informally: nothing of processor $i$'s is
+pending before this resource. A flush of the resource's own oldest write by
+$i$ earns the mark, as do $\cfence_i$, $\clock_i$ and $\cunlock_i$, whose
+guards require the whole of buffer $i$ to be empty. Nothing else does.
+
+\paragraph{Environments.}
+The rest of the machine is described by a \emph{pool} $\mu_J$, holding the
+invariant's cells while the lock is free, and an external \emph{frame}
+$\nu_F$, standing for other threads and for any history that a frame rule
+has set aside. An environment for $\nu$ in mode $m$ is a pool, a frame and
+a machine memory $\mu_0$ with
+\[
+  \mu_0 \in \mu_J \ssep (\nu_F \mhash \nu)
+\]
+such that either the lock is free in $\mu_0$ and
+$(s,\mu_J,\setprocessors) \sentails J$, or the lock is held and $\mu_J$ is
+empty. In the held case the token may be in $\nu$, in $\nu_F$ when another
+thread holds the lock, or split between them. The mode restricts the frame:
+\begin{itemize}[nosep]
+  \item in \emph{overlap mode}, $\modeov$, any compatible frame is allowed,
+        including one that mentions addresses of $\nu$;
+  \item in \emph{disjoint mode}, $\modedj$, the frame and $\nu$ share no
+        address.
+\end{itemize}
+
+\paragraph{Safety.}
+$\safe{n+1}{c,s,\nu,J,Q}$ holds in mode $m$ when, for every future
+$\nu_1 \modrefines \nu$:
+\begin{enumerate}[nosep]
+  \item if $c$ is $\cskip$ then $s,\nu_1 \sentails Q$; and
+  \item for every environment $(\mu_J,\nu_F,\mu_0)$ of $\nu_1$, the
+        configuration $c,(s,\mu_0)$ does not abort, and for every
+        \emph{program} step to $c',(s',\mu_1)$ there are $\nu'$ and
+        $\mu'_J$ forming an environment of $\nu'$ with the \emph{same}
+        frame $\nu_F$ and memory $\mu_1$, such that $\safe{n}{c',s',\nu',J,Q}$
+        and the step's bookkeeping conditions hold.
+\end{enumerate}
+The bookkeeping conditions say that the pool changes only at $\clock$ and
+$\cunlock$; that $\cunlock_i$ requires the whole token in $\nu_1$; that the
+addresses of $\mu'_J$ and $\nu'$ lie within those of $\mu_J$ and $\nu_1$;
+and that $\nu'$ gains no completeness mark beyond the one the step earns.
+A specification is valid in mode $m$, written $\mtruespec{J}{m}{P}{c}{Q}$,
+when $s,\nu \sentails P$ implies safety at every $n$. Overlap-mode validity
+implies disjoint-mode validity.
+
+Four features distinguish this from the printed predicate.
+\begin{itemize}[nosep]
+  \item \emph{The frame is fixed within a step and arbitrary between
+        steps.} The printed predicate let the frame take silent steps of
+        its own choosing during a program step. That permits a local
+        residual to claim a pending write that belonged to the frame, and
+        the frame lemma fails (\rocq{overlap_frame_shape_counterexample}).
+        Re-quantifying the frame at every step is what lets another
+        thread, including one holding the lock, act in between.
+  \item \emph{Flushes are handled by closure.} A silent step is attributed
+        to the frame or to the local resource with the other fixed
+        (\rocq{pooled_resource_flush_attribution}), and safety is closed
+        under futures of the local resource by its outermost quantifier.
+  \item \emph{The mark budget.} Without it, a proof could choose a
+        successor that claims another processor's barrier.
+  \item \emph{The modes.} \rn{unlock} is valid only in disjoint mode: the
+        released cells become the pool, and a frame holding a stale copy of
+        one would collide with it. That is Proposition~\ref{prop:trilemma}
+        seen from the semantics.
+\end{itemize}
+
+\paragraph{Three lemmas carry the proofs.}
+With the frame fixed, the local residual's buffers are determined by the
+machine's: ordered overriding places the frame's writes to an address
+before the local ones, so there is one way to subtract the frame
+(\rocq{ordered_residual_unique}). Every machine flush belongs to exactly
+the frame or the local resource. And an invariant from the guarded
+fragment (Section~\ref{sec:calculus}) is buffer-free and holds of a memory
+regardless of which processors are marked complete
+(\rocq{invariant_fragment_remark}), which is what allows the pool to be
+read at full completeness and handed over with the acquirer's mark alone.

@@ -1,4 +1,93 @@
 \section{What changed}
 \label{sec:changes}
 
-\pending{to be written}
+Table~\ref{tab:changes} lists every difference between the printed calculus
+and the one proved sound. Each is marked as an \kerr{} (the printed
+statement is false, with a checked counterexample), as \kforced{} by an
+error elsewhere, or as a \kchoice{} among sound alternatives.
+
+\begin{table}[!ht]
+\small
+\begin{tabularx}{\textwidth}{@{}p{0.33\textwidth}Xl@{}}
+\toprule
+Printed & Repaired & Kind \\
+\midrule
+\rn{assign}, \rn{load}, \rn{ex}, \rn{conc} say nothing of $\fv{J}$
+  & The assigned, loaded or bound variable, and every variable a parallel
+    branch modifies, is absent from $\fv{J}$ & \kerr \\
+List overriding by lookup; compatibility ignores blocked processors;
+pointwise implications
+  & Ordered overriding; stable compatibility; implications quantify over
+    futures (Table~\ref{tab:local}) & \kerr \\
+\rn{lock} and \rn{unlock} exchange a token; \rn{inv} moves cells
+  & \rn{inv} is removed; \rn{lock} hands over $J$ and \rn{unlock} takes it
+    back & \kerr \\
+\rn{frame-tm} for every specification
+  & \rn{frame-tm} only for specifications valid in \emph{overlap mode},
+    which excludes \rn{unlock} & \kerr \\
+\rn{frame-stm}
+  & Omitted. Sound for one common split of the frame, unsound for
+    $(R \fsep P) \conj (R \fseq P)$ & \kerr \\
+\rn{share}
+  & Omitted; adequacy states the top-level property directly
+    \pending{restricted form} & \kforced \\
+$e \fpointsto e'$ with every processor complete
+  & $e \fcell e'$, complete for some processor; load and store rules for
+    it & \kchoice \\
+Any assertion as invariant
+  & Invariants from a guarded, buffer-free fragment & \kchoice \\
+Any set of processors
+  & At least two active processors & \kforced \\
+\bottomrule
+\end{tabularx}
+\caption{Differences between the printed and the repaired calculus.}
+\label{tab:changes}
+\end{table}
+
+Three of these need a word of explanation.
+
+\paragraph{Transferring lock rules.}
+Section~\ref{sec:local-errors} observed that the printed predicate forgets
+the invariant at acquisition. The standard cure, from concurrent separation
+logic, is to move ownership with the lock: acquiring gives the thread the
+cells of $J$, and releasing requires it to give back cells satisfying $J$.
+\rn{inv} then has nothing left to do. Removing it is also what blocks the
+three derivations of Section~\ref{sec:inconsistent}, all of which are
+proofs about $\cskip$: restricting the frame rules alone would not have
+been enough.
+
+\paragraph{The cell.}
+A thread that acquires the lock can vouch for its own buffer, which the
+machine required to be empty, and for no one else's. So the cells it
+receives carry its completeness mark only. The printed points-to demands
+every processor's mark and can therefore never be established by a command,
+only inherited from a precondition. The repaired calculus uses
+\[
+  e \fcell e' \eqdef \exists x \st (e \fwrite{x} e' \fseq \fbar{x}),
+\]
+a flushed cell that is complete for whichever processor is credited with
+the write. This is the definition the dissertation considered first and
+rejected, on the grounds that $1 \fwrite{0} 1 \fseq 2 \fcell 2$ would then
+have models in which the write to location $1$ is still buffered. Those
+models are reachable, stable states of the machine. Because a model does
+not record who wrote a flushed cell, any marked processor may be credited,
+and two further axioms let any processor load from or store to such a
+cell. The printed points-to remains expressible and keeps its meaning.
+
+\paragraph{Two processors.}
+The lock is represented only by the set of blocked processors. With a
+single processor there is no one to block: a held lock is indistinguishable
+from a free one, $\flock{i}$ is equivalent to $\femp$, and
+$\cseq{\clock_i}{\clock_i}$ runs to completion. A rule that hands over the
+invariant at acquisition would then hand it over twice. The assumption is
+not about finiteness, and the second processor need not execute anything.
+
+\paragraph{Roads not taken.}
+Two other repairs were built during this work and abandoned, and they are
+the first two exits of Section~\ref{sec:trilemma}. Keeping the invariant's
+assertions in a separate compartment of the judgment recovers the
+unrestricted \rn{frame-tm}, but a cell can then never be returned to the
+invariant. Letting $\femp$ record cells that were given away permits the
+return, but $R \fseq \femp$ no longer entails $R$, and in that
+interpretation an ordinary later cell can silently erase an earlier,
+unrelated one.

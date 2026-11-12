@@ -6,6 +6,11 @@ independent. The accepted base remains checkpoint 11: 683 audited
 declarations. This document inventories the laws and proof obligations; it
 does not claim that the audit is complete or that an unchecked law holds.
 
+**Early result:** [E1/E2 and the buffered-load check-in](paper-units-and-buffered-load.md)
+proves all six unit equivalences for arbitrary assertions, including wands,
+and derives reading one's own buffered write using the existing calculus.
+The remaining rows below have not yet been classified by this audit.
+
 ## Interpretation and scope
 
 Every result must concern `persistent_models` / `persistent_entails`, with

@@ -24,6 +24,7 @@ theories/LockRepresentation.v
 theories/AssertionFlushing.v
 theories/RepairedAssertions.v
 theories/PersistentAssertions.v
+theories/AssertionResourceEquivalence.v
 theories/AssertionSubstitution.v
 theories/Safety.v
 theories/RepairedSafety.v
@@ -45,6 +46,7 @@ theories/TemporalSafety.v
 theories/TemporalFence.v
 theories/TemporalTransfer.v
 theories/RegionalResources.v
+theories/AssertionUnits.v
 theories/RegionalSafety.v
 theories/RegionalCalculus.v
 theories/RegionalFraming.v
@@ -104,6 +106,8 @@ theories/OwnedContainerTrace.v
 theories/OwnedExists.v
 theories/OwnedCalculus.v
 theories/OwnedDerivedRules.v
+theories/OwnedBufferedLoad.v
+theories/OwnedBufferedLoadExamples.v
 theories/OwnedContainerDerivation.v
 theories/OwnedRetryContainer.v
 theories/OwnedExecution.v

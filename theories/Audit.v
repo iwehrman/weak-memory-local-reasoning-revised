@@ -29,6 +29,7 @@ From WMLR Require Import OwnedContainerEntailments OwnedContainer OwnedContainer
 From WMLR Require Import RetiredHeaps RetiredSafety RetiredTransfer RetiredRules RetiredExamples RetirementFlushing.
 
 From WMLR Require Import OwnedExists OwnedCalculus OwnedDerivedRules OwnedContainerDerivation OwnedRetryContainer OwnedExecution OwnedRetryTrace.
+From WMLR Require Import AssertionResourceEquivalence AssertionUnits OwnedBufferedLoad OwnedBufferedLoadExamples.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 
@@ -739,3 +740,39 @@ Print Assumptions retirement_flush_simulation.
 Print Assumptions retirement_flushes_simulation.
 Print Assumptions retirement_flushes_from_mask.
 Print Assumptions masking_a_pending_write_does_not_commute.
+
+(** Early paper audit: full units and derived read-after-write. *)
+Print Assumptions assertion_memory_equiv_refl.
+Print Assumptions assertion_memory_equiv_sym.
+Print Assumptions assertion_generalized_equiv_refl.
+Print Assumptions assertion_generalized_equiv_sym.
+Print Assumptions assertion_domain_equiv.
+Print Assumptions assertion_merge_equiv.
+Print Assumptions assertion_stable_equiv.
+Print Assumptions assertion_spatial_equiv.
+Print Assumptions assertion_temporal_equiv.
+Print Assumptions assertion_flush_equiv.
+Print Assumptions assertion_generalized_step_equiv.
+Print Assumptions assertion_generalized_future_equiv.
+Print Assumptions assertion_resource_future_equiv.
+Print Assumptions persistent_models_resource_equiv.
+Print Assumptions persistent_models_mark_extension.
+Print Assumptions assertion_unit_spatial_right.
+Print Assumptions assertion_unit_spatial_left.
+Print Assumptions assertion_unit_temporal_right.
+Print Assumptions assertion_unit_temporal_left.
+Print Assumptions assertion_unit_strong_right.
+Print Assumptions assertion_unit_strong_left.
+Print Assumptions owned_derive_load_write.
+Print Assumptions buffered_load_pure_temporal.
+Print Assumptions owned_derive_load_after_history_overlap.
+Print Assumptions owned_derive_load_after_history.
+Print Assumptions owned_derive_load_after_history_spatial.
+Print Assumptions owned_derive_load_own_buffered_write.
+Print Assumptions buffered_load_history_derived.
+Print Assumptions buffered_load_pending_models.
+Print Assumptions buffered_load_pending_environment.
+Print Assumptions buffered_load_pending_enabled.
+Print Assumptions buffered_load_flush_future.
+Print Assumptions buffered_load_after_flush_enabled.
+Print Assumptions buffered_load_other_processor_reads_old.

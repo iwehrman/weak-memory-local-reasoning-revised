@@ -113,6 +113,12 @@ At release the invariant part cannot absorb a pending foreign write.
 At acquisition the proof re-establishes the chosen mode, including disjoint
 ownership of all acquired cells when working in DJ.
 
+The first paper algebra audit proves `emp` is a two-sided unit for `*`, `;`
+and `⋉` for the entire assertion grammar, including wands, on every
+processor domain. `AssertionUnits.v` removes the wand-free limitation of
+earlier unit helpers; no semantic definition changes. Other printed
+algebra laws remain under audit.
+
 The grammar has no recursive predicates. The invariant fragment therefore
 does not describe an unbounded linked container. That expressiveness limit
 is inherited from the formalized grammar; it is not a finiteness assumption
@@ -170,6 +176,14 @@ two ownership entailments: spatially retained item history excludes the full
 pool, and release's barrier completes both histories for donation. Guards
 and stack-update assertions are still discharged semantically. No new
 FRAME-STM, invariant fragment, validity predicate, or extra fence was needed.
+
+`OwnedBufferedLoad.v` also derives loading one's own latest write from
+`(R ; W(a,i,v)) * T`, with arbitrary history `R` and spatial tail `T` and
+the usual destination freshness conditions. It uses the existing LOAD,
+FRAME-TM, FRAME-SP and mode weakening rules; no LOAD constructor is added.
+Concrete tests cover a still-pending write, its flushed future, and another
+processor reading the older heap value. See the
+[early paper report](../review/paper-units-and-buffered-load.md).
 
 ## Superseded experiments and remaining scope
 

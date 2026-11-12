@@ -1,5 +1,10 @@
 # Checkpoint 5 implementation — safety, adequacy, and acceptance tests checked
 
+**Subsequent status:** [checkpoint 6](checkpoint-6.md) proves general LOCK
+and UNLOCK, but refutes unrestricted FRAME-STM in disjoint mode. The
+checkpoint-5 definition and results below are unchanged; its remaining-work
+section records the state at that checkpoint.
+
 **The approved definition is implemented, and all three fixed acceptance
 tests pass.** The mark-only and externally blocked local futures remain in
 the closure clause. No definition change was needed to pass the tests.

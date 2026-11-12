@@ -21,9 +21,40 @@ From WMLR Require Import FrameShape FrameShapeCounterexample.
 From WMLR Require Import ResidualUniqueness FlushAttribution FixedFrameExamples.
 From WMLR Require Import LockRepresentation.
 From WMLR Require Import ProgramSteps OwnedSafety OwnedAdequacy OwnedResources OwnedAcceptance.
+From WMLR Require Import OwnedRules StrongTemporalCounterexample.
 From WMLR Require Import RetiredHeaps RetiredSafety RetiredTransfer RetiredRules RetiredExamples RetirementFlushing.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
+Print Assumptions owned_lock_payload_held.
+Print Assumptions owned_marked_barrier_intro.
+Print Assumptions owned_barrier_suffix_intro.
+Print Assumptions owned_lock_transfer.
+Print Assumptions owned_lock_valid.
+Print Assumptions owned_free_spatial_environment.
+Print Assumptions owned_unlock_transfer.
+Print Assumptions owned_unlock_valid.
+Print Assumptions stm_wand_free_equiv.
+Print Assumptions stm_wand_free_mark_extension.
+Print Assumptions stm_wand_free_barrier_elim.
+Print Assumptions stm_unframed_release_valid.
+Print Assumptions stm_singleton_models.
+Print Assumptions stm_cell_models.
+Print Assumptions stm_pending_pair_models.
+Print Assumptions stm_pending_domain.
+Print Assumptions stm_payload_domain.
+Print Assumptions stm_payload_spatial.
+Print Assumptions stm_holder_one_models.
+Print Assumptions stm_holder_two_models.
+Print Assumptions stm_initial_spatial_split.
+Print Assumptions stm_initial_temporal_split.
+Print Assumptions stm_framed_precondition.
+Print Assumptions stm_initial_environment.
+Print Assumptions stm_release_step.
+Print Assumptions stm_temporal_post_impossible.
+Print Assumptions stm_returned_local_shape.
+Print Assumptions owned_disjoint_strong_temporal_frame_invalid.
+Print Assumptions owned_strong_temporal_counterexample.
+
 Print Assumptions program_step_erases.
 Print Assumptions step_program_or_flush.
 Print Assumptions owned_safe_future.

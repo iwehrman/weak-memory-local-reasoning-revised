@@ -22,8 +22,14 @@ acceptance tests pass, with additional checked regressions for double acquire,
 split-token contexts, and a local future blocked by an external lock.
 The approved two-distinct-active-processors hypothesis is explicit on
 lock-specific results and client adequacy; no finiteness assumption, new
-assertion atom, or entailment change was added. Integrated framing,
-concurrency, the general transfer rules, and full soundness remain open. See
+assertion atom, or entailment change was added. General LOCK and UNLOCK
+are now proved for arbitrary fragment invariants, with UNLOCK in disjoint
+mode. However, unrestricted FRAME-STM in disjoint mode is refuted: the
+spatial and temporal conjuncts may use different splits, and donation can
+destroy the temporal witness. This is a checked invalid semantic triple,
+not merely an auxiliary-lemma failure. The safety predicate is unchanged.
+General FRAME-SP, overlap-mode FRAME-TM, concurrency, and full soundness
+remain open. See [the lock rules and FRAME-STM counterexample](../review/checkpoint-6.md),
 [the implementation checkpoint](../review/checkpoint-5-implementation.md),
 [checkpoint 5](../review/checkpoint-5.md),
 [checkpoint 4](../review/checkpoint-4.md), [checkpoint 3](../review/checkpoint-3.md),

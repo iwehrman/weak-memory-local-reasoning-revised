@@ -78,9 +78,15 @@ import, and a safe private store while another thread holds the lock.
 Additional checked regressions cover double acquisition, split-token
 contexts, and a local flush blocked by an external token. The approved scope
 requires two distinct active processors for lock-specific reasoning and the
-client adequacy theorem; it does not require finiteness. General rule,
-frame, and concurrency proofs remain open for this target.
-See [the implementation checkpoint](review/checkpoint-5-implementation.md),
+client adequacy theorem; it does not require finiteness. General LOCK and
+UNLOCK are now proved for arbitrary fragment invariants. A checked
+counterexample refutes the proposed unrestricted FRAME-STM rule in disjoint
+mode: its spatial and temporal conjuncts can use different resource splits,
+and donation need not preserve both. The definition is unchanged. General
+FRAME-SP, overlap-mode FRAME-TM, and concurrency remain open for this target;
+development stopped for review before the parallel proof.
+See [the lock rules and FRAME-STM counterexample](review/checkpoint-6.md),
+[the implementation checkpoint](review/checkpoint-5-implementation.md),
 [the definition proposal](review/checkpoint-5.md),
 [its acceptance tests](review/checkpoint-5-acceptance.md),
 [the fixed-frame and flush checkpoint](review/checkpoint-4.md),
@@ -195,7 +201,9 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/OwnedSafety.v` | The single owned-resource safety target, full future closure, mark budget, and two frame modes | Active replacement for the separated development path |
 | `theories/OwnedAdequacy.v` | Actual flush attribution, exact empty-frame execution, and operational adequacy | Partial correctness without mode-specific client premises |
 | `theories/OwnedResources.v` | Local updates, donation reassembly, disjointness preservation, and mode inclusion | Resource lemmas for the active target |
+| `theories/OwnedRules.v` | General LOCK in both modes and UNLOCK in disjoint mode, for arbitrary fragment invariants | Checked explicit ownership-transfer rules |
 | `theories/OwnedAcceptance.v` | All three fixed acceptance tests, double acquisition, split-token fault, and externally blocked local future | Checked checkpoint-5 implementation regressions |
+| `theories/StrongTemporalCounterexample.v` | Valid unframed release and invalid strong-temporally framed instance, with independent spatial/temporal witnesses | Counterexample to unrestricted FRAME-STM in disjoint mode |
 | `theories/OwnershipTransfer.v` | Protected-to-private withdrawal at fence/unlock; disjoint-history donation reassembly | Checked transfer rules and a restricted boundary lemma |
 | `theories/OwnershipTransferLimits.v` | Scoped cell versus ordinary points-to; general retained-history donation obstruction | Concrete invalid donation and positive disjoint-history instance |
 | `theories/TransferExamples.v` | Known-present withdrawal, release, private load and retained foreign write | All-run proofs, concrete traces, rejected all-processor transfer postcondition |

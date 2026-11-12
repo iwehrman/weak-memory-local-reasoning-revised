@@ -37,6 +37,9 @@ proof-rule [statement is ready](review/paper-assertion-rules-statement.md),
 with its soundness proof still ahead. The
 [review response](review/lead-response-after-algebra-audit.md) also checks
 the requested remaining counterexamples in the original interpretation.
+[Independent follow-up](review/paper-independent-results.md) derives the
+store-then-fence cell contract, refutes its unfenced version, and proves
+exact preservation of the machine's address domain.
 
 ## Main results
 
@@ -49,6 +52,8 @@ the requested remaining counterexamples in the original interpretation.
 | Reusable derived cell, assignment and while rules | [OwnedDerivedRules.v](theories/OwnedDerivedRules.v) |
 | All six conjunction unit laws for arbitrary assertions, including wands | [AssertionUnits.v](theories/AssertionUnits.v) |
 | Reading one's own buffered write, with arbitrary history and spatial tail | [OwnedBufferedLoad.v](theories/OwnedBufferedLoad.v) |
+| Store/fence cell rule, unfenced counterexample and a complete trace | [OwnedFenceExamples.v](theories/OwnedFenceExamples.v) |
+| Exact heap-or-buffer address-domain preservation for every execution | [ExecutionDomain.v](theories/ExecutionDomain.v) |
 | Further assertion laws and checked associativity/lock countermodels | [AssertionAlgebra.v](theories/AssertionAlgebra.v), [AssertionAlgebraCounterexamples.v](theories/AssertionAlgebraCounterexamples.v) |
 | Full barrier distribution, lock symmetry and successive-write collapse | [AssertionBarrierAlgebra.v](theories/AssertionBarrierAlgebra.v), [AssertionLockAlgebra.v](theories/AssertionLockAlgebra.v), [AssertionWriteAlgebra.v](theories/AssertionWriteAlgebra.v) |
 | Complete small/full-exchange classification, with checked witnesses | [Audit report and theorem map](review/paper-algebra-audit.md) |
@@ -77,9 +82,9 @@ make check
 
 `make` compiles every file in `_CoqProject`. `make check` additionally runs
 `rocq check` on `WMLR.Audit` and its dependencies. The audit currently reports
-**847 declarations closed under the global context**, including every new
+**863 declarations closed under the global context**, including every new
 lemma/theorem in the final calculus, retrying container, paper algebra audit
-and original-interpretation follow-up.
+and independent follow-up work.
 There are no admitted proofs or declared axioms. The proofs do not require
 choice, functional extensionality, or a finite processor domain.
 

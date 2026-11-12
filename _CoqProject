@@ -27,6 +27,7 @@ theories/PersistentAssertions.v
 theories/AssertionResourceEquivalence.v
 theories/AssertionSubstitution.v
 theories/Safety.v
+theories/ExecutionDomain.v
 theories/RepairedSafety.v
 theories/RepairedRules.v
 theories/PersistentRules.v
@@ -108,6 +109,7 @@ theories/OwnedCalculus.v
 theories/OwnedDerivedRules.v
 theories/OwnedBufferedLoad.v
 theories/OwnedBufferedLoadExamples.v
+theories/OwnedFenceExamples.v
 theories/AssertionAlgebra.v
 theories/AssertionAlgebraCounterexamples.v
 theories/AssertionBarrierAlgebra.v

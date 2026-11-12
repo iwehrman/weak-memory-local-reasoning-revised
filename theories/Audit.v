@@ -1,5 +1,6 @@
 From WMLR Require Import AssertionBarrierAlgebra AssertionLockAlgebra AssertionWriteAlgebra AssertionWriteExamples AssertionExchange AssertionExchangeCounterexamples AssertionExchangeRight AssertionExchangeTemporal AssertionExchangeTemporalRight.
 From WMLR Require Import OriginalAlgebraCounterexamples AssertionDerivation.
+From WMLR Require Import ExecutionDomain OwnedFenceExamples.
 From WMLR Require Import Expressions Languages Assertions AssertionSemantics Specifications Examples.
 From WMLR Require Import Machine OperationalSemantics ExecutionExamples.
 From WMLR Require Import BufferRelations Separation FrameDecomposition ConcreteAssertions SeparationExamples.
@@ -915,3 +916,21 @@ Print Assumptions original_small_exchange_strong_right_refuted.
 Print Assumptions original_full_exchange_left_model.
 Print Assumptions original_full_exchange_right_not_model.
 Print Assumptions original_full_exchange_refuted.
+
+(** Independent queue work: exact domain preservation and the store/fence pair. *)
+Print Assumptions enqueue_retains_domain.
+Print Assumptions enqueue_preserves_domain.
+Print Assumptions flush_retains_domain.
+Print Assumptions flush_preserves_domain.
+Print Assumptions primitive_preserves_domain.
+Print Assumptions step_preserves_domain.
+Print Assumptions steps_preserve_domain.
+Print Assumptions execution_preserves_domain.
+Print Assumptions owned_derive_fence_after.
+Print Assumptions owned_derive_store_fence_cell.
+Print Assumptions owned_store_fence_cell_valid.
+Print Assumptions fence_cell_environment.
+Print Assumptions fence_cell_store_step.
+Print Assumptions owned_plain_store_cell_invalid.
+Print Assumptions owned_plain_store_cell_not_derivable.
+Print Assumptions owned_store_fence_cell_witness.

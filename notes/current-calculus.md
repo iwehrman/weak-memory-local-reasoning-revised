@@ -65,7 +65,7 @@ different witnesses for the two conjuncts.
 | LOAD | Printed strong-temporal form is proved. The destination must be absent from the address, processor annotation, asserted value, retained assertion, and invariant. The appendix's freshness qualifications are explicit; they are not inferred from the unqualified figure. |
 | STORE | Printed strong-temporal form is proved, without a new variable side condition. |
 | LOAD-ANY, STORE-ANY | Added rules accessing `C(a,v)` regardless of its existential writer. Needed for cells transferred from the pool. These rules do not grant the acting processor a completeness mark. LOAD-ANY requires destination freshness for the address, asserted value, retained assertion, and `J`; it does not need annotation freshness because that annotation is absent from the preserved cell assertion. |
-| FENCE | The printed small form `{emp} fence_i {bar(i)}` is a constructor at either mode. The more general `{P} fence_i {P ; bar(i)}` is also semantically proved; it is not an extra calculus constructor. |
+| FENCE | The printed small form `{emp} fence_i {bar(i)}` is a constructor at either mode. The more general `{P} fence_i {P ; bar(i)}` is derived at either mode by `owned_derive_fence_after` in `OwnedFenceExamples.v`; it is not an extra calculus constructor. |
 | LOCK | Replaced by explicit acquisition: `{emp} acquire(i) {(lock(i) * J) ; bar(i)}`, either mode. The invariant's cells become local ownership, with no imported foreign-processor marks. |
 | UNLOCK | Replaced by explicit restoration/donation: from `A ; bar(i) ⊨ J * B`, derive `{lock(i) * A} release(i) {B}` in DJ only. `A` and `B` are arbitrary assertions. The machine's existing release guard supplies the actor's drain; there is no extra fence instruction. |
 | INV | Removed. Invariant transfer occurs at the actual acquire/release actions. Retaining INV would reintroduce the checked stale-value and foreign-barrier derivations. |
@@ -200,6 +200,13 @@ FRAME-TM, FRAME-SP and mode weakening rules; no LOAD constructor is added.
 Concrete tests cover a still-pending write, its flushed future, and another
 processor reading the older heap value. See the
 [early paper report](../review/paper-units-and-buffered-load.md).
+
+The independent [store/fence result](../review/paper-independent-results.md)
+derives `{C(a,u)} [a] := v_i; fence_i {C(a,v)}` and refutes the same
+flushed-cell postcondition without the fence, in both modes, with an
+inhabited start and complete fenced execution. `ExecutionDomain.v` also
+proves exact preservation of the union of heap and buffer addresses along
+every machine execution, without a safety or processor-count premise.
 
 ## Superseded experiments and remaining scope
 

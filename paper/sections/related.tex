@@ -1,5 +1,58 @@
 \section{Later work}
 \label{sec:related}
 
-\pending{a short, sourced comparison with program logics for weak memory
-published since 2012; to be written after a literature pass}
+This is a brief orientation, not a survey. I have relied on the papers'
+own accounts of their results.
+
+\paragraph{Before and alongside.}
+Ridge~\cite{ridge10} gave a rely-guarantee proof system for x86-TSO,
+mechanized in HOL4 and applied to Simpson's four-slot algorithm. Cohen and
+Schirmer~\cite{cohen10} and Owens~\cite{owens10} took the other route:
+conditions on a program, an ownership discipline and triangular-race
+freedom respectively, under which its TSO executions are sequentially
+consistent, so that buffers need not be reasoned about at all. The
+dissertation, and the proposal with Berdine that preceded
+it~\cite{wehrman11}, sat between these: buffers are visible in assertions,
+and separation is meant to keep the reasoning local.
+
+\paragraph{iCAP-TSO.}
+The closest successor is the logic of Sieczkowski, Svendsen, Birkedal and
+Pichon-Pharabod~\cite{sieczkowski15}, which cites the dissertation. It
+extends a higher-order concurrent separation logic with store buffers and
+with connectives for them, including one stating that an assertion holds
+until a buffered update is flushed and another afterwards. That is a
+temporal connective in the dissertation's sense, attached to a single
+update. Their central idea is a \emph{fiction of sequential consistency}:
+a library that synchronizes enough can be given a specification from which
+its clients reason in ordinary separation logic. They observe, fairly, that
+the dissertation's logic cannot exploit synchronization to simplify client
+proofs in that way. They also verify a spin lock whose release is a plain
+buffered store, which is exactly the unlocked access to shared state that
+Section~\ref{sec:open} leaves open here. Jacobs~\cite{jacobs14} proposed
+``TSO spaces'' for separation logic with a related aim.
+
+\paragraph{Temporal reasoning elsewhere.}
+Bornat, Alglave and Parkinson~\cite{bornat15} built a rely-guarantee logic
+for weak memory around temporal modalities, ``since'' and ``so far'' among
+them. The idea that ordering between writes belongs in the assertion
+language, which the dissertation expressed as a separating conjunction, has
+thus reappeared in other forms.
+
+\paragraph{Other memory models.}
+Most later work targets the C11 model and weaker ones rather than TSO:
+relaxed separation logic~\cite{vafeiadis13} and GPS~\cite{turon14}, and
+their reconstruction inside Iris~\cite{kaiser17}, which made mechanized
+soundness proofs the norm for such logics. For x86 itself,
+Pierogi~\cite{bila22} is an Owicki--Gries logic over a view-based semantics
+that also covers persistent memory.
+
+\paragraph{Where this report stands.}
+Against that background, what the repaired logic offers is narrow and, as
+far as I know, still distinctive: sequential and spatial separating
+conjunctions over the whole history of a thread's writes, each with a frame
+rule, and a soundness proof checked end to end against an operational TSO
+machine. Section~\ref{sec:trilemma}'s conflict between temporal framing,
+units and ownership transfer does not depend on TSO and may be of use to
+anyone designing a logic with a sequential conjunction. What it lacks,
+unlocked access and a way for libraries to hide the memory model from
+their clients, is what the later logics were built to provide.

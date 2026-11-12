@@ -119,6 +119,8 @@ theories/AssertionExchangeCounterexamples.v
 theories/AssertionExchangeRight.v
 theories/AssertionExchangeTemporal.v
 theories/AssertionExchangeTemporalRight.v
+theories/OriginalAlgebraCounterexamples.v
+theories/AssertionDerivation.v
 theories/OwnedContainerDerivation.v
 theories/OwnedRetryContainer.v
 theories/OwnedExecution.v

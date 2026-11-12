@@ -1,5 +1,12 @@
 # Paper checkpoint 4A: complete assertion-algebra audit
 
+**Follow-up:** [the response to the accepted audit](lead-response-after-algebra-audit.md)
+adds original-interpretation proofs of the remaining refutations requested
+by the reviewer: T4, all T7/T8 cases with `⋉` outside, the other
+associativity direction and T9. The scope and 830-declaration count below
+record the original 4A batch at `ae16e60`; the follow-up reports the new
+847-declaration check and the proposed 4B rule statement.
+
 The audit of Figures 4.5 and 4.6 is complete for the final
 `persistent_models` / `persistent_entails` interpretation. Every displayed
 schema, every choice of schematic connective, and both readings of the

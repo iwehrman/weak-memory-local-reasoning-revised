@@ -33,7 +33,10 @@ every law and both readings of the small-exchange premise. Spatial and
 temporal associativity, lock symmetry and the barrier/write laws survive;
 strong-temporal associativity and exchange fail. The assertion
 interpretation and proved program calculus are unchanged. The assertion
-proof-rule statement is the next checkpoint.
+proof-rule [statement is ready](review/paper-assertion-rules-statement.md),
+with its soundness proof still ahead. The
+[review response](review/lead-response-after-algebra-audit.md) also checks
+the requested remaining counterexamples in the original interpretation.
 
 ## Main results
 
@@ -49,6 +52,7 @@ proof-rule statement is the next checkpoint.
 | Further assertion laws and checked associativity/lock countermodels | [AssertionAlgebra.v](theories/AssertionAlgebra.v), [AssertionAlgebraCounterexamples.v](theories/AssertionAlgebraCounterexamples.v) |
 | Full barrier distribution, lock symmetry and successive-write collapse | [AssertionBarrierAlgebra.v](theories/AssertionBarrierAlgebra.v), [AssertionLockAlgebra.v](theories/AssertionLockAlgebra.v), [AssertionWriteAlgebra.v](theories/AssertionWriteAlgebra.v) |
 | Complete small/full-exchange classification, with checked witnesses | [Audit report and theorem map](review/paper-algebra-audit.md) |
+| Remaining T4 and strong-temporal exchange refutations in the original interpretation | [OriginalAlgebraCounterexamples.v](theories/OriginalAlgebraCounterexamples.v) |
 | Original container derived inside the calculus, exercising FRAME-TM and EX | [OwnedContainerDerivation.v](theories/OwnedContainerDerivation.v) |
 | Retrying container derived using choice and loops | [OwnedRetryContainer.v](theories/OwnedRetryContainer.v) |
 | 52-step successful trace, two failed retry iterations, all-run safety and completed-run restoration | [OwnedRetryTrace.v](theories/OwnedRetryTrace.v) |
@@ -73,8 +77,9 @@ make check
 
 `make` compiles every file in `_CoqProject`. `make check` additionally runs
 `rocq check` on `WMLR.Audit` and its dependencies. The audit currently reports
-**830 declarations closed under the global context**, including every new
-lemma/theorem in the final calculus, retrying container and complete paper algebra audit.
+**847 declarations closed under the global context**, including every new
+lemma/theorem in the final calculus, retrying container, paper algebra audit
+and original-interpretation follow-up.
 There are no admitted proofs or declared axioms. The proofs do not require
 choice, functional extensionality, or a finite processor domain.
 
@@ -84,8 +89,10 @@ For a fresh build, run `make clean` followed by `make check`. Editors can use
 ## Scope and next work
 
 The active calculus-level soundness proof is complete. Assertion entailments
-are still proved semantically by hand, so reusable assertion rules and proof
-automation are the main usability work. Expression-valued lock schemas,
+are still proved semantically by hand. A proposed 47-constructor assertion
+derivation type now type-checks; its soundness theorem and reconstruction
+of the container's entailment proofs are next. Completeness and proof
+automation are outside the current work queue. Expression-valued lock schemas,
 recursive predicates and Chapter 5's experimental extensions are outside the
 proved calculus. LOCK/UNLOCK currently use constant positive processor IDs;
 the other primitive schemas support expressions. SHARE and FRAME-STM are

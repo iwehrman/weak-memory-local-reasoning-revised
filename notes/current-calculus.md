@@ -120,17 +120,20 @@ earlier unit helpers; no semantic definition changes. The completed audit
 also proves spatial/temporal associativity, lock symmetry, full barrier
 distribution and successive-write collapse. It refutes strong-temporal
 associativity in both directions, the small-exchange cases with `⋉`
-outside, full exchange, and unrestricted lock multiplication. One
-associativity countermodel and the lock countermodel are additionally
-checked in the original interpretation. The lock witness has no admissible
+outside, full exchange, and unrestricted lock multiplication. Those
+countermodels, plus the invalid-writer T4 example, are also checked in the
+original interpretation; see the
+[review follow-up](../review/lead-response-after-algebra-audit.md). The lock witness has no admissible
 machine environment; same-owner lock exclusivity still holds under the
 standing two-processor assumption. The all-processor points-to/write law
 needs an active annotation; for the weaker cell the exact condition is
 presence of that processor's mark. See the
 [complete audit](../review/paper-algebra-audit.md) for all instances,
 including both readings of the small-exchange premise. The interpretation
-and program rules remain unchanged; no assertion rule set has yet been
-selected.
+and program rules remain unchanged. A
+[47-constructor assertion-rule proposal](../review/paper-assertion-rules-statement.md)
+has been stated and type-checked, with no general assertion-entailment
+premise; its soundness theorem and container reconstruction remain open.
 
 The grammar has no recursive predicates. The invariant fragment therefore
 does not describe an unbounded linked container. That expressiveness limit

@@ -1,0 +1,1 @@
+{"counterexample": null, "distinct_cell_instances": 8, "overwrite_instances": 8, "scope": "Exact-atom screening of the two proposed flushed-cell laws for 4B.\n\nTwo active processors, addresses 1 and 2, values 0 and 1, every nonempty\nmark subset, empty buffers and free locks. All compositions are retained.\nThis is evidence about these finite instances, not a general proof.\n"}

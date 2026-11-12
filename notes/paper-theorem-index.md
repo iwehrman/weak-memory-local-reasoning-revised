@@ -242,15 +242,26 @@ execution theorem from an emp-invariant derivation of the printed triple.
 Neither SHARE nor AUX is added. The original derivation's rejected steps
 are classified in the [design diagnosis](../review/paper-priority-1-design.md).
 
+## Named spinlocks
+
+| Result | Declaration and source | Scope |
+| --- | --- | --- |
+| Acquire/release any member of a finite family | `named_lock_acquire_family`, `named_lock_release_family`, [NamedLockRules.v](../theories/NamedLockRules.v) | DJ derivation trees; acquire scratch fresh for J; release has a certificate I * I proves false. |
+| Both contracts semantically valid | `named_lock_family_valid`, [NamedLockExamples.v](../theories/NamedLockExamples.v) | Existing fragment and two-processor hypotheses only. |
+| Inhabited two-lock instance and nested client | `named_lock_two_initial_inhabited`, `named_lock_nested_derived`, `named_lock_nested_all_runs`, same file | Concrete four-cell heap; all finite executions avoid abort, terminal pool restored. |
+| Retry, acquisition and release traces | `named_lock_retry_iteration_trace`, `named_lock_acquire_success_trace`, `named_lock_release_trace`, [NamedLockTrace.v](../theories/NamedLockTrace.v) | General concrete traces, including other processors' pending buffers. |
+| Two named locks held while physical lock free | `named_lock_nested_trace`, `named_lock_nested_state`, [NamedLockExamples.v](../theories/NamedLockExamples.v) | 59-step nested run; protected values unchanged, flags zero on completion. |
+| Finite cell products and exclusivity | `cell_family_models`, `cell_family_exclusive`, [CellFamilies.v](../theories/CellFamilies.v) | Rocq families of existing assertions; no recursive assertion constructor. |
+
 ## Mechanization figures and outstanding work
 
-At this batch, `make check` passes with **1,107 audited declarations closed**,
-no axioms and no admitted proofs, using Rocq 9.3.0. There are **166 theory
-files and 27,053 physical lines** listed in `_CoqProject`, including comments,
+At this batch, `make check` passes with **1,157 audited declarations closed**,
+no axioms and no admitted proofs, using Rocq 9.3.0. There are **173 theory
+files and 27,816 physical lines** listed in `_CoqProject`, including comments,
 blank lines, the audit commands, original transcriptions and superseded
 experiments. This is the entire checked development, not a claim that the
-active soundness proof alone is that large. The nine new message-passing/helper files have 1,025 physical lines and
-79 newly audited declarations.
+active soundness proof alone is that large. The seven new named-lock/helper files have 699 physical lines and
+50 newly audited declarations.
 Declaration totals count
 `Print Assumptions` entries, not every generated inductive eliminator.
 
@@ -263,8 +274,9 @@ bounded-search output for common splitting is in
 
 The assertion soundness and [4C reconstruction](../review/paper-container-assertions.md)
 checkpoints and the [message-passing result](../review/paper-message-passing.md)
-are complete and ready for review. Remaining main work is the named-lock/mailbox
-examples, using assertion derivations. The separate retrying container's remaining semantic
+and the [named-lock result](../review/paper-named-locks.md) are complete and
+ready for review. Remaining main work is the mailbox region client, using
+assertion derivations. The separate retrying container's remaining semantic
 entailments have not been reconstructed in this batch.
 Restricted SHARE's semantic lock-free pre/post premises are approved;
 its proof and mode scope remain open and are deferred until after the named-lock/client work.

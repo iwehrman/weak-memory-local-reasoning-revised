@@ -1225,3 +1225,67 @@ Print Assumptions MessagePassingTrace.message_passing_one_pending_trace.
 Print Assumptions MessagePassingTrace.mp_private_complete_trace.
 Print Assumptions MessagePassingTrace.message_passing_one_trace.
 Print Assumptions MessagePassingTrace.message_passing_private_write_pending.
+
+From WMLR Require Import OwnedLoopRules.
+Print Assumptions OwnedLoopRules.assert_derive_boolean_clash.
+Print Assumptions OwnedLoopRules.owned_assertion_assume.
+Print Assumptions OwnedLoopRules.owned_assertion_while.
+Print Assumptions OwnedLoopRules.owned_assertion_set_emp.
+
+From WMLR Require Import CellFamilies.
+Print Assumptions CellFamilies.cell_heap_domain.
+Print Assumptions CellFamilies.cell_memory_domain.
+Print Assumptions CellFamilies.cell_memory_split.
+Print Assumptions CellFamilies.cell_resource_single.
+Print Assumptions CellFamilies.cell_family_models.
+Print Assumptions CellFamilies.cell_family_fv.
+Print Assumptions CellFamilies.cell_family_fragment.
+Print Assumptions CellFamilies.cell_family_exclusive.
+
+From WMLR Require Import NamedLockSyntax.
+Print Assumptions NamedLockSyntax.nl_cell_fv.
+Print Assumptions NamedLockSyntax.nl_component_fv.
+Print Assumptions NamedLockSyntax.nl_component_fragment.
+Print Assumptions NamedLockSyntax.nl_pool_fragment.
+Print Assumptions NamedLockSyntax.nl_acquire_modifies.
+Print Assumptions NamedLockSyntax.nl_release_modifies.
+
+From WMLR Require Import NamedLockAssertions.
+Print Assumptions NamedLockAssertions.nl_assert_cases.
+Print Assumptions NamedLockAssertions.nl_assert_take_donation.
+Print Assumptions NamedLockAssertions.nl_assert_retry_donation.
+Print Assumptions NamedLockAssertions.nl_assert_release_payload.
+Print Assumptions NamedLockAssertions.nl_assert_return_donation.
+Print Assumptions NamedLockAssertions.nl_assert_select_zero.
+Print Assumptions NamedLockAssertions.nl_assert_select_not_zero.
+Print Assumptions NamedLockAssertions.nl_assert_loop_continue.
+Print Assumptions NamedLockAssertions.nl_assert_loop_finish.
+
+From WMLR Require Import NamedLockRules.
+Print Assumptions NamedLockRules.nl_load_held_derived.
+Print Assumptions NamedLockRules.nl_attempt_derived.
+Print Assumptions NamedLockRules.nl_acquire_derived.
+Print Assumptions NamedLockRules.nl_release_derived.
+Print Assumptions NamedLockRules.nl_pool_focus.
+Print Assumptions NamedLockRules.named_lock_acquire_family.
+Print Assumptions NamedLockRules.named_lock_release_family.
+
+From WMLR Require Import NamedLockTrace.
+Print Assumptions NamedLockTrace.nl_global_write_trace.
+Print Assumptions NamedLockTrace.nl_attempt_success_trace.
+Print Assumptions NamedLockTrace.nl_attempt_retry_trace.
+Print Assumptions NamedLockTrace.nl_loop_one_trace.
+Print Assumptions NamedLockTrace.named_lock_acquire_success_trace.
+Print Assumptions NamedLockTrace.named_lock_retry_iteration_trace.
+Print Assumptions NamedLockTrace.named_lock_release_trace.
+Print Assumptions NamedLockTrace.nl_write_final_shape.
+
+From WMLR Require Import NamedLockExamples.
+Print Assumptions NamedLockExamples.named_lock_family_valid.
+Print Assumptions NamedLockExamples.nl_two_pool_closed.
+Print Assumptions NamedLockExamples.named_lock_nested_derived.
+Print Assumptions NamedLockExamples.nl_two_initial_assertion.
+Print Assumptions NamedLockExamples.named_lock_two_initial_inhabited.
+Print Assumptions NamedLockExamples.named_lock_nested_trace.
+Print Assumptions NamedLockExamples.named_lock_nested_state.
+Print Assumptions NamedLockExamples.named_lock_nested_all_runs.

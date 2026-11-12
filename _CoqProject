@@ -164,4 +164,11 @@ theories/MessagePassingDerivation.v
 theories/MessagePassingResources.v
 theories/MessagePassingAdequacy.v
 theories/MessagePassingTrace.v
+theories/OwnedLoopRules.v
+theories/CellFamilies.v
+theories/NamedLockSyntax.v
+theories/NamedLockAssertions.v
+theories/NamedLockRules.v
+theories/NamedLockTrace.v
+theories/NamedLockExamples.v
 theories/Audit.v

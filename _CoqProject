@@ -180,4 +180,15 @@ theories/MailboxAssertions.v
 theories/MailboxDerivation.v
 theories/MailboxAdequacy.v
 theories/MailboxTrace.v
+theories/OwnedShareAdequacy.v
+theories/OwnedShareInvariant.v
+theories/OwnedShareResources.v
+theories/OwnedShareStability.v
+theories/OwnedShareUpdates.v
+theories/OwnedShare.v
+theories/OwnedShareExamples.v
+theories/OwnedShareOverlapResources.v
+theories/OwnedShareOverlapStability.v
+theories/OwnedShareOverlap.v
+theories/OwnedShareOverlapExamples.v
 theories/Audit.v

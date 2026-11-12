@@ -13,8 +13,8 @@ it has an actual derivation tree; a second version uses choice and loops to
 retry. Both have concrete executions and all-execution safety results.
 
 This does not prove the printed Theorem 1 unchanged. Checked counterexamples
-refute several printed claims. The repaired system removes INV, omits SHARE
-and FRAME-STM, restricts temporal framing through a mode index, transfers the
+refute several printed claims. The repaired system removes INV, omits
+unrestricted SHARE and FRAME-STM, restricts temporal framing through a mode index, transfers the
 invariant at lock actions, and makes the semantic and variable conditions
 explicit. Its two standing hypotheses are a guarded heap invariant and two
 distinct active processors; no finite-domain assumption is needed.
@@ -43,7 +43,11 @@ points-to postcondition and both outcome traces. [Named spinlocks](review/paper-
 are now derived for finite families, with retry and nested-lock traces.
 The [producer/consumer mailbox](review/paper-mailbox.md) transfers a message
 of arbitrary length without a producer fence, with a checked 95-step trace
-that keeps an unrelated third-processor write pending. No rule was added. The
+that keeps an unrelated third-processor write pending.
+[Restricted SHARE](review/paper-restricted-share.md) is proved in both modes,
+with semantic lock-free pre/postconditions and no further side condition.
+No constructor was added. The completed batches are collected in the
+[review handoff](review/offline-queue-handoff.md). The
 [review response](review/lead-response-after-algebra-audit.md) also checks
 the requested remaining counterexamples in the original interpretation.
 [Independent follow-up](review/paper-independent-results.md) derives the
@@ -74,6 +78,7 @@ errors, repair choices and remaining scope.
 | Exact LOAD-P, corrected STORE-P, and forward/backward fence and lock variants | [OwnedPointsToRules.v](theories/OwnedPointsToRules.v), [OwnedAlternativeRules.v](theories/OwnedAlternativeRules.v) |
 | Common-split resource framing and enabled release with pending foreign writes | [OwnedCommonSplit.v](theories/OwnedCommonSplit.v), [OwnedCommonSplitExamples.v](theories/OwnedCommonSplitExamples.v) |
 | Original-points-to INV counterexamples and a printed FRAME-STM counterexample | [PrintedPointsToDerivations.v](theories/PrintedPointsToDerivations.v), [PrintedStrongFrame.v](theories/PrintedStrongFrame.v) |
+| Restricted SHARE in DJ and OV, with semantic lock-free pre/postconditions | [OwnedShare.v](theories/OwnedShare.v), [OwnedShareOverlap.v](theories/OwnedShareOverlap.v) |
 | SHARE and literal STORE-P counterexamples in the final interpretation | [OwnedAlternativeCounterexamples.v](theories/OwnedAlternativeCounterexamples.v) |
 | Further assertion laws and checked associativity/lock countermodels | [AssertionAlgebra.v](theories/AssertionAlgebra.v), [AssertionAlgebraCounterexamples.v](theories/AssertionAlgebraCounterexamples.v) |
 | Full barrier distribution, lock symmetry and successive-write collapse | [AssertionBarrierAlgebra.v](theories/AssertionBarrierAlgebra.v), [AssertionLockAlgebra.v](theories/AssertionLockAlgebra.v), [AssertionWriteAlgebra.v](theories/AssertionWriteAlgebra.v) |
@@ -103,7 +108,7 @@ make check
 
 `make` compiles every file in `_CoqProject`. `make check` additionally runs
 `rocq check` on `WMLR.Audit` and its dependencies. The audit currently reports
-**1,232 declarations closed under the global context**, including every new
+**1,284 declarations closed under the global context**, including every new
 lemma/theorem in the final calculus, retrying container, paper algebra audit
 and independent follow-up work.
 There are no admitted proofs or declared axioms. The proofs do not require
@@ -120,13 +125,16 @@ conversion, value hiding and drained-history collapse. The selected-branch
 container now uses these rules for every assertion obligation. The separate
 retrying variant remains checked but retains some semantic entailment proofs.
 The dissertation's message-passing example now uses that system and has
-the original one-cell execution conclusion. Named spinlocks and the arbitrary-length producer/consumer mailbox are
-derived too. Restricted SHARE is the remaining main queue item. Completeness and proof
-automation are outside the current work queue. Expression-valued lock schemas,
+the original one-cell execution conclusion. Named spinlocks and the
+arbitrary-length producer/consumer mailbox are derived too. Restricted SHARE is proved in DJ and OV; the requested queue
+is complete and awaits independent review. Completeness and proof automation
+are outside the current work queue. Expression-valued lock schemas,
 recursive predicates and Chapter 5's experimental extensions are outside the
 proved calculus. LOCK/UNLOCK currently use constant positive processor IDs;
-the other primitive schemas support expressions. SHARE and FRAME-STM are
-explicit omissions, not admitted cases. Chapter 3 syntax is present without
+the other primitive schemas support expressions. Unrestricted SHARE and
+FRAME-STM remain omitted. Restricted SHARE is a semantic theorem, with
+corollaries from derivations, rather than a new constructor. Chapter 3 syntax
+is present without
 a separate complete sequential soundness theorem.
 
 The original transcriptions and checked counterexamples remain available.

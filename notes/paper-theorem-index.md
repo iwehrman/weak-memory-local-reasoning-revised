@@ -7,6 +7,22 @@ historical modules have colliding names. The complete declaration audit is
 [Audit.v](../theories/Audit.v); the full assertion-law instance table is
 [the algebra audit](../review/paper-algebra-audit.md).
 
+## Restricted SHARE after the client derivations
+
+| Result | Declaration and source | Scope |
+| --- | --- | --- |
+| DJ SHARE | `owned_share_valid`, [OwnedShare.v](../theories/OwnedShare.v) | DJ source validity to DJ validity under emp, with J added spatially to pre and post; semantic lock-free pre/postconditions and the two standing hypotheses only |
+| OV SHARE | `owned_share_overlap_valid`, [OwnedShareOverlap.v](../theories/OwnedShareOverlap.v) | Same rule with OV on both sides; no DJ-to-OV claim |
+| From proof trees | `owned_share_derivation_valid`, `owned_share_overlap_derivation_valid`, same files | Existing 21-constructor derivations as premises; no new constructor |
+| All finite executions | `owned_share_all_runs`, `owned_share_derivation_all_runs`, [OwnedShareAdequacy.v](../theories/OwnedShareAdequacy.v) | Initial J * P; no abort; terminal free lock and full interpretation of J * Q on the actual memory |
+| Examples and projection regression | [OwnedShareExamples.v](../theories/OwnedShareExamples.v), [OwnedShareOverlapExamples.v](../theories/OwnedShareOverlapExamples.v) | Container under emp, foreign spatial frame, general store/fence in OV, and an actual stale overlapping frame |
+
+The [report](../review/paper-restricted-share.md) explains the source-frame
+projection and why it leaves the target frame exactly unchanged. No new
+safety predicate, invariant-variable premise, axiom or assertion interpretation
+is used. The OV failure conjecture in reviewer guidance is superseded by
+this proof, pending independent checking.
+
 ## Main theorem and standing hypotheses
 
 | Result | Declaration and source | Scope |
@@ -180,7 +196,7 @@ is not represented as proof of the source's literal formula.
 | Capture-avoiding substitution | `persistent_assertion_subst`, [AssertionSubstitution.v](../theories/AssertionSubstitution.v); `substitution_capture_regression`, [OwnedRoutineExamples.v](../theories/OwnedRoutineExamples.v) | Whole grammar, including wands |
 | Preserve assertion meaning under thread interference | `owned_safe_stack_agrees`, [OwnedInterference.v](../theories/OwnedInterference.v) | Used by EX and parallel composition; explicit variable conditions |
 | Remove INV; transfer at machine actions | `OwnedRules.owned_lock_valid`, `owned_unlock_valid`, [OwnedRules.v](../theories/OwnedRules.v) | Active protocol, not protected/private compartments |
-| Omit FRAME-STM and SHARE | Counterexamples below; common-split framing above | Deliberate omissions; restricted SHARE remains an open proposal |
+| Omit FRAME-STM and unrestricted SHARE | Counterexamples below; common-split framing above | Unrestricted SHARE and FRAME-STM remain omitted; restricted SHARE is proved semantically in both modes |
 
 The safety record's footprint bound and mark budget are explicit fields of
 `owned_update` in [OwnedSafety.v](../theories/OwnedSafety.v). Pool status
@@ -216,7 +232,7 @@ contexts. No additional validity predicate has been layered on top of it.
 | Unfenced flushed-cell postcondition | `owned_plain_store_cell_invalid`, `owned_plain_store_cell_not_derivable`, [OwnedFenceExamples.v](../theories/OwnedFenceExamples.v) | Current semantics/calculus, both modes; inhabited precondition |
 | Literal displayed STORE-P | `owned_literal_store_p_invalid`, [OwnedAlternativeCounterexamples.v](../theories/OwnedAlternativeCounterexamples.v) | Final interpretation; literal postcondition false on all resources; source transcription separated from corrected derived form |
 | Unrestricted SHARE with transferring LOCK | `owned_printed_share_lock_counterexample`, same file | Current semantics, both modes; duplicates a cell |
-| Merely syntactically lock-free SHARE | `owned_syntactic_lock_free_share_counterexample`, same file | `emp` and `C * true` contain no Lock atom but the latter can hide its token; semantic restriction is still open |
+| Merely syntactically lock-free SHARE | `owned_syntactic_lock_free_share_counterexample`, same file | `emp` and `C * true` contain no Lock atom but the latter can hide its token; the semantic restriction is proved in both modes by the restricted SHARE theorems |
 | Retirement erases unrelated live ownership | `ReviewObstructions.retired_later_cell_can_erase_earlier`, [ReviewObstructions.v](../theories/ReviewObstructions.v) | Abandoned retirement interpretation only |
 | General framing/unit/transfer tension | `ReviewObstructions.trilemma`, same file | Abstract conditional theorem, not a discharged soundness theorem |
 
@@ -266,9 +282,9 @@ are classified in the [design diagnosis](../review/paper-priority-1-design.md).
 
 ## Mechanization figures and outstanding work
 
-At this batch, `make check` passes with **1,232 audited declarations closed**,
-no axioms and no admitted proofs, using Rocq 9.3.0. There are **182 theory
-files and 28,865 physical lines** listed in `_CoqProject`, including comments,
+At this batch, `make check` passes with **1,284 audited declarations closed**,
+no axioms and no admitted proofs, using Rocq 9.3.0. There are **193 theory
+files and 30,052 physical lines** listed in `_CoqProject`, including comments,
 blank lines, the audit commands, original transcriptions and superseded
 experiments. This is the entire checked development, not a claim that the
 active soundness proof alone is that large. The nine new mailbox/helper files have 956 physical lines and
@@ -287,10 +303,11 @@ The assertion soundness and [4C reconstruction](../review/paper-container-assert
 checkpoints and the [message-passing result](../review/paper-message-passing.md)
 and the [named-lock result](../review/paper-named-locks.md) are complete and
 ready for review. The [mailbox region client](../review/paper-mailbox.md) is
-now complete too. Restricted SHARE is the remaining main queue item. The separate retrying container's remaining semantic
-entailments have not been reconstructed in this batch.
-Restricted SHARE's semantic lock-free pre/post premises are approved;
-its proof and mode scope remain open and are next in the queue.
+now complete too. [Restricted SHARE](../review/paper-restricted-share.md) is
+proved in both modes, completing the requested queue. The separate retrying
+container's remaining semantic entailments have not been reconstructed in this batch.
+Independent review of these offline batches is pending. No new constructor
+was added for SHARE; its placement in the paper is a review decision.
 Fenced Dekker lacks a shared-access rule; see the scope paragraph in the
 [batch report](../review/paper-independent-batch.md). No completeness or
 automation claim is made for the sound assertion system.

@@ -74,7 +74,7 @@ different witnesses for the two conjuncts.
 | FRAME-STM | Omitted. A checked DJ counterexample exploits independent witnesses in the two conjuncts of `⋉`. The connective itself is retained unchanged and works in LOAD/STORE. No common-witness constructor was added. `owned_safe_common_frame` now proves resource-level framing when the same witnesses satisfy both relations, in either mode, including release; the abbreviation alone does not imply that premise. Soundness or failure of the unrestricted abbreviation rule in OV is not claimed. |
 | CONC | Printed mutual variable-interference condition, plus neither command modifies a free variable of `J`. Supports arbitrary commands, nested parallel composition, and disjoint register updates. |
 | EX | Printed freshness in command and postcondition, plus freshness in `J`. `owned_exists_valid` proves the rule in both modes by stack-agreement transport. |
-| SHARE | Omitted. `owned_printed_share_lock_counterexample` now refutes unrestricted SHARE with the transferring LOCK rule in both modes. Syntactic absence of Lock atoms is also insufficient (`owned_syntactic_lock_free_share_counterexample`). A restricted theorem requiring every pre/post model to have no token remains open. Top-level adequacy already starts directly with a pool satisfying `J`. |
+| SHARE | Unrestricted form omitted. `owned_printed_share_lock_counterexample` now refutes unrestricted SHARE with the transferring LOCK rule in both modes. Syntactic absence of Lock atoms is also insufficient (`owned_syntactic_lock_free_share_counterexample`). Restricted SHARE requiring every pre/post model to be lock-free is now proved in DJ and OV (`owned_share_valid`, `owned_share_overlap_valid`), with no extra premise. These are semantic theorems with corollaries from derivations; no new constructor is added. Top-level adequacy already starts directly with a pool satisfying `J`. |
 | Mode weakening | New explicit OV → DJ rule. It packages the proved inclusion of semantic validities. |
 
 There are 21 constructors. None contains `owned_safe`, `owned_valid`, or an
@@ -254,7 +254,8 @@ regressions and evidence explaining the repairs. See the
 The main Chapter 4 repair now has calculus-level soundness and adequacy.
 Remaining extensions include assertion proof automation, expression-valued
 lock schemas, recursive predicates, and the dissertation's Chapter 5
-experiments. FRAME-STM and SHARE are deliberate omissions from this target,
-not unfinished cases hidden inside its soundness proof. Sequential Chapter 3
-syntax is present, but no separate complete sequential soundness theorem is
+experiments. FRAME-STM and unrestricted SHARE remain deliberate omissions;
+there are no unfinished cases hidden inside the soundness proof. Restricted
+SHARE is now a proved semantic rule in both modes, without a new constructor.
+Sequential Chapter 3 syntax is present, but no separate complete sequential soundness theorem is
 claimed.

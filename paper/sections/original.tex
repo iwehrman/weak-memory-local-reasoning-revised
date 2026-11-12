@@ -66,12 +66,13 @@ $\Gamma_0 \cup \Gamma_1$ and require $K_0 \cap K_1 = \nil$.
 \subsection{Assertions}
 
 Assertions are given by
-\[
-  P \bnfdef b \bnfbar P \disj P \bnfbar P \conj P \bnfbar \exists x \st P
+\begin{align*}
+  P \bnfdef{} & b \bnfbar P \disj P \bnfbar P \conj P \bnfbar \exists x \st P
     \bnfbar \forall x \st P \bnfbar \femp \bnfbar \fbar{e} \bnfbar
-    \flock{e} \bnfbar e \fwrite{e'} e'' \bnfbar P \fsep P \bnfbar
-    P \fseq P \bnfbar P \fsepi P \bnfbar P \fseqli P \bnfbar P \fseqri P
-\]
+    \flock{e} \bnfbar e \fwrite{e'} e'' \\
+  \bnfbar{} & P \fsep P \bnfbar P \fseq P \bnfbar P \fsepi P \bnfbar
+    P \fseqli P \bnfbar P \fseqri P
+\end{align*}
 and are interpreted over a stack and a generalized memory. The atoms are:
 \begin{itemize}[nosep]
   \item $\femp$: empty heap, empty buffers, $K = \nil$; $\Gamma$ is
@@ -201,7 +202,7 @@ $\safe{n}{c,s,\mu,J,Q}$ for all $n$. Local states are always read at full
 completeness, $\Gamma = \setprocessors$.
 
 Theorem~1 states that provable specifications are true. The dissertation
-proves the axioms sound in an appendix, sketches a frame lemma for the
+gives soundness lemmas for the axioms in an appendix, sketches a frame lemma for the
 spatiotemporal operator $\shash$, and reduces the spatial frame rule to
 Conjecture~1, which is left open. Associativity of buffer overriding
 (Proposition~2) and of the three separations, and flushing closure of

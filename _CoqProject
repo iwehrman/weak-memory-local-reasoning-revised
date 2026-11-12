@@ -153,4 +153,6 @@ theories/AssertionCellSubstitution.v
 theories/AssertionDerivedRules.v
 theories/OwnedAssertionRules.v
 theories/AssertionDerivationExamples.v
+theories/AssertionRearrangements.v
+theories/OwnedContainerAssertions.v
 theories/Audit.v

@@ -2,7 +2,7 @@ From Stdlib Require Import List ZArith.
 From WMLR Require Import Expressions Languages Machine Separation OperationalSemantics
   Assertions AssertionSemantics Specifications PersistentAssertions PersistentRules AssertionSubstitution
   Safety TemporalSafety RegionalResources InvariantFragment OwnedSafety OwnedHeap OwnedCalculus
-  OwnedContainerEntailments.
+  OwnedContainerEntailments AssertionDerivation AssertionDerivedRules AssertionRearrangements OwnedAssertionRules.
 Import ListNotations.
 
 Lemma owned_derive_load_cell active invariant mode address value annotation x :
@@ -11,11 +11,11 @@ Lemma owned_derive_load_cell active invariant mode address value annotation x :
     (C.Prim (C.Common (S.Load x address)) annotation)
     (A.And (writer_points_to address value) (A.Pure (BEq (EVar x) value))).
 Proof.
-  intros HJ Hfresh; eapply OwnedConsequence.
-  - intros s r H; apply persistent_strong_emp_right, H.
+  intros HJ Hfresh; eapply owned_assertion_consequence.
+  - apply (assert_derive_strong_emp_right active Backward).
   - apply OwnedLoadAny; [exact HJ |cbn [A.fv]; rewrite app_nil_r; exact Hfresh].
-  - intros s r [[Hsp Htm] Hb]; split; [|exact Hb].
-    eapply container_spatial_emp_elim; [cbn [writer_points_to wand_free]; tauto |exact Hsp].
+  - apply assert_derive_and_mono;
+      [apply (assert_derive_strong_emp_right active Forward) |apply AssertRefl].
 Qed.
 
 Lemma owned_derive_store_cell active invariant mode address old value annotation :
@@ -23,12 +23,11 @@ Lemma owned_derive_store_cell active invariant mode address old value annotation
     (C.Prim (C.Common (S.Store address value)) annotation)
     (A.Temporal (writer_points_to address old) (A.LeadsTo address annotation value)).
 Proof.
-  eapply OwnedConsequence.
-  - intros s r H; apply persistent_strong_emp_right, H.
+  eapply owned_assertion_consequence.
+  - apply (assert_derive_strong_emp_right active Backward).
   - apply OwnedStoreAny.
-  - eapply container_temporal_mono; [|intros s r H; exact H].
-    intros s r [Hsp Htm]; eapply container_spatial_emp_elim;
-      [cbn [writer_points_to wand_free]; tauto |exact Hsp].
+  - apply (AssertSeparateMono active SepTemporal);
+      [apply (assert_derive_strong_emp_right active Forward) |apply AssertRefl].
 Qed.
 
 Lemma owned_derive_assign_from active invariant mode pre post x rhs annotation :

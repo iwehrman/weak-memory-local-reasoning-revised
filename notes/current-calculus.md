@@ -137,7 +137,10 @@ and program rules remain unchanged. A
 now has a [checked soundness theorem](../review/paper-assertion-soundness.md)
 for the entire assertion grammar, with no global processor-count or invariant
 assumption. All four planned cell rules are derived without adding a
-constructor. The container reconstruction remains the next checkpoint.
+constructor. The selected-branch container's
+[4C reconstruction](../review/paper-container-assertions.md) is complete:
+every CONS/UNLOCK obligation and both cell-access helpers use assertion
+proof trees. No rule or side condition was added for that reconstruction.
 
 The grammar has no recursive predicates. The invariant fragment therefore
 does not describe an unbounded linked container. That expressiveness limit
@@ -187,15 +190,20 @@ releasing the lock and returning to the loop each time. Neither trace is a
 claim of termination for every schedule. The language's guarded-choice
 encoding can also choose a false assumption and wait.
 
-The practical proof work remains assertion entailment. The original example
-had 16 named obligations (28 expanded instances); its derivation trees reuse
-that algebra and replace manual existential opening with EX. Derived rules
-now package cell-only LOAD/STORE, assignment from an entailment about the
-updated stack, while loops, and unreachable release. The retrying proof adds
-two ownership entailments: spatially retained item history excludes the full
-pool, and release's barrier completes both histories for donation. Guards
-and stack-update assertions are still discharged semantically. No new
-FRAME-STM, invariant fragment, validity predicate, or extra fence was needed.
+The original example had 16 nonidentity entailment obligations (28 expanded
+instances). In checkpoint 4C these obligations are all supplied by assertion
+derivations, including the pure guards and the value existential. The 13
+named container assertion lemmas reuse eight general rearrangement proofs
+and the previously derived cell rules. Cell-only LOAD/STORE now use the
+same assertion interfaces. The all-run safety theorem uses the reconstructed
+program derivation directly; its statement and concrete trace are unchanged.
+
+The separate retrying proof still has semantic obligations for its retry
+register and two additional ownership entailments: spatially retained item
+history excludes the full pool, and release's barrier completes both
+histories for donation. Its reconstruction was not the 4C target. No new
+FRAME-STM, invariant fragment, validity predicate, or extra fence was needed
+for either example.
 
 `OwnedBufferedLoad.v` also derives loading one's own latest write from
 `(R ; W(a,i,v)) * T`, with arbitrary history `R` and spatial tail `T` and

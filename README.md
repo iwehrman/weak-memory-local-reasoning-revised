@@ -34,8 +34,9 @@ temporal associativity, lock symmetry and the barrier/write laws survive;
 strong-temporal associativity and exchange fail. The assertion
 interpretation and proved program calculus are unchanged. The assertion
 proof basis now has [checked soundness and derived cell rules](review/paper-assertion-soundness.md)
-for all 47 approved constructors. Derived CONS/UNLOCK interfaces accept
-assertion proof trees; reconstructing the container through them is next. The
+for all 47 approved constructors. The selected-branch container is now
+[reconstructed entirely through assertion proof trees](review/paper-container-assertions.md),
+including CONS/UNLOCK and the cell access helpers. No rule was added. The
 [review response](review/lead-response-after-algebra-audit.md) also checks
 the requested remaining counterexamples in the original interpretation.
 [Independent follow-up](review/paper-independent-results.md) derives the
@@ -68,7 +69,7 @@ errors, repair choices and remaining scope.
 | Full barrier distribution, lock symmetry and successive-write collapse | [AssertionBarrierAlgebra.v](theories/AssertionBarrierAlgebra.v), [AssertionLockAlgebra.v](theories/AssertionLockAlgebra.v), [AssertionWriteAlgebra.v](theories/AssertionWriteAlgebra.v) |
 | Complete small/full-exchange classification, with checked witnesses | [Audit report and theorem map](review/paper-algebra-audit.md) |
 | Remaining T4 and strong-temporal exchange refutations in the original interpretation | [OriginalAlgebraCounterexamples.v](theories/OriginalAlgebraCounterexamples.v) |
-| Original container derived inside the calculus, exercising FRAME-TM and EX | [OwnedContainerDerivation.v](theories/OwnedContainerDerivation.v) |
+| Original container derived using assertion proof trees throughout, exercising FRAME-TM and EX | [OwnedContainerDerivation.v](theories/OwnedContainerDerivation.v), [OwnedContainerAssertions.v](theories/OwnedContainerAssertions.v) |
 | Retrying container derived using choice and loops | [OwnedRetryContainer.v](theories/OwnedRetryContainer.v) |
 | 52-step successful trace, two failed retry iterations, all-run safety and completed-run restoration | [OwnedRetryTrace.v](theories/OwnedRetryTrace.v) |
 | General final invariant restoration for emp-to-emp clients with a lock-free initial frame | [OwnedExecution.v](theories/OwnedExecution.v) |
@@ -92,7 +93,7 @@ make check
 
 `make` compiles every file in `_CoqProject`. `make check` additionally runs
 `rocq check` on `WMLR.Audit` and its dependencies. The audit currently reports
-**1,007 declarations closed under the global context**, including every new
+**1,028 declarations closed under the global context**, including every new
 lemma/theorem in the final calculus, retrying container, paper algebra audit
 and independent follow-up work.
 There are no admitted proofs or declared axioms. The proofs do not require
@@ -105,9 +106,11 @@ For a fresh build, run `make clean` followed by `make check`. Editors can use
 
 The active program and assertion calculi have soundness proofs. The approved
 47-constructor assertion basis also derives cell exclusion, drained-write
-conversion, value hiding and drained-history collapse. The existing container
-proofs still use semantic entailments; rebuilding those obligations as assertion
-derivations is the next checkpoint. Completeness and proof
+conversion, value hiding and drained-history collapse. The selected-branch
+container now uses these rules for every assertion obligation. The separate
+retrying variant remains checked but retains some semantic entailment proofs.
+Next are the dissertation's message-passing example and the named-lock/client
+examples, using the assertion system. Completeness and proof
 automation are outside the current work queue. Expression-valued lock schemas,
 recursive predicates and Chapter 5's experimental extensions are outside the
 proved calculus. LOCK/UNLOCK currently use constant positive processor IDs;

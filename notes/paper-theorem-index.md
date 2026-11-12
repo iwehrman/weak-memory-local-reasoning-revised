@@ -14,7 +14,7 @@ historical modules have colliding names. The complete declaration audit is
 | Program calculus, 21 constructors | `owned_derivation`, [OwnedCalculus.v](../theories/OwnedCalculus.v) | Modes OV and DJ; no safety/validity premise in a constructor. CONS and UNLOCK have semantic assertion-entailment premises. |
 | Assertion calculus, 47 constructors | `assertion_derivation`, [AssertionDerivation.v](../theories/AssertionDerivation.v); `assertion_derivation_sound`, [AssertionSoundness.v](../theories/AssertionSoundness.v) | Entire assertion grammar, including wands; no global processor-count, finiteness or invariant hypothesis. |
 | CONS and UNLOCK from assertion proofs | `owned_assertion_consequence`, `owned_assertion_unlock`, [OwnedAssertionRules.v](../theories/OwnedAssertionRules.v) | Derived interfaces to the existing program constructors; no new program rule. |
-| Soundness by induction | `owned_calculus_sound`, same file | `invariant_fragment J` and `two_active_processors active`. No finiteness axiom. |
+| Soundness by induction | `owned_calculus_sound`, [OwnedCalculus.v](../theories/OwnedCalculus.v) | `invariant_fragment J` and `two_active_processors active`. No finiteness axiom. |
 | Adequacy directly from a derivation | `owned_derivation_adequacy`, same file | Concrete free-lock start, disjoint invariant pool; empty external frame instantiated internally. Every finite run avoids abort; termination gives the postcondition and ownership decomposition. |
 | Semantic adequacy | `owned_valid_adequacy`, [OwnedAdequacy.v](../theories/OwnedAdequacy.v) | Same standing hypotheses; takes semantic validity. |
 | Final invariant restoration for emp-to-emp clients | `owned_emp_derivation_restores`, [OwnedExecution.v](../theories/OwnedExecution.v) | Also assumes a lock-free initial external frame. The final pool is a component of the actual final memory. |
@@ -146,9 +146,11 @@ freshness details and the unchanged constructor counts.
 | Common-split future closure and program-step reconstruction | `resource_common_future_split`, `owned_common_reconstruction`, [OwnedCommonSplit.v](../theories/OwnedCommonSplit.v) |
 | Resource-level common-split framing, both modes | `owned_safe_common_frame`, same file; fragment invariant and variable condition; **one common pair of witnesses**, not merely `R ⋉ P` |
 | Enabled common-split release with foreign writes pending | `owned_common_release_safe`, `owned_common_release_enabled`, [OwnedCommonSplitExamples.v](../theories/OwnedCommonSplitExamples.v) |
-| Selected-branch container derivation | `owned_container_derived`, [OwnedContainerDerivation.v](../theories/OwnedContainerDerivation.v) |
+| Selected-branch container, assertion derivations throughout | `owned_container_derived`, [OwnedContainerDerivation.v](../theories/OwnedContainerDerivation.v); all CONS/UNLOCK premises and cell-access helpers now use assertion proof trees |
+| Container assertion obligations, including both releases and reacquisition | `container_assert_remove_unlock`, `container_assert_return_unlock`, `container_assert_reacquire`, [OwnedContainerAssertions.v](../theories/OwnedContainerAssertions.v); all 13 lemmas construct `assertion_derivation` |
+| Reusable assertion rearrangements | `assert_derive_lock_temporal_out`, `assert_derive_strong_emp_right`, `assert_derive_distinct_cells`, [AssertionRearrangements.v](../theories/AssertionRearrangements.v); eight derived lemmas, no new constructor |
 | Original container trace, pending foreign write and all-run safety | `owned_container_trace`, `owned_container_foreign_pending_throughout`, `owned_container_all_runs_safe`, [OwnedContainerTrace.v](../theories/OwnedContainerTrace.v) |
-| Retrying container derivation | `owned_retrying_container_derived`, [OwnedRetryContainer.v](../theories/OwnedRetryContainer.v) |
+| Retrying container derivation | `owned_retrying_container_derived`, [OwnedRetryContainer.v](../theories/OwnedRetryContainer.v); retains some semantic entailment proofs, outside this 4C reconstruction |
 | 52-step success and two failed retry iterations | `owned_retrying_container_trace`, `container_two_failed_iterations`, [OwnedRetryTrace.v](../theories/OwnedRetryTrace.v) |
 | Both containers restore the invariant on completion | `owned_container_completed_restores`, `owned_retrying_container_completed_restores`, same file |
 | Concurrency with register updates and an acquire beside a blocked store | `owned_parallel_registers_valid`, `owned_parallel_acquire_store_valid`, [OwnedParallelExamples.v](../theories/OwnedParallelExamples.v); enabled witnesses in the same file |
@@ -227,14 +229,15 @@ all-processor statements when describing the printed calculus in the paper.
 
 ## Mechanization figures and outstanding work
 
-At this batch, `make check` passes with **1,007 audited declarations closed**,
-no axioms and no admitted proofs, using Rocq 9.3.0. There are **155 theory
-files and 25,666 physical lines** listed in `_CoqProject`, including comments,
+At this batch, `make check` passes with **1,028 audited declarations closed**,
+no axioms and no admitted proofs, using Rocq 9.3.0. There are **157 theory
+files and 25,931 physical lines** listed in `_CoqProject`, including comments,
 blank lines, the audit commands, original transcriptions and superseded
 experiments. This is the entire checked development, not a claim that the
-active soundness proof alone is that large. The seven files added for the
-assertion soundness checkpoint have 634 physical lines and 60 newly audited
-declarations. Declaration totals count
+active soundness proof alone is that large. The two files added for the
+4C reconstruction have 239 physical lines and 21 newly audited declarations;
+the existing container and cell-helper proof bodies were also rewritten.
+Declaration totals count
 `Print Assumptions` entries, not every generated inductive eliminator.
 
 Reproduce the line count by summing `len(path.read_text().splitlines())` for
@@ -244,9 +247,11 @@ checks the imported proof objects after compilation. The complete fixed
 bounded-search output for common splitting is in
 [paper-common-split-search.jsonl](../review/paper-common-split-search.jsonl).
 
-Remaining main work: review the completed assertion soundness checkpoint,
-rebuild the container without semantic entailment premises (4C),
-then the original message-passing example and named-lock/mailbox examples.
+The assertion soundness and [4C reconstruction](../review/paper-container-assertions.md)
+checkpoints are complete and ready for review. Remaining main work is the
+original message-passing example and named-lock/mailbox examples, all using
+assertion derivations. The separate retrying container's remaining semantic
+entailments have not been reconstructed in this batch.
 Restricted SHARE's semantic lock-free pre/post premises are approved;
 its proof and mode scope remain open and are deferred until after priority 1.
 Fenced Dekker lacks a shared-access rule; see the scope paragraph in the

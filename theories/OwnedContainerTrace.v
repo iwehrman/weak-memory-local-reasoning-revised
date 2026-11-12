@@ -2,7 +2,8 @@ From Stdlib Require Import List ZArith.
 From WMLR Require Import Expressions Languages Machine BufferRelations Separation OperationalSemantics
   ProgramSteps ExecutionExamples Assertions AssertionSemantics ConcreteAssertions PersistentAssertions Safety
   TemporalSafety RegionalResources InvariantFragment InvariantFragmentExamples PrivateOwnership
-  OwnedSafety OwnedAdequacy OwnedResources OwnedAcceptance OwnedContainerEntailments OwnedContainer.
+  OwnedSafety OwnedAdequacy OwnedResources OwnedAcceptance OwnedContainerEntailments OwnedContainer
+  OwnedCalculus OwnedContainerDerivation.
 Import ListNotations.
 
 Definition container_pool_memory value := Memory
@@ -190,6 +191,6 @@ Theorem owned_container_all_runs_safe s n last t final :
       exists owner, lock_held two_processors (resource_memory two_processors local) owner /\ pool = empty_memory)).
 Proof.
   intros Hrun; destruct (owned_container_initial s) as [HP [HJ [Henv [Hf [Hx Hfree]]]]].
-  eapply owned_valid_adequacy; [apply acceptance_two_active |apply container_invariant_fragment
-    |apply owned_container_valid |exact HP |exact HJ |exact Hfree |apply container_initial_split |exact Hrun].
+  eapply owned_derivation_adequacy; [apply container_invariant_fragment |apply acceptance_two_active
+    |apply owned_container_derived |exact HP |exact HJ |exact Hfree |apply container_initial_split |exact Hrun].
 Qed.

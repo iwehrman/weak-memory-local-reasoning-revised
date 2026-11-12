@@ -1128,3 +1128,100 @@ Print Assumptions OwnedContainerAssertions.container_assert_full_overwrite.
 Print Assumptions OwnedContainerAssertions.container_assert_reacquire.
 Print Assumptions OwnedContainerAssertions.container_assert_select_one.
 Print Assumptions OwnedContainerAssertions.container_assert_select_zero.
+
+From WMLR Require Import HeapExtension.
+Print Assumptions HeapExtension.heap_extension_read_some.
+Print Assumptions HeapExtension.heap_extension_read_fresh.
+Print Assumptions HeapExtension.heap_extension_enqueue.
+Print Assumptions HeapExtension.heap_extension_flush_write.
+Print Assumptions HeapExtension.primitive_heap_extension.
+Print Assumptions HeapExtension.flush_heap_extension.
+Print Assumptions HeapExtension.step_heap_extension.
+Print Assumptions HeapExtension.execution_heap_extension.
+Print Assumptions HeapExtension.step_accesses_only.
+Print Assumptions HeapExtension.execution_accesses_only.
+Print Assumptions HeapExtension.execution_preserves_unmodified.
+Print Assumptions HeapExtension.abort_heap_extension.
+
+From WMLR Require Import AssertionClientRules.
+Print Assumptions AssertionClientRules.assert_derive_and_comm.
+Print Assumptions AssertionClientRules.assert_derive_separate_pure_left.
+Print Assumptions AssertionClientRules.assert_derive_separate_pure_right.
+Print Assumptions AssertionClientRules.assert_derive_spatial_rotate.
+Print Assumptions AssertionClientRules.assert_derive_cell_write_drained.
+Print Assumptions AssertionClientRules.assert_derive_pure_frame_intro.
+Print Assumptions AssertionClientRules.assert_derive_pure_frame_elim.
+
+From WMLR Require Import OwnedClientRules.
+Print Assumptions OwnedClientRules.owned_assertion_frame_right.
+Print Assumptions OwnedClientRules.owned_assertion_pure_frame.
+Print Assumptions OwnedClientRules.owned_assertion_fence_after.
+Print Assumptions OwnedClientRules.owned_assertion_store_fence.
+Print Assumptions OwnedClientRules.owned_assertion_load_spatial.
+
+From WMLR Require Import MessagePassingSyntax.
+Print Assumptions MessagePassingSyntax.mp_invariant_fragment.
+Print Assumptions MessagePassingSyntax.mp_token_fv.
+Print Assumptions MessagePassingSyntax.mp_data_fv.
+Print Assumptions MessagePassingSyntax.mp_invariant_fv.
+Print Assumptions MessagePassingSyntax.mp_sender_modifies.
+Print Assumptions MessagePassingSyntax.mp_receiver_modifies.
+
+From WMLR Require Import MessagePassingAssertions.
+Print Assumptions MessagePassingAssertions.mp_assert_acquire.
+Print Assumptions MessagePassingAssertions.mp_assert_sender_payload.
+Print Assumptions MessagePassingAssertions.mp_assert_receiver_payload.
+Print Assumptions MessagePassingAssertions.mp_assert_receiver_acquire.
+Print Assumptions MessagePassingAssertions.mp_assert_sender_release.
+Print Assumptions MessagePassingAssertions.mp_assert_release_zero.
+Print Assumptions MessagePassingAssertions.mp_assert_release_one.
+Print Assumptions MessagePassingAssertions.mp_assert_select_one.
+Print Assumptions MessagePassingAssertions.mp_assert_select_not_one.
+
+From WMLR Require Import MessagePassingDerivation.
+Print Assumptions MessagePassingDerivation.mp_sender_derived.
+Print Assumptions MessagePassingDerivation.mp_load_held_derived.
+Print Assumptions MessagePassingDerivation.mp_load_cases_derived.
+Print Assumptions MessagePassingDerivation.mp_release_cases_derived.
+Print Assumptions MessagePassingDerivation.mp_tail_derived.
+Print Assumptions MessagePassingDerivation.mp_receiver_derived.
+Print Assumptions MessagePassingDerivation.mp_parallel_derived.
+
+From WMLR Require Import MessagePassingResources.
+Print Assumptions MessagePassingResources.mp_plain_domain.
+Print Assumptions MessagePassingResources.mp_single_domain.
+Print Assumptions MessagePassingResources.mp_plain_spatial.
+Print Assumptions MessagePassingResources.mp_full_cell.
+Print Assumptions MessagePassingResources.mp_tokens_models.
+Print Assumptions MessagePassingResources.mp_augmented_split.
+Print Assumptions MessagePassingResources.mp_augmented_extension.
+Print Assumptions MessagePassingResources.mp_cell_shape.
+Print Assumptions MessagePassingResources.mp_spatial_shape.
+Print Assumptions MessagePassingResources.mp_invariant_shape.
+Print Assumptions MessagePassingResources.mp_received_shape.
+Print Assumptions MessagePassingResources.mp_shape_domain.
+Print Assumptions MessagePassingResources.mp_shapes_disjoint.
+Print Assumptions MessagePassingResources.mp_shape_free.
+
+From WMLR Require Import MessagePassingAdequacy.
+Print Assumptions MessagePassingAdequacy.mp_received_free.
+Print Assumptions MessagePassingAdequacy.mp_outcome_from_shape.
+Print Assumptions MessagePassingAdequacy.mp_terminal_extract.
+Print Assumptions MessagePassingAdequacy.mp_augmented_all_runs.
+Print Assumptions MessagePassingAdequacy.mp_program_accesses.
+Print Assumptions MessagePassingAdequacy.mp_tokens_fresh.
+Print Assumptions MessagePassingAdequacy.message_passing_all_runs.
+Print Assumptions MessagePassingAdequacy.message_passing_points_to.
+
+From WMLR Require Import MessagePassingTrace.
+Print Assumptions MessagePassingTrace.mp_sender_trace.
+Print Assumptions MessagePassingTrace.mp_receiver_prefix.
+Print Assumptions MessagePassingTrace.mp_tail_zero_trace.
+Print Assumptions MessagePassingTrace.mp_receiver_zero_trace.
+Print Assumptions MessagePassingTrace.message_passing_zero_trace.
+Print Assumptions MessagePassingTrace.mp_sender_final_shape.
+Print Assumptions MessagePassingTrace.mp_tail_one_pending_trace.
+Print Assumptions MessagePassingTrace.message_passing_one_pending_trace.
+Print Assumptions MessagePassingTrace.mp_private_complete_trace.
+Print Assumptions MessagePassingTrace.message_passing_one_trace.
+Print Assumptions MessagePassingTrace.message_passing_private_write_pending.

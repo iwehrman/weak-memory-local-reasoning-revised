@@ -36,7 +36,10 @@ interpretation and proved program calculus are unchanged. The assertion
 proof basis now has [checked soundness and derived cell rules](review/paper-assertion-soundness.md)
 for all 47 approved constructors. The selected-branch container is now
 [reconstructed entirely through assertion proof trees](review/paper-container-assertions.md),
-including CONS/UNLOCK and the cell access helpers. No rule was added. The
+including CONS/UNLOCK and the cell access helpers. The dissertation's
+[message-passing example](review/paper-message-passing.md) is also derived
+in that system, with its original one-cell execution conclusion, original
+points-to postcondition and both outcome traces. No rule was added. The
 [review response](review/lead-response-after-algebra-audit.md) also checks
 the requested remaining counterexamples in the original interpretation.
 [Independent follow-up](review/paper-independent-results.md) derives the
@@ -60,6 +63,7 @@ errors, repair choices and remaining scope.
 | All six conjunction unit laws for arbitrary assertions, including wands | [AssertionUnits.v](theories/AssertionUnits.v) |
 | Reading one's own buffered write, with arbitrary history and spatial tail | [OwnedBufferedLoad.v](theories/OwnedBufferedLoad.v) |
 | Store/fence cell rule, unfenced counterexample and a complete trace | [OwnedFenceExamples.v](theories/OwnedFenceExamples.v) |
+| Original message-passing derivation, token-free all-run theorem and both outcome traces | [MessagePassingDerivation.v](theories/MessagePassingDerivation.v), [MessagePassingAdequacy.v](theories/MessagePassingAdequacy.v), [MessagePassingTrace.v](theories/MessagePassingTrace.v) |
 | Exact heap-or-buffer address-domain preservation for every execution | [ExecutionDomain.v](theories/ExecutionDomain.v) |
 | Exact LOAD-P, corrected STORE-P, and forward/backward fence and lock variants | [OwnedPointsToRules.v](theories/OwnedPointsToRules.v), [OwnedAlternativeRules.v](theories/OwnedAlternativeRules.v) |
 | Common-split resource framing and enabled release with pending foreign writes | [OwnedCommonSplit.v](theories/OwnedCommonSplit.v), [OwnedCommonSplitExamples.v](theories/OwnedCommonSplitExamples.v) |
@@ -93,7 +97,7 @@ make check
 
 `make` compiles every file in `_CoqProject`. `make check` additionally runs
 `rocq check` on `WMLR.Audit` and its dependencies. The audit currently reports
-**1,028 declarations closed under the global context**, including every new
+**1,107 declarations closed under the global context**, including every new
 lemma/theorem in the final calculus, retrying container, paper algebra audit
 and independent follow-up work.
 There are no admitted proofs or declared axioms. The proofs do not require
@@ -109,8 +113,9 @@ The active program and assertion calculi have soundness proofs. The approved
 conversion, value hiding and drained-history collapse. The selected-branch
 container now uses these rules for every assertion obligation. The separate
 retrying variant remains checked but retains some semantic entailment proofs.
-Next are the dissertation's message-passing example and the named-lock/client
-examples, using the assertion system. Completeness and proof
+The dissertation's message-passing example now uses that system and has
+the original one-cell execution conclusion. Next are the named-lock/client
+examples. Completeness and proof
 automation are outside the current work queue. Expression-valued lock schemas,
 recursive predicates and Chapter 5's experimental extensions are outside the
 proved calculus. LOCK/UNLOCK currently use constant positive processor IDs;

@@ -155,4 +155,13 @@ theories/OwnedAssertionRules.v
 theories/AssertionDerivationExamples.v
 theories/AssertionRearrangements.v
 theories/OwnedContainerAssertions.v
+theories/HeapExtension.v
+theories/AssertionClientRules.v
+theories/OwnedClientRules.v
+theories/MessagePassingSyntax.v
+theories/MessagePassingAssertions.v
+theories/MessagePassingDerivation.v
+theories/MessagePassingResources.v
+theories/MessagePassingAdequacy.v
+theories/MessagePassingTrace.v
 theories/Audit.v

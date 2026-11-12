@@ -227,16 +227,30 @@ owner-specific derivations and history-invention lemma are also audited in
 `PrintedDerivations.v` and `ReviewObstructions.v`; use the newer
 all-processor statements when describing the printed calculus in the paper.
 
+## Original message-passing example
+
+| Result | Declaration and source | Scope |
+| --- | --- | --- |
+| Sender, receiver and parallel derivations | `mp_sender_derived`, `mp_receiver_derived`, `mp_parallel_derived`, [MessagePassingDerivation.v](../theories/MessagePassingDerivation.v) | Same commands as Section 4.1; token invariant; all assertion premises are proof trees. |
+| Original one-cell all-execution conclusion | `message_passing_all_runs`, [MessagePassingAdequacy.v](../theories/MessagePassingAdequacy.v) | Tokens chosen and erased internally; arbitrary initial result register; no abort, terminal singleton heap containing x+1, empty buffers/free lock. |
+| Original all-processor points-to | `message_passing_points_to`, same file | At full completeness on the actual final memory. |
+| Execution and abort lifting by unused cells | `execution_heap_extension`, `abort_heap_extension`, [HeapExtension.v](../theories/HeapExtension.v) | General machine lemmas; abort lifting requires added cells absent at the accessed address. |
+| Both outcomes and pending private store | `message_passing_zero_trace`, `message_passing_one_trace`, `message_passing_one_pending_trace`, [MessagePassingTrace.v](../theories/MessagePassingTrace.v) | 16-step and 20-step complete original-heap runs; 17-step prefix with private write still buffered. |
+
+The [result report](../review/paper-message-passing.md) distinguishes this
+execution theorem from an emp-invariant derivation of the printed triple.
+Neither SHARE nor AUX is added. The original derivation's rejected steps
+are classified in the [design diagnosis](../review/paper-priority-1-design.md).
+
 ## Mechanization figures and outstanding work
 
-At this batch, `make check` passes with **1,028 audited declarations closed**,
-no axioms and no admitted proofs, using Rocq 9.3.0. There are **157 theory
-files and 25,931 physical lines** listed in `_CoqProject`, including comments,
+At this batch, `make check` passes with **1,107 audited declarations closed**,
+no axioms and no admitted proofs, using Rocq 9.3.0. There are **166 theory
+files and 27,053 physical lines** listed in `_CoqProject`, including comments,
 blank lines, the audit commands, original transcriptions and superseded
 experiments. This is the entire checked development, not a claim that the
-active soundness proof alone is that large. The two files added for the
-4C reconstruction have 239 physical lines and 21 newly audited declarations;
-the existing container and cell-helper proof bodies were also rewritten.
+active soundness proof alone is that large. The nine new message-passing/helper files have 1,025 physical lines and
+79 newly audited declarations.
 Declaration totals count
 `Print Assumptions` entries, not every generated inductive eliminator.
 
@@ -248,12 +262,12 @@ bounded-search output for common splitting is in
 [paper-common-split-search.jsonl](../review/paper-common-split-search.jsonl).
 
 The assertion soundness and [4C reconstruction](../review/paper-container-assertions.md)
-checkpoints are complete and ready for review. Remaining main work is the
-original message-passing example and named-lock/mailbox examples, all using
-assertion derivations. The separate retrying container's remaining semantic
+checkpoints and the [message-passing result](../review/paper-message-passing.md)
+are complete and ready for review. Remaining main work is the named-lock/mailbox
+examples, using assertion derivations. The separate retrying container's remaining semantic
 entailments have not been reconstructed in this batch.
 Restricted SHARE's semantic lock-free pre/post premises are approved;
-its proof and mode scope remain open and are deferred until after priority 1.
+its proof and mode scope remain open and are deferred until after the named-lock/client work.
 Fenced Dekker lacks a shared-access rule; see the scope paragraph in the
 [batch report](../review/paper-independent-batch.md). No completeness or
 automation claim is made for the sound assertion system.

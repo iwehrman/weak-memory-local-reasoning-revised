@@ -88,9 +88,15 @@ active target while its assertion abbreviation remains unchanged.
 validity are now proved**, after bounded searches found no counterexamples.
 They add no lock-free-frame or no-unlock condition and need no processor-count
 assumption. FRAME-TM uses the existing invariant fragment. The safety and
-assertion definitions are unchanged. Development stops for review before
-the general parallel proof; full corrected soundness remains open.
-See [the general framing checkpoint](review/checkpoint-7.md),
+assertion definitions are unchanged. **General parallel composition now
+holds in both modes**, including register updates and either thread
+finishing first. Its only addition to the printed interference condition is
+that neither command modifies variables free in the shared invariant.
+Checked examples include acquisition followed by a sibling store while
+blocked and two threads updating distinct registers. No further safety or
+assertion change was needed. Full corrected soundness remains open.
+See [the parallel checkpoint](review/checkpoint-8.md),
+[the general framing checkpoint](review/checkpoint-7.md),
 [the lock rules and FRAME-STM counterexample](review/checkpoint-6.md),
 [the implementation checkpoint](review/checkpoint-5-implementation.md),
 [the definition proposal](review/checkpoint-5.md),
@@ -209,9 +215,12 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/OwnedResources.v` | Local updates, donation reassembly, disjointness preservation, and mode inclusion | Resource lemmas for the active target |
 | `theories/OwnedRules.v` | General LOCK in both modes and UNLOCK in disjoint mode, for arbitrary fragment invariants | Checked explicit ownership-transfer rules |
 | `theories/OwnedFraming.v` | General FRAME-SP in both modes; FRAME-TM from overlap validity; exact-frame reconstruction and mark preservation | Checked semantic frame rules for the active target |
+| `theories/OwnedInterference.v` | Program, abort, environment and full owned-safety transport between agreeing stacks | General support for private register changes |
+| `theories/OwnedParallel.v` | Same-index parallel safety and semantic parallel validity in both modes; finished-thread spatial framing | Printed interference plus invariant-variable freshness |
 | `theories/OwnedAcceptance.v` | All three fixed acceptance tests, double acquisition, split-token fault, and externally blocked local future | Checked checkpoint-5 implementation regressions |
 | `theories/StrongTemporalCounterexample.v` | Valid unframed release and invalid strong-temporally framed instance, with independent spatial/temporal witnesses | Counterexample to unrestricted FRAME-STM in disjoint mode |
 | `theories/OwnedFramingExamples.v` | Spatially framed donation and private store; temporal acquisition with a genuine foreign pending write | Applications of the proved frame rules |
+| `theories/OwnedParallelExamples.v` | Acquire then blocked sibling store, either finished branch, and distinct register assignments | General-rule applications with concrete enabled starts |
 | `theories/OwnershipTransfer.v` | Protected-to-private withdrawal at fence/unlock; disjoint-history donation reassembly | Checked transfer rules and a restricted boundary lemma |
 | `theories/OwnershipTransferLimits.v` | Scoped cell versus ordinary points-to; general retained-history donation obstruction | Concrete invalid donation and positive disjoint-history instance |
 | `theories/TransferExamples.v` | Known-present withdrawal, release, private load and retained foreign write | All-run proofs, concrete traces, rejected all-processor transfer postcondition |
@@ -250,6 +259,10 @@ distinguishes this interpretation from both earlier models.
 
 ## Proved results
 
+- `owned_parallel_valid` proves the general semantic parallel rule for
+  `owned_safe` in both modes, with the printed interference condition and
+  invariant-variable freshness. `owned_safe_parallel` supplies the same-index
+  theorem; `owned_safe_stack_agrees` permits private register updates.
 - `eval_expr_agrees` and `eval_bexpr_agrees` establish Lemma 1. Evaluation
   depends only on free variables.
 - `eval_subst_expr` and `eval_subst_bexpr` equate syntactic substitution with
@@ -547,30 +560,21 @@ the approved single-resource ownership semantics described above.
 
 ## Remaining proof work
 
-1. Continue the [independent-review checkpoints](review/lead-response.md).
-   The review response and [guarded invariant results](review/checkpoint-2.md)
-   are complete. [Checkpoint 3](review/checkpoint-3.md) refutes the arbitrary
-   residual lemma; [checkpoint 4](review/checkpoint-4.md) proves fixed-frame
-   buffer uniqueness and actual flush attribution. The approved
-   [checkpoint-5 implementation](review/checkpoint-5-implementation.md) now
-   proves closure, adequacy, mode inclusion, and the fixed acceptance tests
-   for `owned_safe`. Review this implementation, then prove the general
-   ownership-transfer rules and frame reconstruction for that single target.
-   The candidate replaces INV with explicit
-   ownership rules, preserves `emp`, and initially restricts FRAME-TM to
-   unlock-free commands. Do not extend the retirement interpretation or add
-   another validity predicate without a checkpoint.
-2. Prove concurrency for `owned_safe`, including nested parallel derivations
-   and the accepted variable-interference conditions. The earlier model's
-   parallel rule permits private loads after release, but does not transfer
-   automatically to this target. See [its scope](notes/parallel-ownership.md).
-3. Implement capture-avoiding assertion substitution and its semantic lemma.
-4. Generalize constant-cell load/store to expression and framed forms, and
-   check their freshness conditions and shared-invariant transfers. Integrate
-   arithmetic assignments into the active target. Extend
-   the checked critical-section example to multiple protected cells and private state.
-5. Establish the full frame, concurrency, and explicit ownership-transfer rules, then complete
-   soundness by induction on derivations and the message-passing example.
+1. Complete the general structural and primitive rules for `owned_safe`:
+   sequencing, consequence, disjunction, choice, loop, assignment, base
+   load/store and fence. The active target already has general lock,
+   unlock, spatial/temporal frame, and parallel rules; results for earlier
+   safety predicates do not fill the remaining gaps.
+2. Implement capture-avoiding assertion substitution and its semantic lemma
+   where required by expression-based primitive rules.
+3. Check LOAD and STORE in the dissertation's strong-temporal form. FRAME-STM
+   remains omitted; the existing `⋉` abbreviation has not been changed.
+4. Derive the container example with acquisition, removal, release, private
+   use and return, while a foreign write is pending.
+5. Define a calculus that tracks overlap-mode validity for FRAME-TM, then
+   prove soundness by induction on derivations and apply operational
+   adequacy. Continue the [review checkpoints](review/lead-response.md);
+   [checkpoint 8](review/checkpoint-8.md) records the current exact scope.
 
 The dissertation identifies its soundness proof as incomplete on pp. 9–10.
 The present project starts with the core grammars and Figures 4.7–4.8 as the

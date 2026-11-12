@@ -23,9 +23,36 @@ From WMLR Require Import LockRepresentation.
 From WMLR Require Import ProgramSteps OwnedSafety OwnedAdequacy OwnedResources OwnedAcceptance.
 From WMLR Require Import OwnedRules StrongTemporalCounterexample.
 From WMLR Require Import OwnedFraming OwnedFramingExamples.
+From WMLR Require Import OwnedInterference OwnedParallel OwnedParallelExamples.
 From WMLR Require Import RetiredHeaps RetiredSafety RetiredTransfer RetiredRules RetiredExamples RetirementFlushing.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
+
+Print Assumptions stack_agrees_incl.
+Print Assumptions stack_agrees_sym.
+Print Assumptions stack_agrees_update.
+Print Assumptions primitive_step_stack_agrees.
+Print Assumptions primitive_abort_stack_agrees.
+Print Assumptions program_step_stack_agrees.
+Print Assumptions abort_stack_agrees.
+Print Assumptions owned_environment_stack_agrees.
+Print Assumptions owned_safe_stack_agrees.
+Print Assumptions owned_safe_post_mono.
+Print Assumptions owned_update_identity.
+Print Assumptions owned_safe_spatial_frame_right.
+Print Assumptions owned_safe_step_interference.
+Print Assumptions owned_spatial_component_step.
+Print Assumptions owned_safe_parallel.
+Print Assumptions owned_parallel_valid.
+Print Assumptions owned_parallel_acquire_store_valid.
+Print Assumptions owned_parallel_finished_left_valid.
+Print Assumptions owned_parallel_finished_right_valid.
+Print Assumptions parallel_acquire_initial_spatial.
+Print Assumptions owned_parallel_acquire_store_enabled.
+Print Assumptions owned_parallel_assignment_valid.
+Print Assumptions owned_parallel_registers_valid.
+Print Assumptions owned_parallel_registers_enabled.
+
 Print Assumptions resource_repaired_domain.
 Print Assumptions owned_mode_parts.
 Print Assumptions owned_environment_unframe.

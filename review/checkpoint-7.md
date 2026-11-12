@@ -1,5 +1,10 @@
 # Checkpoint 7 — spatial and temporal framing proved
 
+**Subsequent result:** [checkpoint 8](checkpoint-8.md) proves parallel
+composition in both modes, with the accepted invariant-variable condition
+and no safety-definition change. The report below records checkpoint 7's
+original review boundary.
+
 **FRAME-SP is proved in both modes, and semantic FRAME-TM is proved from
 overlap-mode validity.** The bounded searches ran before the general proof
 attempt and found no counterexamples. The proofs need no change to the

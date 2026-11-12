@@ -5,7 +5,7 @@ derivations of stale-value and foreign-barrier specifications from the
 printed rules themselves. It also exposes unrelated-cell erasure in the
 retirement interpretation. The lead response accepts both derivations and
 drops retirement and permanent protected/private assertion positions from
-the target design. The proposed rule-level replacement is not proved.
+the target design. Full soundness of the replacement calculus is not proved.
 Checkpoint 2 now proves acquisition re-marking and buffer-freeness for
 invariants with heap-guarded pure assertions, and proves that their release
 premise retains every pending write outside the donated invariant. The
@@ -33,10 +33,18 @@ General FRAME-SP in both modes and semantic FRAME-TM from overlap-mode
 validity are now proved, after bounded reconstruction searches. The proofs
 add no lock-free-frame, no-unlock, or processor-count condition. FRAME-TM
 uses the approved invariant fragment; FRAME-SP does not need that restriction.
-The safety predicate is unchanged. Development stops before general parallel
-composition, which remains open alongside the full container derivation,
-the original strong-temporal LOAD/STORE axioms for this target, and full
-soundness. See [the general framing checkpoint](../review/checkpoint-7.md),
+General parallel composition now holds in both modes, with arbitrary
+commands and assertions. It retains the printed interference condition and
+adds the agreed requirement that neither command modifies invariant
+variables. Stack-agreement transport supports register-changing threads;
+finished threads use the proved spatial frame rule. Checked examples cover
+acquisition followed by a blocked sibling's private store, both finished
+branch cases, and distinct register assignments. All 510 audited declarations
+are closed. The safety predicate is unchanged. The general structural and
+primitive rule suite, the full container derivation, the original
+strong-temporal LOAD/STORE axioms for this target, and full soundness remain
+open. See [the parallel checkpoint](../review/checkpoint-8.md),
+[the general framing checkpoint](../review/checkpoint-7.md),
 [the lock rules and FRAME-STM counterexample](../review/checkpoint-6.md),
 [the implementation checkpoint](../review/checkpoint-5-implementation.md),
 [checkpoint 5](../review/checkpoint-5.md),

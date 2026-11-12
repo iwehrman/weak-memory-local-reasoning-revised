@@ -58,6 +58,8 @@ theories/OwnedAdequacy.v
 theories/OwnedResources.v
 theories/OwnedRules.v
 theories/OwnedFraming.v
+theories/OwnedInterference.v
+theories/OwnedParallel.v
 theories/SeparatedHeap.v
 theories/OwnershipTransfer.v
 theories/SeparatedCalculus.v
@@ -88,6 +90,7 @@ theories/InvariantFragmentExamples.v
 theories/OwnedAcceptance.v
 theories/StrongTemporalCounterexample.v
 theories/OwnedFramingExamples.v
+theories/OwnedParallelExamples.v
 theories/FrameShapeCounterexample.v
 theories/FixedFrameExamples.v
 theories/RetiredHeaps.v

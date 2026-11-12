@@ -168,10 +168,60 @@ independent and can be done in any order.
    theorem names made uniform and the errors separated from the design
    choices.
 
+## Priority 4: a proof system for assertions
+
+Approved by Ian. The dissertation's "Contributions and Status" section names
+two major components left unfinished: a proof system for the assertion
+language, and the soundness proof. The second is done. This is the first.
+
+It has three parts. Part A is independent and may start at any time. Parts B
+and C come after priorities 1 and 2, because those derivations show which
+laws recur.
+
+**Part A: audit the dissertation's algebra.** Figures 4.5 and 4.6 (the
+"Concurrent Algebra" subsection) list about twenty equivalences and
+entailments, several stated schematically over all three conjunctions. For
+each instance, in the final interpretation (`persistent_models`), report one
+of: proved, refuted with a checked countermodel, or holds in a stated
+modified form. Do not assume any of them. I expect at least the full
+exchange law for `*` and `⋉` to be doubtful, given the FRAME-STM
+counterexample, and the laws mentioning points-to need both the printed
+all-processor abbreviation and `writer_points_to`. The result is a table for
+the paper.
+
+**Part B: a sound rule set.** An inductive entailment-derivation type whose
+rules are:
+
+- the laws that survive part A;
+- ordinary first-order rules for the connectives and quantifiers;
+- the three wand adjunctions;
+- the laws the container proofs needed repeatedly: barrier distribution over
+  spatial conjunction, collapse of a drained history to its current cell,
+  cell exclusivity, and existential introduction for cell values;
+- whatever priorities 1 and 2 show to be recurring.
+
+Pure boolean and arithmetic facts stay as semantic side conditions. Prove
+soundness with respect to `persistent_entails`. State the rules before
+proving them, as with every earlier checkpoint.
+
+**Part C: use it.** Give CONS and UNLOCK variants whose premises are
+entailment derivations, and re-derive the one-item container with no
+semantic entailment premises. If a step cannot be derived, report the
+missing law; that is the measure of whether the rule set is adequate. Then
+do the same for as much of priorities 1 and 2 as is practical, and say what
+was left semantic.
+
+**Out of scope.** Completeness, decision procedures and proof automation.
+The dissertation itself observes that no complete rule set exists, because
+the language includes arithmetic. Do not change the assertion grammar or
+interpretation; a law that needs such a change is a stop-and-report.
+
 ## Check-in points
 
 - After the design for priority 1, and again after its result.
 - After the design and theorem statements for priority 2, before part A's
   proof; then after part A; then after part B.
+- After priority 4 part A's table; after the rule statements for part B,
+  before their soundness proof; and after part C.
 - Priority 3 items need no individual check-in. Report them together, and
   immediately if any contradicts something the calculus currently claims.

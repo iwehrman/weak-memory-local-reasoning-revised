@@ -20,8 +20,8 @@ admitted gap:
 3. It "gives little indication of how proofs ought to proceed in the logic".
 
 The paper reports on each. Item 2 is done, for a repaired calculus. Item 3
-is addressed by the derivations. Item 1 is **[open]**; see the last section
-of this outline.
+is addressed by the derivations. Item 1 is **[queued]**, in a bounded form; see the last
+section of this outline.
 
 ## 1. Introduction
 
@@ -194,10 +194,11 @@ any claim is written. **[open]**: scope and depth.
 - A strong temporal connective with a common split, and its frame rule.
 - Allocation, recursive predicates, permissions (Chapter 5).
 - Expression-valued lock identifiers.
-- An assertion proof system, unless done; see below.
+- Completeness and automation for the assertion proof system.
 
-## Open decision: a proof system for assertions
+## Decided: a proof system for assertions
 
-Recommended, in a bounded form. See the note to Ian accompanying this draft.
-If done, it becomes a section between 6 and 7 and changes item 1 of the
-introduction from "still open" to "addressed".
+Approved and queued as priority 4 in `review/work-queue-for-paper.md`: an
+audit of Figures 4.5 and 4.6, a sound rule set, and a container derivation
+with no semantic entailment premises. Completeness is out of scope. It
+becomes a section between 6 and 7, and the audit table also feeds section 4.

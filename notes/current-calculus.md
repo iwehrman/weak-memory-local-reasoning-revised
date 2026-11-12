@@ -71,10 +71,10 @@ different witnesses for the two conjuncts.
 | INV | Removed. Invariant transfer occurs at the actual acquire/release actions. Retaining INV would reintroduce the checked stale-value and foreign-barrier derivations. |
 | FRAME-SP | Same assertion form and usual variable condition, either mode. No lock-free-frame or register-preservation condition. |
 | FRAME-TM | Original assertion form and variable condition, restricted to an OV premise and conclusion. There is no syntactic “no unlock” premise. DJ validity alone is insufficient. |
-| FRAME-STM | Omitted. A checked DJ counterexample exploits independent witnesses in the two conjuncts of `⋉`. The connective itself is retained unchanged and works in LOAD/STORE. No common-witness constructor was added. Soundness or failure of this frame rule in OV is not claimed. |
+| FRAME-STM | Omitted. A checked DJ counterexample exploits independent witnesses in the two conjuncts of `⋉`. The connective itself is retained unchanged and works in LOAD/STORE. No common-witness constructor was added. `owned_safe_common_frame` now proves resource-level framing when the same witnesses satisfy both relations, in either mode, including release; the abbreviation alone does not imply that premise. Soundness or failure of the unrestricted abbreviation rule in OV is not claimed. |
 | CONC | Printed mutual variable-interference condition, plus neither command modifies a free variable of `J`. Supports arbitrary commands, nested parallel composition, and disjoint register updates. |
 | EX | Printed freshness in command and postcondition, plus freshness in `J`. `owned_exists_valid` proves the rule in both modes by stack-agreement transport. |
-| SHARE | Deliberately omitted. The top-level adequacy theorem starts directly with a concrete pool satisfying `J`; the current one-global-lock setting needs no nested invariant discharge. Omission is not a claim that SHARE has been refuted. |
+| SHARE | Omitted. `owned_printed_share_lock_counterexample` now refutes unrestricted SHARE with the transferring LOCK rule in both modes. Syntactic absence of Lock atoms is also insufficient (`owned_syntactic_lock_free_share_counterexample`). A restricted theorem requiring every pre/post model to have no token remains open. Top-level adequacy already starts directly with a pool satisfying `J`. |
 | Mode weakening | New explicit OV → DJ rule. It packages the proved inclusion of semantic validities. |
 
 There are 21 constructors. None contains `owned_safe`, `owned_valid`, or an
@@ -207,6 +207,18 @@ flushed-cell postcondition without the fence, in both modes, with an
 inhabited start and complete fenced execution. `ExecutionDomain.v` also
 proves exact preservation of the union of heap and buffer addresses along
 every machine execution, without a safety or processor-count premise.
+
+The [independent queue batch](../review/paper-independent-batch.md) also
+derives the exact all-processor LOAD-P rule and the corrected STORE-P form,
+using an empty all-barrier spatial frame instead of FRAME-STM. It adds
+forward/backward fence and lock variants and a same-invariant locked wrapper.
+These are derived rules, not new constructors. The original INV counterexamples
+now use the dissertation's all-processor points-to and belong to the audited
+build. A separate original-model counterexample combines INV with FRAME-STM's
+independent witnesses. The common-split resource theorem does not reinstate
+that assertion-level frame rule. See the [writer's index](paper-theorem-index.md)
+for uniform theorem names and the distinction between original errors and
+repair-specific limitations.
 
 ## Superseded experiments and remaining scope
 

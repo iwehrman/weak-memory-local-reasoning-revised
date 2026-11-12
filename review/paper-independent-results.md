@@ -1,5 +1,8 @@
 # Independent work alongside the 4B statement checkpoint
 
+This records the batch at `26af676`. The later [independent batch](paper-independent-batch.md)
+updates the remaining-queue statuses below and adds the writer's index.
+
 The work queue permits priority 3 and priority 5 items 2–4 independently of
 the assertion-system work. This batch completes **priority 5.2**, the
 store/fence comparison, and the general domain-preservation lemma requested

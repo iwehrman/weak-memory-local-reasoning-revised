@@ -12,3 +12,4 @@ META.weak-memory-local-reasoning
 .rocq-native/
 .coq-native/
 .DS_Store
+__pycache__/

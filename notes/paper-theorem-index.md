@@ -1,0 +1,188 @@
+# Writer's index: rules, repairs, counterexamples and scope
+
+This is a source map, not another semantics or proof system. The active
+program judgment is `owned_derivation`; its one semantic target is
+`owned_safe` / `owned_valid`. Fully qualified names are used below where
+historical modules have colliding names. The complete declaration audit is
+[Audit.v](../theories/Audit.v); the full assertion-law instance table is
+[the algebra audit](../review/paper-algebra-audit.md).
+
+## Main theorem and standing hypotheses
+
+| Result | Declaration and source | Scope |
+| --- | --- | --- |
+| Program calculus, 21 constructors | `owned_derivation`, [OwnedCalculus.v](../theories/OwnedCalculus.v) | Modes OV and DJ; no safety/validity premise in a constructor. CONS and UNLOCK have semantic assertion-entailment premises. |
+| Soundness by induction | `owned_calculus_sound`, same file | `invariant_fragment J` and `two_active_processors active`. No finiteness axiom. |
+| Adequacy directly from a derivation | `owned_derivation_adequacy`, same file | Concrete free-lock start, disjoint invariant pool; empty external frame instantiated internally. Every finite run avoids abort; termination gives the postcondition and ownership decomposition. |
+| Semantic adequacy | `owned_valid_adequacy`, [OwnedAdequacy.v](../theories/OwnedAdequacy.v) | Same standing hypotheses; takes semantic validity. |
+| Final invariant restoration for emp-to-emp clients | `owned_emp_derivation_restores`, [OwnedExecution.v](../theories/OwnedExecution.v) | Also assumes a lock-free initial external frame. The final pool is a component of the actual final memory. |
+| Exact address-domain preservation | `step_preserves_domain`, `steps_preserve_domain`, `execution_preserves_domain`, [ExecutionDomain.v](../theories/ExecutionDomain.v) | Union of heap and buffer addresses. No safety, processor-count, or invariant premise. |
+
+These are partial-correctness results. They do not establish termination,
+fairness, deadlock freedom, or restoration at every intermediate prefix.
+A general terminating postcondition may retain the lock.
+
+## Every program constructor and its semantic theorem
+
+All constructors are in `OwnedCalculus.v`. Unless restricted below, they
+are available at both modes. The semantic lemmas often need fewer
+hypotheses than the combined soundness theorem.
+
+| Constructor / rule | Semantic theorem | Source / extra premise |
+| --- | --- | --- |
+| `OwnedSkip` / SKIP | `owned_skip_valid` | [OwnedStructural.v](../theories/OwnedStructural.v) |
+| `OwnedAssign` / ASSIGN | `owned_assignment_valid` | [OwnedPrimitives.v](../theories/OwnedPrimitives.v); destination absent from `fv(J)` |
+| `OwnedAssume` / ASSUME | `owned_assume_valid` | Same file |
+| `OwnedAssert` / ASSERT | `owned_assert_valid` | Same file |
+| `OwnedLoad` / LOAD | `owned_load_valid` | [OwnedHeap.v](../theories/OwnedHeap.v); destination fresh for invariant, address, annotation, value and retained assertion |
+| `OwnedStore` / STORE | `owned_store_valid` | Same file |
+| `OwnedLoadAny` / LOAD-ANY | `owned_load_any_writer_valid` | Same file; destination fresh for invariant, address, value and retained assertion |
+| `OwnedStoreAny` / STORE-ANY | `owned_store_any_writer_valid` | Same file |
+| `OwnedFence` / FENCE | `owned_fence_valid` | [OwnedPrimitives.v](../theories/OwnedPrimitives.v) |
+| `OwnedLock` / transferring LOCK | `OwnedRules.owned_lock_valid` | [OwnedRules.v](../theories/OwnedRules.v); fragment invariant, two active processors; constant positive owner |
+| `OwnedUnlock` / transferring UNLOCK | `owned_unlock_valid` | Same file; fragment invariant, two active processors, restoration entailment; DJ only; constant positive owner |
+| `OwnedSequence` / SEQ | `owned_sequence_valid` | [OwnedStructural.v](../theories/OwnedStructural.v) |
+| `OwnedConsequence` / CONS | `owned_consequence_valid` | Same file |
+| `OwnedDisjunction` / DISJ | `owned_disjunction_valid` | Same file |
+| `OwnedChoice` / CHOICE | `owned_choice_valid` | Same file |
+| `OwnedLoop` / LOOP | `owned_loop_valid` | Same file |
+| `OwnedExists` / EX | `owned_exists_valid` | [OwnedExists.v](../theories/OwnedExists.v); binder fresh for command, postcondition and invariant |
+| `OwnedFrameSP` / FRAME-SP | `owned_spatial_frame_valid` | [OwnedFraming.v](../theories/OwnedFraming.v); usual modified/free-variable condition |
+| `OwnedFrameTM` / FRAME-TM | `owned_temporal_frame_valid` | Same file; fragment invariant, usual variable condition; OV only |
+| `OwnedParallel` / CONC | `owned_parallel_valid` | [OwnedParallel.v](../theories/OwnedParallel.v); printed mutual interference condition and neither command modifies `fv(J)` |
+| `OwnedWeaken` / OV → DJ | `owned_valid_overlap_disjoint` | [OwnedResources.v](../theories/OwnedResources.v) |
+
+INV, FRAME-STM and SHARE are not hidden unproved constructors: they are
+absent. There is no auxiliary-variable elimination rule. Expression-valued
+lock schemas, recursive predicates and general shared-read permissions are
+not implemented.
+
+## Derived rules and examples
+
+| Result | Declaration and source |
+| --- | --- |
+| Exact all-processor LOAD-P | `owned_derive_load_points_to`, [OwnedPointsToRules.v](../theories/OwnedPointsToRules.v) |
+| Corrected STORE-P, temporal write suffix | `owned_derive_store_points_to`, same file |
+| Cell-only LOAD/STORE, assignment from an updated-stack entailment, while loop | `owned_derive_load_cell`, `owned_derive_store_cell`, `owned_derive_assign_from`, `owned_derive_while`, [OwnedDerivedRules.v](../theories/OwnedDerivedRules.v) |
+| Own-buffered-write load, arbitrary history and spatial tail | `owned_derive_load_after_history_spatial`, `owned_derive_load_own_buffered_write`, [OwnedBufferedLoad.v](../theories/OwnedBufferedLoad.v) |
+| Pending, flushed, and other-processor load witnesses | `buffered_load_pending_enabled`, `buffered_load_after_flush_enabled`, `buffered_load_other_processor_reads_old`, [OwnedBufferedLoadExamples.v](../theories/OwnedBufferedLoadExamples.v) |
+| FENCE-G | `owned_derive_fence_after`, [OwnedFenceExamples.v](../theories/OwnedFenceExamples.v) |
+| Fenced cell-store contract and complete trace | `owned_derive_store_fence_cell`, `owned_store_fence_cell_witness`, same file |
+| FENCE-B; transferring LOCK-G and LOCK-B | `owned_derive_fence_backward`, `owned_derive_lock_after`, `owned_derive_lock_backward`, [OwnedAlternativeRules.v](../theories/OwnedAlternativeRules.v) |
+| Empty-invariant strengthened LOCK/UNLOCK and UNLOCK-G/B | `owned_derive_lock_empty_strong`, `owned_derive_unlock_empty_strong`, `owned_derive_unlock_after_empty`, `owned_derive_unlock_backward_empty`, same file |
+| Replacement locked wrapper, body under the same invariant | `owned_derive_locked_wrapper`, same file |
+| Common-split future closure and program-step reconstruction | `resource_common_future_split`, `owned_common_reconstruction`, [OwnedCommonSplit.v](../theories/OwnedCommonSplit.v) |
+| Resource-level common-split framing, both modes | `owned_safe_common_frame`, same file; fragment invariant and variable condition; **one common pair of witnesses**, not merely `R ⋉ P` |
+| Enabled common-split release with foreign writes pending | `owned_common_release_safe`, `owned_common_release_enabled`, [OwnedCommonSplitExamples.v](../theories/OwnedCommonSplitExamples.v) |
+| Selected-branch container derivation | `owned_container_derived`, [OwnedContainerDerivation.v](../theories/OwnedContainerDerivation.v) |
+| Original container trace, pending foreign write and all-run safety | `owned_container_trace`, `owned_container_foreign_pending_throughout`, `owned_container_all_runs_safe`, [OwnedContainerTrace.v](../theories/OwnedContainerTrace.v) |
+| Retrying container derivation | `owned_retrying_container_derived`, [OwnedRetryContainer.v](../theories/OwnedRetryContainer.v) |
+| 52-step success and two failed retry iterations | `owned_retrying_container_trace`, `container_two_failed_iterations`, [OwnedRetryTrace.v](../theories/OwnedRetryTrace.v) |
+| Both containers restore the invariant on completion | `owned_container_completed_restores`, `owned_retrying_container_completed_restores`, same file |
+| Concurrency with register updates and an acquire beside a blocked store | `owned_parallel_registers_valid`, `owned_parallel_acquire_store_valid`, [OwnedParallelExamples.v](../theories/OwnedParallelExamples.v); enabled witnesses in the same file |
+
+See the [derived-rule classification](../review/paper-independent-batch.md)
+for the exact differences from the source's LOCKED/ATOMIC, backward rules
+and apparently mistyped STORE-P/FENCE-B displays. A useful modified theorem
+is not represented as proof of the source's literal formula.
+
+## Repairs and design choices, with supporting theorems
+
+| Repair or choice | Checked support | Status |
+| --- | --- | --- |
+| Preserve occurrence order in buffer overriding | `ordered_associative`, [OrderedBuffers.v](../theories/OrderedBuffers.v) | Repair of failed printed algebra |
+| Compatibility must include blocked processors | `stable_compatibility_associative`, `stable_implies_printed_compatible`, [StableCompatibility.v](../theories/StableCompatibility.v) | Conservative repair; admits fewer compositions |
+| Combine repaired merge and compatibility | `repaired_resource_associative`, `repaired_temporal_resource_associative`, [RepairedSeparation.v](../theories/RepairedSeparation.v) | Active resource algebra |
+| Full flushing closure, including wands | `persistent_assertion_flushing_closed`, [PersistentAssertions.v](../theories/PersistentAssertions.v) | Future-quantified wand interpretation |
+| Preserve all three wand adjunctions | `persistent_spatial_wand_adjoint`, `persistent_temporal_wand_left_adjoint`, `persistent_temporal_wand_right_adjoint`, [PersistentRules.v](../theories/PersistentRules.v) | Full assertion grammar |
+| Preserve all six emp unit laws | `assertion_unit_spatial_left/right`, `assertion_unit_temporal_left/right`, `assertion_unit_strong_left/right`, [AssertionUnits.v](../theories/AssertionUnits.v) | Full grammar, including wands; no domain assumption |
+| Preserve spatial/temporal associativity and spatial commutativity | `assertion_spatial_associative`, `assertion_temporal_associative`, `assertion_spatial_commutative`, [AssertionAlgebra.v](../theories/AssertionAlgebra.v) | Strong-temporal associativity is excluded |
+| Barrier, lock and write laws | `assertion_barrier_distribution`, [AssertionBarrierAlgebra.v](../theories/AssertionBarrierAlgebra.v); `assertion_lock_symmetric`, [AssertionLockAlgebra.v](../theories/AssertionLockAlgebra.v); `assertion_successive_writes_collapse`, [AssertionWriteAlgebra.v](../theories/AssertionWriteAlgebra.v) | Complete instance classifications in the algebra audit |
+| Writer-existential cell in the existing grammar | `writer_points_to_shape`, `writer_points_to_from_shape`, [InvariantFragment.v](../theories/InvariantFragment.v) | Abbreviation, not a new atom; original `A.points_to` retained |
+| Guarded heap invariants and controlled re-marking | `invariant_fragment_shape`, `invariant_fragment_remark`, `invariant_spatial_pending_retained`, same file | Buffer/token freedom; release cannot hide a foreign pending write in the pool |
+| Keep blocked-set lock encoding; require two active processors | `two_processors_separate_free_held`, [LockRepresentation.v](../theories/LockRepresentation.v) | Design choice instead of changing the machine's representation |
+| Fix the external frame within each actual program step | `ordered_residual_unique`, [ResidualUniqueness.v](../theories/ResidualUniqueness.v) | Buffer uniqueness only; no claimed heap/mark cancellation |
+| Attribute each flush to one component | `pooled_resource_flush_attribution`, [FlushAttribution.v](../theories/FlushAttribution.v) | Pool and unaffected component fixed; duplicates attributed to the frame |
+| Capture-avoiding substitution | `persistent_assertion_subst`, [AssertionSubstitution.v](../theories/AssertionSubstitution.v); `substitution_capture_regression`, [OwnedRoutineExamples.v](../theories/OwnedRoutineExamples.v) | Whole grammar, including wands |
+| Preserve assertion meaning under thread interference | `owned_safe_stack_agrees`, [OwnedInterference.v](../theories/OwnedInterference.v) | Used by EX and parallel composition; explicit variable conditions |
+| Remove INV; transfer at machine actions | `OwnedRules.owned_lock_valid`, `owned_unlock_valid`, [OwnedRules.v](../theories/OwnedRules.v) | Active protocol, not protected/private compartments |
+| Omit FRAME-STM and SHARE | Counterexamples below; common-split framing above | Deliberate omissions; restricted SHARE remains an open proposal |
+
+The safety record's footprint bound and mark budget are explicit fields of
+`owned_update` in [OwnedSafety.v](../theories/OwnedSafety.v). Pool status
+covers free, held locally, held externally, and admissible split-token
+contexts. No additional validity predicate has been layered on top of it.
+
+## Counterexamples: distinguish original errors from repaired-design limits
+
+| Claim or regression | Checked declaration / source | Interpretation and qualification |
+| --- | --- | --- |
+| Printed Conjecture 1 | `printed_conjecture1_false`, [SeparationExamples.v](../theories/SeparationExamples.v) | Original relation; arbitrary overlapping heaps obstruct the proposed decomposition |
+| Printed buffer associativity | `printed_buffer_override_not_associative`, [OrderedBuffers.v](../theories/OrderedBuffers.v) | Original overriding |
+| Printed compatibility / spatiotemporal associativity | `printed_memory_compatibility_not_associative`, `printed_spatiotemporal_not_associative`, [StableCompatibility.v](../theories/StableCompatibility.v) | Original blocking exception |
+| Unqualified assignment | `printed_assignment_invalid`, `printed_assignment_soundness_false`, [SafetyExamples.v](../theories/SafetyExamples.v) | Printed safety; changing an invariant variable breaks the environment |
+| Pointwise temporal wand flushing closure | `pointwise_temporal_wand_not_flush_closed`, [FlushingCounterexample.v](../theories/FlushingCounterexample.v) | Checked for the earlier repaired, pointwise-wand interpretation; do not silently relabel this theorem as an original-`models` theorem |
+| INV + FRAME-TM stale value | `printed_points_stale_value_unsound`, [PrintedPointsToDerivations.v](../theories/PrintedPointsToDerivations.v) | Original `models`, original all-processor points-to, printed derivation and invalidity |
+| INV + FRAME-TM foreign barrier | `printed_points_foreign_barrier_unsound`, same file | Same original scope; an actual foreign write remains pending |
+| INV + FRAME-STM witness mismatch | `printed_strong_frame_counterexample`, [PrintedStrongFrame.v](../theories/PrintedStrongFrame.v) | Original interpretation and points-to; minimal adapted witness, not the identical checkpoint-6 program; does not isolate FRAME-STM from INV |
+| Strong associativity, both directions | `assertion_strong_associativity_printed_right_model`, `assertion_strong_associativity_printed_left_not_model`, [AssertionAlgebraCounterexamples.v](../theories/AssertionAlgebraCounterexamples.v); opposite direction in [OriginalAlgebraCounterexamples.v](../theories/OriginalAlgebraCounterexamples.v) | Original and final interpretations; table in algebra audit |
+| Unrestricted lock multiplication | `assertion_lock_multiplication_printed_model`, `assertion_lock_multiplication_refuted`, [AssertionAlgebraCounterexamples.v](../theories/AssertionAlgebraCounterexamples.v) | Original and final; witness has no admissible machine environment; same-owner exclusion survives with two processors |
+| T4 with invalid writer annotation | `original_points_to_invalid_writer_refuted`, [OriginalAlgebraCounterexamples.v](../theories/OriginalAlgebraCounterexamples.v) | Original and final; active annotation is the qualification |
+| T7/T8 with strong connective outside | `original_small_exchange_strong_left_refuted`, `original_small_exchange_strong_right_refuted`, same file | Original-model counterparts; literal/uniform premise distinction remains essential |
+| T9 full exchange | `original_full_exchange_refuted`, same file | Original and final interpretations |
+| Arbitrarily evolving frame during one program step | `overlap_frame_shape_counterexample`, `overlap_acquire_frame_shape_counterexample`, [FrameShapeCounterexample.v](../theories/FrameShapeCounterexample.v) | Failed checkpoint-3 proposal; excluded by `fixed_frame_excludes_assume_counterexample` and `fixed_frame_excludes_acquire_counterexample` in [FixedFrameExamples.v](../theories/FixedFrameExamples.v) |
+| Singleton processor lock ambiguity | `singleton_emp_lock_equivalent`, `singleton_acquire_still_free`, [LockRepresentation.v](../theories/LockRepresentation.v) | Original machine encoding; motivates two distinct active processors |
+| Bare pure invariant can absorb buffered writes | `bare_pure_is_not_buffer_free`, `checkpoint_unlock_foreign_write_test`, [InvariantFragmentExamples.v](../theories/InvariantFragmentExamples.v) | Final assertion interpretation; motivates syntactic guards |
+| Acquired weak cell is not an all-processor cell | `processor_cell_does_not_imply_all_processor_cell`, [OwnershipTransferLimits.v](../theories/OwnershipTransferLimits.v); `checkpoint_cell_remark_and_no_foreign_barrier`, [InvariantFragmentExamples.v](../theories/InvariantFragmentExamples.v) | Assertion distinction; not a changed definition of the old points-to |
+| Donation in overlap mode | `owned_overlap_donation_invalid`, [OwnedAcceptance.v](../theories/OwnedAcceptance.v) | Current safety; corresponding DJ donation is valid |
+| Foreign barrier after acquire/release | `owned_foreign_barrier_invalid`, same file | Current safety, both modes; all allowed successors ruled out |
+| Reacquisition | `double_acquire_stuck`, same file | With two processors: stuck, not unsafe and not a second transfer |
+| Blocked local flush and external token | `owned_blocked_local_future_regression`, `owned_foreign_holder_both_safe`, same file | Positive non-vacuity regressions for the existing closure and environment clauses |
+| Strong-temporal frame over release | `owned_disjoint_strong_temporal_frame_invalid`, [StrongTemporalCounterexample.v](../theories/StrongTemporalCounterexample.v) | Current DJ validity, weak-conjunction abbreviation; corresponding spatial frame is valid in [OwnedFramingExamples.v](../theories/OwnedFramingExamples.v) |
+| Unfenced flushed-cell postcondition | `owned_plain_store_cell_invalid`, `owned_plain_store_cell_not_derivable`, [OwnedFenceExamples.v](../theories/OwnedFenceExamples.v) | Current semantics/calculus, both modes; inhabited precondition |
+| Literal displayed STORE-P | `owned_literal_store_p_invalid`, [OwnedAlternativeCounterexamples.v](../theories/OwnedAlternativeCounterexamples.v) | Final interpretation; literal postcondition false on all resources; source transcription separated from corrected derived form |
+| Unrestricted SHARE with transferring LOCK | `owned_printed_share_lock_counterexample`, same file | Current semantics, both modes; duplicates a cell |
+| Merely syntactically lock-free SHARE | `owned_syntactic_lock_free_share_counterexample`, same file | `emp` and `C * true` contain no Lock atom but the latter can hide its token; semantic restriction is still open |
+| Retirement erases unrelated live ownership | `ReviewObstructions.retired_later_cell_can_erase_earlier`, [ReviewObstructions.v](../theories/ReviewObstructions.v) | Abandoned retirement interpretation only |
+| General framing/unit/transfer tension | `ReviewObstructions.trilemma`, same file | Abstract conditional theorem, not a discharged soundness theorem |
+
+All individual E1–E12 / T1–T9 instances, including mixed spatial/temporal
+exchange and the precise nonempty-domain qualifications, remain enumerated
+in the [algebra table](../review/paper-algebra-audit.md). The original review's
+owner-specific derivations and history-invention lemma are also audited in
+`PrintedDerivations.v` and `ReviewObstructions.v`; use the newer
+all-processor statements when describing the printed calculus in the paper.
+
+## Mechanization figures and outstanding work
+
+At this batch, `make check` passes with **947 audited declarations closed**,
+no axioms and no admitted proofs, using Rocq 9.3.0. There are **148 theory
+files and 24,957 physical lines** listed in `_CoqProject`, including comments,
+blank lines, the audit commands, original transcriptions and superseded
+experiments. This is the entire checked development, not a claim that the
+active soundness proof alone is that large. The nine added theory files
+have 1,600 physical lines; 32 historical review results and 52 new results
+account for the 84 newly audited declarations. Declaration totals count
+`Print Assumptions` entries, not every generated inductive eliminator.
+
+Reproduce the line count by summing `len(path.read_text().splitlines())` for
+the `.v` paths in `_CoqProject`; reproduce the audit count from the closed
+reports emitted while rebuilding `Audit.v`. `rocq check` independently
+checks the imported proof objects after compilation. The complete fixed
+bounded-search output for common splitting is in
+[paper-common-split-search.jsonl](../review/paper-common-split-search.jsonl).
+
+Remaining main work: review the 4B assertion-rule statement, prove its
+soundness, rebuild the container without semantic entailment premises (4C),
+then the original message-passing example and named-lock/mailbox examples.
+The semantic restricted SHARE statement and its mode scope remain open.
+Fenced Dekker lacks a shared-access rule; see the scope paragraph in the
+[batch report](../review/paper-independent-batch.md). No completeness or
+automation claim is made for the proposed assertion system.
+
+The historical `RepairedSafety`, `PersistentCalculus`, `OwnershipCalculus`,
+`PrivateCalculus`, `RegionalCalculus`, `SeparatedCalculus` and `Retired*`
+paths are **superseded experiments**, not extra validity layers needed by
+`owned_derivation`. Their utility lemmas may still be imported by the active
+proof. [Current-calculus notes](current-calculus.md) and
+[development history](development-history.md) record that distinction.

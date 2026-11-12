@@ -20,8 +20,8 @@ explicit. Its two standing hypotheses are a guarded heap invariant and two
 distinct active processors; no finite-domain assumption is needed.
 
 Read [the complete comparison with the dissertation](notes/current-calculus.md)
-for the exact scope and [checkpoint 11](review/checkpoint-11.md) for the latest
-review report. Earlier safety/calculus experiments are superseded as the
+for the exact scope and [checkpoint 11](review/checkpoint-11.md) for the
+accepted calculus checkpoint. Earlier safety/calculus experiments are superseded as the
 active design; their chronology and source map are preserved in
 [development history](notes/development-history.md).
 
@@ -39,7 +39,12 @@ with its soundness proof still ahead. The
 the requested remaining counterexamples in the original interpretation.
 [Independent follow-up](review/paper-independent-results.md) derives the
 store-then-fence cell contract, refutes its unfenced version, and proves
-exact preservation of the machine's address domain.
+exact preservation of the machine's address domain. The next
+[batched queue report](review/paper-independent-batch.md) adds audited
+original-points-to counterexamples, the derived-rule classification, and
+common-split resource framing in both modes, including release. The
+[writer's theorem index](notes/paper-theorem-index.md) distinguishes original
+errors, repair choices and remaining scope.
 
 ## Main results
 
@@ -54,6 +59,10 @@ exact preservation of the machine's address domain.
 | Reading one's own buffered write, with arbitrary history and spatial tail | [OwnedBufferedLoad.v](theories/OwnedBufferedLoad.v) |
 | Store/fence cell rule, unfenced counterexample and a complete trace | [OwnedFenceExamples.v](theories/OwnedFenceExamples.v) |
 | Exact heap-or-buffer address-domain preservation for every execution | [ExecutionDomain.v](theories/ExecutionDomain.v) |
+| Exact LOAD-P, corrected STORE-P, and forward/backward fence and lock variants | [OwnedPointsToRules.v](theories/OwnedPointsToRules.v), [OwnedAlternativeRules.v](theories/OwnedAlternativeRules.v) |
+| Common-split resource framing and enabled release with pending foreign writes | [OwnedCommonSplit.v](theories/OwnedCommonSplit.v), [OwnedCommonSplitExamples.v](theories/OwnedCommonSplitExamples.v) |
+| Original-points-to INV counterexamples and a printed FRAME-STM counterexample | [PrintedPointsToDerivations.v](theories/PrintedPointsToDerivations.v), [PrintedStrongFrame.v](theories/PrintedStrongFrame.v) |
+| SHARE and literal STORE-P counterexamples in the final interpretation | [OwnedAlternativeCounterexamples.v](theories/OwnedAlternativeCounterexamples.v) |
 | Further assertion laws and checked associativity/lock countermodels | [AssertionAlgebra.v](theories/AssertionAlgebra.v), [AssertionAlgebraCounterexamples.v](theories/AssertionAlgebraCounterexamples.v) |
 | Full barrier distribution, lock symmetry and successive-write collapse | [AssertionBarrierAlgebra.v](theories/AssertionBarrierAlgebra.v), [AssertionLockAlgebra.v](theories/AssertionLockAlgebra.v), [AssertionWriteAlgebra.v](theories/AssertionWriteAlgebra.v) |
 | Complete small/full-exchange classification, with checked witnesses | [Audit report and theorem map](review/paper-algebra-audit.md) |
@@ -82,7 +91,7 @@ make check
 
 `make` compiles every file in `_CoqProject`. `make check` additionally runs
 `rocq check` on `WMLR.Audit` and its dependencies. The audit currently reports
-**863 declarations closed under the global context**, including every new
+**947 declarations closed under the global context**, including every new
 lemma/theorem in the final calculus, retrying container, paper algebra audit
 and independent follow-up work.
 There are no admitted proofs or declared axioms. The proofs do not require

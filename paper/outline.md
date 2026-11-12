@@ -171,6 +171,9 @@ The dissertation's third gap.
   producer/consumer client. **[queued]**
 - The cost: entailment obligations counted and classified. **[have]** for
   the container.
+- Opening pair: a fenced store gives the textbook rule, and the unfenced
+  one is invalid. **[queued]**
+- Reading your own buffered write: derivable, or a new rule. **[queued]**
 
 ## 9. The mechanization
 
@@ -191,7 +194,8 @@ any claim is written. **[open]**: scope and depth.
 
 - Releases outside the global lock (the "daring" rules; fenced Dekker).
   **[queued]** for a one-paragraph confirmation.
-- A strong temporal connective with a common split, and its frame rule.
+- A strong temporal connective with a common split. Its frame property at
+  the resource level is **[queued]**; the connective itself is not planned.
 - Allocation, recursive predicates, permissions (Chapter 5).
 - Expression-valued lock identifiers.
 - Completeness and automation for the assertion proof system.

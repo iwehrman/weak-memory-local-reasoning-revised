@@ -42,6 +42,7 @@ labels; the order is now:
 4. Priority 1: the Section 4.1 example, derived in the system.
 5. Priority 2: the ambitious derivation, derived in the system.
 6. Priority 3 items may be done at any point.
+7. Priority 5 item 1 early, with the audit; items 2 to 4 at any point.
 
 The rule set is expected to grow during steps 4 and 5. Adding a rule with a
 soundness proof is normal and needs no check-in; list the additions in the
@@ -238,6 +239,46 @@ The dissertation itself observes that no complete rule set exists, because
 the language includes arithmetic. Do not change the assertion grammar or
 interpretation; a law that needs such a change is a stop-and-report.
 
+## Priority 5: four small additional results
+
+Approved by Ian. Each is a few lemmas. Item 1 should be settled early,
+alongside the algebra audit, because if the gap is real the new rule belongs
+in the calculus before the larger derivations are written.
+
+1. **Reading your own buffered write.** After `[x] := v` on processor `i`,
+   the thread holds `H = (∃u. C(x,u)) ; W_i(x,v)`. The LOAD axioms need the
+   loaded write or cell to be spatially separate from the rest of the
+   resource, and an old cell and a newer pending write to the same address
+   cannot be split spatially. The reviewer's unchecked reading is that
+   `r := [x]_i` from `H` is therefore not derivable.
+   - Determine whether `{H} r := [x]_i {H ∧ r = v}` is derivable in
+     `owned_derivation`. If it is, give the derivation.
+   - If it is not, state that precisely and prove the semantic rule for the
+     owning thread, on the same processor `i`, with the usual freshness
+     conditions and an arbitrary spatial tail. It should hold: the cell is
+     owned, so no other thread can write it; the frame cannot hold a pending
+     write to an address in the local heap; and the load returns the latest
+     buffered write or, after a flush, the heap value, which is `v` either
+     way. A load by a different processor of the same thread is not
+     determined while the write is pending and is not part of the rule.
+   - If proved, add it as a constructor with soundness, and say in the
+     report that it is an extension of the printed LOAD.
+2. **Fences recover ordinary separation logic.** Derive
+   `{C(x,u)} [x] := v_i; fence_i {C(x,v)}`, and prove that the same
+   specification without the fence is invalid. Give both in the calculus's
+   own terms, with an inhabited precondition for the negative one.
+3. **A common-split strong temporal frame, at the resource level.** Without
+   changing the assertion grammar, prove the frame property for a local
+   resource given by one split that is both spatial and temporal: if the
+   command is safe on the `P` part, it is safe on the whole, and the retained
+   part is still both spatially separate from and temporally before the
+   successor. Do it in disjoint mode across a release, which is where the
+   abbreviation's rule failed. State it before proving it.
+4. **The FRAME-STM counterexample and the printed calculus.** Determine
+   whether the checkpoint-6 shape yields a false specification from the
+   printed rules, using INV in place of the transferring UNLOCK. Report a
+   checked derivation and countermodel, or the reason it does not transfer.
+
 ## Check-in points
 
 - After the design for priority 1, and again after its result.
@@ -245,5 +286,7 @@ interpretation; a law that needs such a change is a stop-and-report.
   proof; then after part A; then after part B.
 - After priority 4 part A's table; after the rule statements for part B,
   before their soundness proof; and after part C.
+- Priority 5 item 1: check in with the answer before adding a constructor.
+  Items 2 to 4 can be reported together.
 - Priority 3 items need no individual check-in. Report them together, and
   immediately if any contradicts something the calculus currently claims.

@@ -19,9 +19,21 @@ From WMLR Require Import TransferredCells OwnershipTransfer OwnershipTransferLim
 From WMLR Require Import InvariantFragment InvariantFragmentExamples.
 From WMLR Require Import FrameShape FrameShapeCounterexample.
 From WMLR Require Import ResidualUniqueness FlushAttribution FixedFrameExamples.
+From WMLR Require Import LockRepresentation.
 From WMLR Require Import RetiredHeaps RetiredSafety RetiredTransfer RetiredRules RetiredExamples RetirementFlushing.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
+Print Assumptions free_held_characterization.
+Print Assumptions singleton_emp_lock_equivalent.
+Print Assumptions singleton_acquire_still_free.
+Print Assumptions singleton_empty_acquire_enabled.
+Print Assumptions two_processors_separate_free_held.
+Print Assumptions SplitLockWitness.fragments_well_formed.
+Print Assumptions SplitLockWitness.fragments_compose.
+Print Assumptions SplitLockWitness.whole_held.
+Print Assumptions SplitLockWitness.parts_incomplete.
+Print Assumptions SplitLockWitness.failing_assert_enabled.
+
 Print Assumptions ordered_residual_unique.
 Print Assumptions repaired_residual_buffers_unique.
 Print Assumptions resource_residual_buffers_unique.

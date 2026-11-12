@@ -15,7 +15,12 @@ acquisition. This refutes an auxiliary lemma, not design D's proof rules.
 Checkpoint 4 proves fixed-frame buffer uniqueness and attribution of actual
 machine flushes to the frame or local resource while fixing the other and
 the buffer-free pool. These support a new single safety target, which has
-not been defined; integrated framing and soundness remain open. See
+not been defined; integrated framing and soundness remain open. Checkpoint 5
+now records the proposed definition and fixed acceptance tests. Its checked
+lock diagnostics expose singleton free/held ambiguity and partial blocked
+sets that must not be excluded from all environments. No new processor
+assumption or safety predicate has been installed. See
+[checkpoint 5](../review/checkpoint-5.md),
 [checkpoint 4](../review/checkpoint-4.md), [checkpoint 3](../review/checkpoint-3.md),
 [checkpoint 2](../review/checkpoint-2.md), [the review](../review/independent-review.md)
 and [the response](../review/lead-response.md). The results below describe

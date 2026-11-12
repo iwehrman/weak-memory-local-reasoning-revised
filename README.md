@@ -70,9 +70,14 @@ the temporal-only resource lemma but refutes the proposed generalization
 to external `#`, including an acquisition case. Checkpoint 4 proves that a
 fixed frame determines the local buffers and that actual machine flushes
 can be attributed to one component with the other and the pool unchanged.
-The proposed single safety replacement and its frame/concurrency proofs
-remain open.
-See [the fixed-frame and flush checkpoint](review/checkpoint-4.md),
+Checkpoint 5 records a concrete safety proposal and three fixed acceptance
+tests, before implementation. New checked diagnostics identify singleton
+lock ambiguity and admissible compositions of partial lock information.
+The processor-domain decision, single safety replacement, and its
+frame/concurrency proofs remain open.
+See [the definition proposal](review/checkpoint-5.md),
+[its acceptance tests](review/checkpoint-5-acceptance.md),
+[the fixed-frame and flush checkpoint](review/checkpoint-4.md),
 [the frame-shape checkpoint](review/checkpoint-3.md),
 [the invariant-fragment checkpoint](review/checkpoint-2.md),
 [the response and development checkpoints](review/lead-response.md),
@@ -179,6 +184,7 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/ResidualUniqueness.v` | Fixed-frame buffer cancellation, forced duplicate-head origin, and incompatible premature local flush | Checkpoint-4 residual and duplicate-write results |
 | `theories/FlushAttribution.v` | A machine flush belongs to the frame or local resource, with precise marks and the buffer-free pool fixed | Checkpoint-4 attribution for arbitrary resources and invariant pools |
 | `theories/FixedFrameExamples.v` | The unchanged frame excludes checkpoint 3's bad assume and acquisition residuals | Direct checks of the proposed repair |
+| `theories/LockRepresentation.v` | Singleton free/held ambiguity and complete locks assembled from partial blocked sets | Checked diagnostics for the checkpoint-5 definition proposal |
 | `theories/OwnershipTransfer.v` | Protected-to-private withdrawal at fence/unlock; disjoint-history donation reassembly | Checked transfer rules and a restricted boundary lemma |
 | `theories/OwnershipTransferLimits.v` | Scoped cell versus ordinary points-to; general retained-history donation obstruction | Concrete invalid donation and positive disjoint-history instance |
 | `theories/TransferExamples.v` | Known-present withdrawal, release, private load and retained foreign write | All-run proofs, concrete traces, rejected all-processor transfer postcondition |
@@ -516,9 +522,10 @@ See [the precise rule comparison and release problem](notes/persistent-semantics
    The review response and [guarded invariant results](review/checkpoint-2.md)
    are complete. [Checkpoint 3](review/checkpoint-3.md) refutes the arbitrary
    residual lemma; [checkpoint 4](review/checkpoint-4.md) proves fixed-frame
-   buffer uniqueness and actual flush attribution. Review the exact single
-   safety target replacing the `separated_safe` development path before
-   defining it and proving the integrated rules.
+   buffer uniqueness and actual flush attribution. [Checkpoint 5](review/checkpoint-5.md)
+   proposes the exact single safety target replacing the `separated_safe`
+   development path and fixes its acceptance tests. Resolve the singleton
+   lock-domain decision and review the definition before implementing it.
    The candidate replaces INV with explicit
    ownership rules, preserves `emp`, and initially restricts FRAME-TM to
    unlock-free commands. Do not extend the retirement interpretation or add

@@ -19,6 +19,7 @@ theories/ExecutionExamples.v
 theories/Assertions.v
 theories/AssertionSemantics.v
 theories/ConcreteAssertions.v
+theories/LockRepresentation.v
 theories/AssertionFlushing.v
 theories/RepairedAssertions.v
 theories/PersistentAssertions.v

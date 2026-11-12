@@ -1,0 +1,1 @@
+{"counterexample": null, "instances_checked": 8, "law": "E12", "scope": "Screen E12 on exact write/barrier atoms for two active processors.\n\nOne address, old/new values 0 and 1, all mark subsets and permitted blocked\nbits. Intermediate compositions are retained, including two pending writes.\nThe general, expression-valued Rocq theorem remains the authority.\n"}

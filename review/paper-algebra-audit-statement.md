@@ -1,5 +1,10 @@
 # Paper priority 4A: assertion-algebra audit targets
 
+**Completed:** the [full 4A result table](paper-algebra-audit.md) now
+classifies every target below, with 830 audited declarations closed. This
+document is retained as the pre-proof scope statement; its progress notes
+below describe the earlier stages.
+
 This is the statement of work before proofs, following the revised queue at
 `f4899e0`. The active order is **4A → 4B → 4C → 1 → 2**, with priority 3
 independent. The accepted base remains checkpoint 11: 683 audited

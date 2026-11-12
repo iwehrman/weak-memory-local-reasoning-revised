@@ -113,17 +113,24 @@ At release the invariant part cannot absorb a pending foreign write.
 At acquisition the proof re-establishes the chosen mode, including disjoint
 ownership of all acquired cells when working in DJ.
 
-The first paper algebra audit proves `emp` is a two-sided unit for `*`, `;`
+The paper algebra audit proves `emp` is a two-sided unit for `*`, `;`
 and `⋉` for the entire assertion grammar, including wands, on every
 processor domain. `AssertionUnits.v` removes the wand-free limitation of
-earlier unit helpers; no semantic definition changes. The next batch proves
-spatial/temporal associativity and further barrier laws, but refutes
-strong-temporal associativity and unrestricted lock multiplication. Both
-countermodels also hold in the original interpretation. The lock witness
-has no admissible machine environment; same-owner lock exclusivity still
-holds under the standing two-processor assumption. See the
-[algebra audit progress](../review/paper-algebra-progress.md) for the exact
-statements and remaining laws.
+earlier unit helpers; no semantic definition changes. The completed audit
+also proves spatial/temporal associativity, lock symmetry, full barrier
+distribution and successive-write collapse. It refutes strong-temporal
+associativity in both directions, the small-exchange cases with `⋉`
+outside, full exchange, and unrestricted lock multiplication. One
+associativity countermodel and the lock countermodel are additionally
+checked in the original interpretation. The lock witness has no admissible
+machine environment; same-owner lock exclusivity still holds under the
+standing two-processor assumption. The all-processor points-to/write law
+needs an active annotation; for the weaker cell the exact condition is
+presence of that processor's mark. See the
+[complete audit](../review/paper-algebra-audit.md) for all instances,
+including both readings of the small-exchange premise. The interpretation
+and program rules remain unchanged; no assertion rule set has yet been
+selected.
 
 The grammar has no recursive predicates. The invariant fragment therefore
 does not describe an unbounded linked container. That expressiveness limit

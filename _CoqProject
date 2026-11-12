@@ -110,6 +110,15 @@ theories/OwnedBufferedLoad.v
 theories/OwnedBufferedLoadExamples.v
 theories/AssertionAlgebra.v
 theories/AssertionAlgebraCounterexamples.v
+theories/AssertionBarrierAlgebra.v
+theories/AssertionLockAlgebra.v
+theories/AssertionWriteAlgebra.v
+theories/AssertionWriteExamples.v
+theories/AssertionExchange.v
+theories/AssertionExchangeCounterexamples.v
+theories/AssertionExchangeRight.v
+theories/AssertionExchangeTemporal.v
+theories/AssertionExchangeTemporalRight.v
 theories/OwnedContainerDerivation.v
 theories/OwnedRetryContainer.v
 theories/OwnedExecution.v

@@ -5,6 +5,37 @@
 {"formulas": {"i": 2, "j": 1}, "law": "E6:tm", "witness": {"blocked": 3, "buffers": [[], []], "heap": [null, null, null], "marks": 0}}
 {"formulas": {"i": 1, "j": 2}, "law": "E6:stm", "witness": {"blocked": 3, "buffers": [[], []], "heap": [null, null, null], "marks": 0}}
 {"formulas": {"i": 2, "j": 1}, "law": "E6:stm", "witness": {"blocked": 3, "buffers": [[], []], "heap": [null, null, null], "marks": 0}}
+{"law": "E8:sp", "instances_checked": 12675, "counterexample_directions": []}
+{"law": "E8:tm", "instances_checked": 12675, "counterexample_directions": []}
+{"law": "E8:stm", "instances_checked": 12675, "counterexample_directions": []}
+{"law": "E5:sp", "instances_checked": 130, "counterexample_directions": []}
+{"law": "E5:tm", "instances_checked": 130, "counterexample_directions": []}
+{"law": "E5:stm", "instances_checked": 130, "counterexample_directions": []}
 {"formulas": {"P": "true", "Q": "bar1", "R": "(emp or W(1,1,0))"}, "law": "E3:stm:right-to-left", "witness": {"blocked": 0, "buffers": [[[1, 0]], []], "heap": [0, null, null], "marks": 1}}
 {"formulas": {"P": "true", "Q": "W(1,1,0)", "R": "(bar1 or W(2,2,0))"}, "law": "E3:stm:left-to-right", "witness": {"blocked": 0, "buffers": [[[1, 0]], [[2, 0]]], "heap": [null, 0, null], "marks": 1}}
 {"law": "E3:stm", "triples_checked": 6240, "counterexample_directions": ["left-to-right", "right-to-left"]}
+{"laws": "T7/T8", "bullet": "sp", "circle": "sp", "premise_satisfying_triples": 276353, "counterexample_laws": []}
+{"formulas": {"P": "true", "Q": "emp", "R": "bar1", "uniform_premise_known": false}, "law": "T7:sp:tm", "witness": {"blocked": 0, "buffers": [[[1, 0]], []], "heap": [null, null, null], "marks": 1}}
+{"formulas": {"P": "true", "Q": "emp", "R": "bar1", "uniform_premise_known": false}, "law": "T8:sp:tm", "witness": {"blocked": 0, "buffers": [[[1, 0]], []], "heap": [null, null, null], "marks": 1}}
+{"laws": "T7/T8", "bullet": "sp", "circle": "tm", "premise_satisfying_triples": 147, "counterexample_laws": ["T7", "T8"]}
+{"formulas": {"P": "true", "Q": "emp", "R": "bar1", "uniform_premise_known": false}, "law": "T7:sp:stm", "witness": {"blocked": 0, "buffers": [[[1, 0]], []], "heap": [null, null, null], "marks": 1}}
+{"formulas": {"P": "true", "Q": "emp", "R": "bar1", "uniform_premise_known": false}, "law": "T8:sp:stm", "witness": {"blocked": 0, "buffers": [[[1, 0]], []], "heap": [null, null, null], "marks": 1}}
+{"laws": "T7/T8", "bullet": "sp", "circle": "stm", "premise_satisfying_triples": 147, "counterexample_laws": ["T7", "T8"]}
+{"formulas": {"P": "true", "Q": "emp", "R": "W(1,1,0)", "uniform_premise_known": false}, "law": "T7:tm:sp", "witness": {"blocked": 0, "buffers": [[[1, 0]], []], "heap": [0, null, null], "marks": 1}}
+{"formulas": {"P": "true", "Q": "emp", "R": "W(1,1,0)", "uniform_premise_known": false}, "law": "T8:tm:sp", "witness": {"blocked": 0, "buffers": [[[1, 0]], []], "heap": [0, null, null], "marks": 1}}
+{"laws": "T7/T8", "bullet": "tm", "circle": "sp", "premise_satisfying_triples": 149, "counterexample_laws": ["T7", "T8"]}
+{"laws": "T7/T8", "bullet": "tm", "circle": "tm", "premise_satisfying_triples": 276353, "counterexample_laws": []}
+{"formulas": {"P": "true", "Q": "emp", "R": "W(1,1,0)", "uniform_premise_known": false}, "law": "T7:tm:stm", "witness": {"blocked": 0, "buffers": [[[1, 0]], []], "heap": [0, null, null], "marks": 1}}
+{"formulas": {"P": "true", "Q": "emp", "R": "W(1,1,0)", "uniform_premise_known": false}, "law": "T8:tm:stm", "witness": {"blocked": 0, "buffers": [[[1, 0]], []], "heap": [0, null, null], "marks": 1}}
+{"laws": "T7/T8", "bullet": "tm", "circle": "stm", "premise_satisfying_triples": 149, "counterexample_laws": ["T7", "T8"]}
+{"formulas": {"P": "true", "Q": "bar1", "R": "(emp or W(1,1,0))", "uniform_premise_known": true}, "law": "T7:stm:sp", "witness": {"blocked": 0, "buffers": [[[1, 0]], []], "heap": [0, null, null], "marks": 1}}
+{"formulas": {"P": "true", "Q": "W(1,1,0)", "R": "(bar1 or W(2,2,0))", "uniform_premise_known": true}, "law": "T8:stm:sp", "witness": {"blocked": 0, "buffers": [[[1, 0]], [[2, 0]]], "heap": [null, 0, null], "marks": 1}}
+{"laws": "T7/T8", "bullet": "stm", "circle": "sp", "premise_satisfying_triples": 6240, "counterexample_laws": ["T7", "T8"]}
+{"formulas": {"P": "W(1,1,0)", "Q": "W(1,1,0)", "R": "true", "uniform_premise_known": true}, "law": "T8:stm:tm", "witness": {"blocked": 0, "buffers": [[[1, 0]], []], "heap": [0, 0, null], "marks": 1}}
+{"formulas": {"P": "true", "Q": "(lock1 or W(1,1,0))", "R": "(bar1 or lock1)", "uniform_premise_known": true}, "law": "T7:stm:tm", "witness": {"blocked": 2, "buffers": [[[1, 0]], []], "heap": [0, null, null], "marks": 1}}
+{"laws": "T7/T8", "bullet": "stm", "circle": "tm", "premise_satisfying_triples": 7859, "counterexample_laws": ["T7", "T8"]}
+{"formulas": {"P": "true", "Q": "bar1", "R": "(emp or W(1,1,0))", "uniform_premise_known": true}, "law": "T7:stm:stm", "witness": {"blocked": 0, "buffers": [[[1, 0]], []], "heap": [0, null, null], "marks": 1}}
+{"formulas": {"P": "true", "Q": "W(1,1,0)", "R": "(bar1 or W(2,2,0))", "uniform_premise_known": true}, "law": "T8:stm:stm", "witness": {"blocked": 0, "buffers": [[[1, 0]], [[2, 0]]], "heap": [null, 0, null], "marks": 1}}
+{"laws": "T7/T8", "bullet": "stm", "circle": "stm", "premise_satisfying_triples": 6240, "counterexample_laws": ["T7", "T8"]}
+{"formulas": {"P": "(lock2 or C(2,0))", "Q": "(W(1,1,0) or lock2)", "R": "true", "S": "(bar1 or C(2,0))"}, "law": "T9", "witness": {"blocked": 0, "buffers": [[[1, 0]], []], "heap": [null, 0, null], "marks": 3}}
+{"law": "T9", "quadruples_checked": 20957, "counterexample_found": true}

@@ -87,6 +87,33 @@ def main():
         for i, j in product((1, 2), repeat=2):
             result("E6:"+kind, {"i": i, "j": j}, conj(kind, atoms[f"lock{i}"], atoms[f"lock{j}"]), 0)
 
+    for kind in ("sp", "tm", "stm"):
+        failures = set()
+        checked = 0
+        for (np, p), (nq, q), nb in product(fs, fs, ("bar1", "bar2", "emp")):
+            bar = atoms[nb]  # emp is the interpretation of an inactive barrier.
+            left = conj("tm", conj(kind, p, q), bar)
+            right = conj(kind, conj("tm", p, bar), conj("tm", q, bar))
+            checked += 1
+            for direction, lhs, rhs in (("left-to-right", left, right), ("right-to-left", right, left)):
+                if direction not in failures and result("E8:"+kind+":"+direction,
+                        {"P": np, "Q": nq, "barrier": nb}, lhs, rhs):
+                    failures.add(direction)
+        print(json.dumps({"law": "E8:"+kind, "instances_checked": checked,
+                          "counterexample_directions": sorted(failures)}), flush=True)
+
+    for kind in ("sp", "tm", "stm"):
+        failures = set()
+        for (np, p), owner in product(fs, (1, 2)):
+            lock = atoms[f"lock{owner}"]
+            left, right = conj(kind, p, lock), conj(kind, lock, p)
+            for direction, lhs, rhs in (("left-to-right", left, right), ("right-to-left", right, left)):
+                if direction not in failures and result("E5:"+kind+":"+direction,
+                        {"P": np, "owner": owner}, lhs, rhs):
+                    failures.add(direction)
+        print(json.dumps({"law": "E5:"+kind, "instances_checked": 2*len(fs),
+                          "counterexample_directions": sorted(failures)}), flush=True)
+
     # Search atoms first, then disjunctive formulas, for a failure of either
     # direction of strong-temporal associativity.
     found = set()
@@ -108,6 +135,51 @@ def main():
             break
     print(json.dumps({"law": "E3:stm", "triples_checked": checked,
                       "counterexample_directions": sorted(found)}), flush=True)
+
+    # T7/T8: test the literal premise on the denotations of the particular
+    # P,Q. Identity and strong projections also satisfy the uniform premise.
+    for bullet, circle in product(("sp", "tm", "stm"), repeat=2):
+        failures = set()
+        checked = 0
+        uniform = bullet == circle or bullet == "stm"
+        for family in (list(atoms.items()), fs):
+            for (np, p), (nq, q), (nr, r) in product(family, repeat=3):
+                if conj(bullet, p, q) & ~conj(circle, p, q):
+                    continue
+                checked += 1
+                cases = (
+                    ("T7", conj(bullet, p, conj(circle, q, r)), conj(circle, conj(bullet, p, q), r)),
+                    ("T8", conj(bullet, conj(circle, p, q), r), conj(circle, p, conj(bullet, q, r))))
+                for law, lhs, rhs in cases:
+                    if law not in failures and result(law+":"+bullet+":"+circle,
+                            {"P": np, "Q": nq, "R": nr, "uniform_premise_known": uniform}, lhs, rhs):
+                        failures.add(law)
+                if len(failures) == 2:
+                    break
+            if len(failures) == 2:
+                break
+        print(json.dumps({"laws": "T7/T8", "bullet": bullet, "circle": circle,
+                          "premise_satisfying_triples": checked, "counterexample_laws": sorted(failures)}), flush=True)
+
+    found = False
+    checked = 0
+    # Atoms first; then deterministic samples of disjunctive formulas.
+    from random import Random
+    rng = Random(0)
+    families = (product(atoms.items(), repeat=4),
+                (tuple(rng.choice(fs) for _ in range(4)) for _ in range(100000)))
+    for family in families:
+        for (np, p), (nq, q), (nr, r), (ns, s) in family:
+            left = conj("stm", conj("sp", p, q), conj("sp", r, s))
+            right = conj("sp", conj("stm", p, r), conj("stm", q, s))
+            checked += 1
+            if result("T9", {"P": np, "Q": nq, "R": nr, "S": ns}, left, right):
+                found = True
+                break
+        if found:
+            break
+    print(json.dumps({"law": "T9", "quadruples_checked": checked,
+                      "counterexample_found": found}), flush=True)
 
 
 if __name__ == "__main__":

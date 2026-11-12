@@ -76,11 +76,11 @@ Proof.
     split; [reflexivity |apply algebra_pending_inner_models].
 Qed.
 
-Theorem assertion_strong_associativity_left_not_model s :
+Lemma assertion_strong_associativity_left_spatial_not_model s :
   ~ persistent_models two_processors s algebra_whole
-    (A.strong_temporal (A.strong_temporal algebra_P algebra_Q) algebra_R).
+    (A.Spatial (A.strong_temporal algebra_P algebra_Q) algebra_R).
 Proof.
-  intros [(a & b & [[Hdis [Hheap [Hbuffers Hblocks]]] Hmarks] & [_ Hbar] & HR) _].
+  intros (a & b & [[Hdis [Hheap [Hbuffers Hblocks]]] Hmarks] & [_ Hbar] & HR).
   assert (Ha : buffers (resource_memory two_processors a) 1%positive = []).
   { eapply assertion_barrier_suffix_buffer; [left; reflexivity |exact Hbar]. }
   specialize (Hbuffers 1%positive); change (interleaves
@@ -99,6 +99,11 @@ Proof.
       rewrite <- Hbuffers; left; reflexivity.
   - rewrite Hb in Hbuffers; discriminate.
 Qed.
+
+Theorem assertion_strong_associativity_left_not_model s :
+  ~ persistent_models two_processors s algebra_whole
+    (A.strong_temporal (A.strong_temporal algebra_P algebra_Q) algebra_R).
+Proof. intros [H _]; exact (assertion_strong_associativity_left_spatial_not_model s H). Qed.
 
 Theorem assertion_associativity_countermodel_environment mode s :
   owned_environment two_processors mode A.Emp s algebra_whole empty_memory

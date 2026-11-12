@@ -1,5 +1,9 @@
 # Algebra audit progress: associativity and lock countermodels
 
+**Follow-up:** the [complete 4A audit](paper-algebra-audit.md) settles every
+instance left open here, including the other associativity direction and
+all exchange cases. This report records the earlier 761-declaration batch.
+
 The approved 4A audit can proceed while the reviewer is offline. This batch
 proves more of the existing assertion laws and checks two failures, without
 changing the assertion interpretation or choosing the 4B rule set.

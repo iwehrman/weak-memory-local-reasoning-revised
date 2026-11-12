@@ -28,10 +28,12 @@ active design; their chronology and source map are preserved in
 Paper follow-up: [the first assertion-algebra results](review/paper-units-and-buffered-load.md)
 prove the full unit laws, including wands, and derive reading one's own
 buffered write using the existing calculus. The
-[next audit results](review/paper-algebra-progress.md) prove further laws
-and check counterexamples to strong-temporal associativity and unrestricted
-lock multiplication, also in the original assertion interpretation. The
-remaining algebra audit is in progress.
+[complete Figures 4.5/4.6 audit](review/paper-algebra-audit.md) classifies
+every law and both readings of the small-exchange premise. Spatial and
+temporal associativity, lock symmetry and the barrier/write laws survive;
+strong-temporal associativity and exchange fail. The assertion
+interpretation and proved program calculus are unchanged. The assertion
+proof-rule statement is the next checkpoint.
 
 ## Main results
 
@@ -45,6 +47,8 @@ remaining algebra audit is in progress.
 | All six conjunction unit laws for arbitrary assertions, including wands | [AssertionUnits.v](theories/AssertionUnits.v) |
 | Reading one's own buffered write, with arbitrary history and spatial tail | [OwnedBufferedLoad.v](theories/OwnedBufferedLoad.v) |
 | Further assertion laws and checked associativity/lock countermodels | [AssertionAlgebra.v](theories/AssertionAlgebra.v), [AssertionAlgebraCounterexamples.v](theories/AssertionAlgebraCounterexamples.v) |
+| Full barrier distribution, lock symmetry and successive-write collapse | [AssertionBarrierAlgebra.v](theories/AssertionBarrierAlgebra.v), [AssertionLockAlgebra.v](theories/AssertionLockAlgebra.v), [AssertionWriteAlgebra.v](theories/AssertionWriteAlgebra.v) |
+| Complete small/full-exchange classification, with checked witnesses | [Audit report and theorem map](review/paper-algebra-audit.md) |
 | Original container derived inside the calculus, exercising FRAME-TM and EX | [OwnedContainerDerivation.v](theories/OwnedContainerDerivation.v) |
 | Retrying container derived using choice and loops | [OwnedRetryContainer.v](theories/OwnedRetryContainer.v) |
 | 52-step successful trace, two failed retry iterations, all-run safety and completed-run restoration | [OwnedRetryTrace.v](theories/OwnedRetryTrace.v) |
@@ -69,8 +73,8 @@ make check
 
 `make` compiles every file in `_CoqProject`. `make check` additionally runs
 `rocq check` on `WMLR.Audit` and its dependencies. The audit currently reports
-**761 declarations closed under the global context**, including every new
-lemma/theorem in the final calculus, retrying container and early paper audit.
+**830 declarations closed under the global context**, including every new
+lemma/theorem in the final calculus, retrying container and complete paper algebra audit.
 There are no admitted proofs or declared axioms. The proofs do not require
 choice, functional extensionality, or a finite processor domain.
 

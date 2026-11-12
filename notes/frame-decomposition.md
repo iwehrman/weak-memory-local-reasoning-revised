@@ -1,5 +1,12 @@
 # Repairing the spatial frame argument
 
+> **Historical checkpoint.** This report describes an earlier development
+> stage. Its alternative safety/calculus design is superseded by
+> `OwnedSafety.v` and `OwnedCalculus.v`; any statements about remaining
+> soundness work belong to that stage. Reused resource lemmas and checked
+> counterexamples retain their meanings. See the
+> [current calculus and complete comparison](current-calculus.md).
+
 The target is Lemma 21 (pp. 174-176), a step toward Theorem 1. The immediate
 problem is the use of Conjecture 1 to turn a spatiotemporal post-step
 decomposition into a spatial one.

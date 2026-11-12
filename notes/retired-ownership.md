@@ -1,5 +1,12 @@
 # Retaining history after returning ownership
 
+> **Historical checkpoint.** This report describes an earlier development
+> stage. Its alternative safety/calculus design is superseded by
+> `OwnedSafety.v` and `OwnedCalculus.v`; any statements about remaining
+> soundness work belong to that stage. Reused resource lemmas and checked
+> counterexamples retain their meanings. See the
+> [current calculus and complete comparison](current-calculus.md).
+
 **Status after independent review: not the development direction.** The
 review checks an additional defect: permissive later cell atoms can erase
 unrelated earlier cells (`retired_later_cell_can_erase_earlier` in

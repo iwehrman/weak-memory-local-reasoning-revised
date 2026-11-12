@@ -1,5 +1,12 @@
 # Private resources through a critical section
 
+> **Historical checkpoint.** This report describes an earlier development
+> stage. Its alternative safety/calculus design is superseded by
+> `OwnedSafety.v` and `OwnedCalculus.v`; any statements about remaining
+> soundness work belong to that stage. Reused resource lemmas and checked
+> counterexamples retain their meanings. See the
+> [current calculus and complete comparison](current-calculus.md).
+
 This extends the checked ownership protocol with a private local component
 that survives acquisition and release. The original prototype remains in
 `OwnershipProtocol.v`; the new semantics is `private_valid` and `private_safe`.

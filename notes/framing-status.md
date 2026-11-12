@@ -1,5 +1,12 @@
 # Spatial framing and the temporal repair
 
+> **Historical checkpoint.** This report describes an earlier development
+> stage. Its alternative safety/calculus design is superseded by
+> `OwnedSafety.v` and `OwnedCalculus.v`; any statements about remaining
+> soundness work belong to that stage. Reused resource lemmas and checked
+> counterexamples retain their meanings. See the
+> [current calculus and complete comparison](current-calculus.md).
+
 The general semantic spatial frame rule is proved for `private_valid` with
 closed entry. The work below proves temporal framing in a separate semantics
 retaining completeness marks and identifies two transfer obstacles. The

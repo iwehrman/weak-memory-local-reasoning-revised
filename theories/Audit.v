@@ -28,7 +28,68 @@ From WMLR Require Import AssertionSubstitution OwnedStructural OwnedPrimitives O
 From WMLR Require Import OwnedContainerEntailments OwnedContainer OwnedContainerTrace.
 From WMLR Require Import RetiredHeaps RetiredSafety RetiredTransfer RetiredRules RetiredExamples RetirementFlushing.
 
+From WMLR Require Import OwnedExists OwnedCalculus OwnedDerivedRules OwnedContainerDerivation OwnedRetryContainer OwnedExecution OwnedRetryTrace.
+
 (** Compiling this file reports the assumptions of the main proved facts. *)
+
+Print Assumptions owned_exists_valid.
+Print Assumptions owned_calculus_sound.
+Print Assumptions owned_derivation_adequacy.
+Print Assumptions owned_derive_load_cell.
+Print Assumptions owned_derive_store_cell.
+Print Assumptions owned_derive_assign_from.
+Print Assumptions owned_derive_while.
+Print Assumptions owned_derive_unlock_false.
+Print Assumptions container_read_flag_derived.
+Print Assumptions container_read_cases_derived.
+Print Assumptions container_select_one_derived.
+Print Assumptions container_select_zero_derived.
+Print Assumptions container_store_known_derived.
+Print Assumptions container_expression_cell_some.
+Print Assumptions container_store_some_derived.
+Print Assumptions container_store_flag_derived.
+Print Assumptions container_remove_derived.
+Print Assumptions container_return_derived.
+Print Assumptions container_core_derived.
+Print Assumptions owned_container_derived.
+Print Assumptions container_models_update.
+Print Assumptions container_set_retry_derived.
+Print Assumptions container_set_finished_derived.
+Print Assumptions container_retry_derived.
+Print Assumptions container_empty_release_derived.
+Print Assumptions container_take_attempt_derived.
+Print Assumptions container_retry_take_derived.
+Print Assumptions container_history_heap.
+Print Assumptions container_item_history_disjoint.
+Print Assumptions container_retry_acquire_entails.
+Print Assumptions container_retry_return_unlock_entails.
+Print Assumptions container_put_attempt_derived.
+Print Assumptions container_retry_put_derived.
+Print Assumptions container_retry_core_derived.
+Print Assumptions owned_retrying_container_derived.
+Print Assumptions owned_execution_frame.
+Print Assumptions owned_empty_local_free_frame_pool.
+Print Assumptions owned_empty_local_frame_split.
+Print Assumptions owned_emp_derivation_restores.
+Print Assumptions container_done_trace.
+Print Assumptions container_if_true_trace.
+Print Assumptions container_if_false_trace.
+Print Assumptions container_loop_one_trace.
+Print Assumptions container_retry_one_trace.
+Print Assumptions container_take_success_trace.
+Print Assumptions container_put_success_trace.
+Print Assumptions owned_retrying_container_trace.
+Print Assumptions container_retry_empty_environment.
+Print Assumptions container_take_failure_trace.
+Print Assumptions container_execution_append.
+Print Assumptions container_execution_prefix.
+Print Assumptions container_failed_iteration_retries.
+Print Assumptions container_two_failed_iterations.
+Print Assumptions owned_retrying_container_all_runs_safe.
+Print Assumptions container_core_initial_environment.
+Print Assumptions owned_container_completed_restores.
+Print Assumptions owned_retrying_container_completed_restores.
+
 
 Print Assumptions container_spatial_mono.
 Print Assumptions container_temporal_mono.

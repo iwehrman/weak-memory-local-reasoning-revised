@@ -101,6 +101,13 @@ theories/OwnedHeapExamples.v
 theories/OwnedContainerEntailments.v
 theories/OwnedContainer.v
 theories/OwnedContainerTrace.v
+theories/OwnedExists.v
+theories/OwnedCalculus.v
+theories/OwnedDerivedRules.v
+theories/OwnedContainerDerivation.v
+theories/OwnedRetryContainer.v
+theories/OwnedExecution.v
+theories/OwnedRetryTrace.v
 theories/FrameShapeCounterexample.v
 theories/FixedFrameExamples.v
 theories/RetiredHeaps.v

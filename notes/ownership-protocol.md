@@ -1,5 +1,12 @@
 # Ownership protocol for release
 
+> **Historical checkpoint.** This report describes an earlier development
+> stage. Its alternative safety/calculus design is superseded by
+> `OwnedSafety.v` and `OwnedCalculus.v`; any statements about remaining
+> soundness work belong to that stage. Reused resource lemmas and checked
+> counterexamples retain their meanings. See the
+> [current calculus and complete comparison](current-calculus.md).
+
 This is a checked, bounded implementation of the ownership-transfer repair.
 It is separate from `persistent_valid` and the printed safety predicate.
 It does not establish the full dissertation soundness theorem.

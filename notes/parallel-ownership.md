@@ -1,5 +1,12 @@
 # Two threads sharing one protected invariant
 
+> **Historical checkpoint.** This report describes an earlier development
+> stage. Its alternative safety/calculus design is superseded by
+> `OwnedSafety.v` and `OwnedCalculus.v`; any statements about remaining
+> soundness work belong to that stage. Reused resource lemmas and checked
+> counterexamples retain their meanings. See the
+> [current calculus and complete comparison](current-calculus.md).
+
 `private_parallel_rule` proves concurrent composition for two threads in the
 private-resource calculus, including register updates from private loads.
 It covers every finite execution of the ordinary

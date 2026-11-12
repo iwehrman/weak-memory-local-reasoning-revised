@@ -1,5 +1,12 @@
 # Recovering FRAME-TM with separate protected assertions
 
+> **Historical checkpoint.** This report describes an earlier development
+> stage. Its alternative safety/calculus design is superseded by
+> `OwnedSafety.v` and `OwnedCalculus.v`; any statements about remaining
+> soundness work belong to that stage. Reused resource lemmas and checked
+> counterexamples retain their meanings. See the
+> [current calculus and complete comparison](current-calculus.md).
+
 **Transfer extension:** [ownership-transfer.md](ownership-transfer.md) now
 proves withdrawal of protected cells into private ownership at an owner
 fence or unlock, and identifies a checked obstruction to unrestricted

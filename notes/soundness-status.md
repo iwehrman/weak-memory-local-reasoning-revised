@@ -1,86 +1,18 @@
-# Soundness: checked obstructions and repairs
+# Soundness: current result and historical obstructions
 
-**Direction after independent review:** the review now supplies checked
-derivations of stale-value and foreign-barrier specifications from the
-printed rules themselves. It also exposes unrelated-cell erasure in the
-retirement interpretation. The lead response accepts both derivations and
-drops retirement and permanent protected/private assertion positions from
-the target design. Full soundness of the replacement calculus is not proved.
-Checkpoint 2 now proves acquisition re-marking and buffer-freeness for
-invariants with heap-guarded pure assertions, and proves that their release
-premise retains every pending write outside the donated invariant. The
-frame-shape checkpoint now proves the temporal-only resource lemma but
-refutes the proposed `#` reconstruction under a footprint bound, including
-acquisition. This refutes an auxiliary lemma, not design D's proof rules.
-Checkpoint 4 proves fixed-frame buffer uniqueness and attribution of actual
-machine flushes to the frame or local resource while fixing the other and
-the buffer-free pool. The approved checkpoint-5 target is now implemented
-as `owned_safe` / `owned_valid`, replacing the separated path as the active
-development target. Full generalized-future closure, empty-frame operational
-adequacy, and overlap-to-disjoint mode inclusion are proved. All three fixed
-acceptance tests pass, with additional checked regressions for double acquire,
-split-token contexts, and a local future blocked by an external lock.
-The approved two-distinct-active-processors hypothesis is explicit on
-lock-specific results and client adequacy; no finiteness assumption, new
-assertion atom, or entailment change was added. General LOCK and UNLOCK
-are now proved for arbitrary fragment invariants, with UNLOCK in disjoint
-mode. However, unrestricted FRAME-STM in disjoint mode is refuted: the
-spatial and temporal conjuncts may use different splits, and donation can
-destroy the temporal witness. This is a checked invalid semantic triple,
-not merely an auxiliary-lemma failure. FRAME-STM has been dropped from the
-current rule target, leaving its assertion abbreviation unchanged.
-General FRAME-SP in both modes and semantic FRAME-TM from overlap-mode
-validity are now proved, after bounded reconstruction searches. The proofs
-add no lock-free-frame, no-unlock, or processor-count condition. FRAME-TM
-uses the approved invariant fragment; FRAME-SP does not need that restriction.
-General parallel composition now holds in both modes, with arbitrary
-commands and assertions. It retains the printed interference condition and
-adds the agreed requirement that neither command modifies invariant
-variables. Stack-agreement transport supports register-changing threads;
-finished threads use the proved spatial frame rule. Checked examples cover
-acquisition followed by a blocked sibling's private store, both finished
-branch cases, and distinct register assignments. The requested routine rules
-now check, with capture-avoiding substitution for the whole assertion grammar.
-The printed strong-temporal LOAD/STORE forms and explicit any-writer cell
-extensions are proved in both modes; LOAD's destination and invariant
-freshness conditions are explicit. The existing `⋉` abbreviation suffices,
-and the safety predicate remains unchanged. The container derivation now
-checks, with a complete 24-step trace from a nonempty free invariant pool
-that keeps a foreign write pending. A single spatial frame carries that
-write through both releases; temporal framing handles the private write at
-reacquisition. All 626 audited declarations are closed. Any further printed
-rules such as EX and SHARE, and full calculus soundness remain open. See
-[the container checkpoint](../review/checkpoint-10.md),
-[the routine and heap-rule checkpoint](../review/checkpoint-9.md),
-[the parallel checkpoint](../review/checkpoint-8.md),
-[the general framing checkpoint](../review/checkpoint-7.md),
-[the lock rules and FRAME-STM counterexample](../review/checkpoint-6.md),
-[the implementation checkpoint](../review/checkpoint-5-implementation.md),
-[checkpoint 5](../review/checkpoint-5.md),
-[checkpoint 4](../review/checkpoint-4.md), [checkpoint 3](../review/checkpoint-3.md),
-[checkpoint 2](../review/checkpoint-2.md), [the review](../review/independent-review.md)
-and [the response](../review/lead-response.md). The results below describe
-distinct earlier models, not one integrated calculus.
+**Current status: the repaired Chapter 4 calculus has proved soundness by
+induction and operational adequacy from derivations.** See
+[the consolidated calculus comparison](current-calculus.md) and
+[checkpoint 11](../review/checkpoint-11.md). EX and the mode-indexed derivation
+system are complete; SHARE and FRAME-STM are deliberate omissions. Both the
+selected-branch and retrying container examples are derived inside the
+system. The original printed calculus remains refuted by checked examples.
 
-The revised full soundness theorem is **not proved**. The current development
-contains checked negative results about the printed claims and a separate
-repaired model. The repaired model has associative generalized-memory
-operations, actual flushing decomposition, ownership-aware safety, operational
-adequacy, and derivation soundness for a bounded calculus. The latest
-future-aware wand interpretation has full assertion flushing closure and
-base heap/lock rules, with a restricted release rule. The subsequent ownership
-protocol proves protected-memory transfer with private resources, and a first
-parallel theorem composes two threads under explicit variable-interference
-conditions, including private loads into registers. General spatial framing
-is now proved for private validity with closed entry. A generalized ownership
-model now proves acquire/release, flushing, bounded calculus soundness and
-temporal framing around the entire shared/private region. A further checked
-counterexample shows why its unrestricted private temporal rule cannot simply
-be added: a derivable acquire/release specification exports another processor's
-completeness from the invariant. The combined spatial/temporal/concurrency
-calculus remains open. See [the regional result](regional-ownership.md),
-[the framing results](framing-status.md), [the semantic changes](persistent-semantics.md),
-and [the parallel theorem's exact premises](parallel-ownership.md).
+The sections below are **historical obstruction and repair notes**. Their
+bounded calculi and alternative safety predicates are superseded as the
+active design by `OwnedSafety.v` and `OwnedCalculus.v`. References to open
+integration work describe those earlier checkpoints, not the current status.
+The counterexamples and algebraic results retain their stated meanings.
 
 ## The assignment axiom fails against full safety
 
@@ -255,7 +187,7 @@ heap cells and a pending write, and exhibits a run flushing that write between
 assignments. The derivation and adequacy theorem establish `x = 2` for every
 terminating execution from that initial state, independently of flush scheduling.
 
-## What still prevents a full positive soundness claim
+## Remaining obligations at the historical checkpoint
 
 The pointwise temporal wand is not flushing closed: a two-processor example
 becomes false when flushing enables a composition with a barrier. The newer

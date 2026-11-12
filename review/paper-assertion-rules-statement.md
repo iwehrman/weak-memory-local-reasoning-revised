@@ -1,5 +1,10 @@
 # Paper checkpoint 4B: proposed assertion rules
 
+**Follow-up:** the reviewer approved this exact 47-constructor basis.
+[The soundness checkpoint](paper-assertion-soundness.md) now proves all
+constructors and the four planned derived cell rules, without adding rules.
+The text below records the original statement-stage proposal.
+
 This is the rule-statement checkpoint requested after the accepted
 [4A audit](paper-algebra-audit.md). The precise inductive definition is
 [AssertionDerivation.v](../theories/AssertionDerivation.v).

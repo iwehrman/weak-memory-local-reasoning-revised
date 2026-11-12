@@ -78,9 +78,11 @@ different witnesses for the two conjuncts.
 | Mode weakening | New explicit OV → DJ rule. It packages the proved inclusion of semantic validities. |
 
 There are 21 constructors. None contains `owned_safe`, `owned_valid`, or an
-operational correctness assumption as a premise. Assertion entailments in
-CONS and UNLOCK still require semantic proofs; there is no complete assertion
-proof calculus or automation layer.
+operational correctness assumption as a premise. The original CONS and
+UNLOCK constructors retain semantic entailment premises; derived interfaces
+in [OwnedAssertionRules.v](../theories/OwnedAssertionRules.v) now discharge
+them from assertion proof trees using `assertion_derivation_sound`. The
+assertion basis is sound; no completeness or automation claim is made.
 
 One formalization scope limit is explicit: the LOCK and UNLOCK schemas use
 constant positive processor identifiers, matching the semantic transfer
@@ -131,9 +133,11 @@ presence of that processor's mark. See the
 [complete audit](../review/paper-algebra-audit.md) for all instances,
 including both readings of the small-exchange premise. The interpretation
 and program rules remain unchanged. A
-[47-constructor assertion-rule proposal](../review/paper-assertion-rules-statement.md)
-has been stated and type-checked, with no general assertion-entailment
-premise; its soundness theorem and container reconstruction remain open.
+[47-constructor assertion basis](../review/paper-assertion-rules-statement.md)
+now has a [checked soundness theorem](../review/paper-assertion-soundness.md)
+for the entire assertion grammar, with no global processor-count or invariant
+assumption. All four planned cell rules are derived without adding a
+constructor. The container reconstruction remains the next checkpoint.
 
 The grammar has no recursive predicates. The invariant fragment therefore
 does not describe an unbounded linked container. That expressiveness limit

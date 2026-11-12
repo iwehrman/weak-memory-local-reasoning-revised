@@ -12,6 +12,8 @@ historical modules have colliding names. The complete declaration audit is
 | Result | Declaration and source | Scope |
 | --- | --- | --- |
 | Program calculus, 21 constructors | `owned_derivation`, [OwnedCalculus.v](../theories/OwnedCalculus.v) | Modes OV and DJ; no safety/validity premise in a constructor. CONS and UNLOCK have semantic assertion-entailment premises. |
+| Assertion calculus, 47 constructors | `assertion_derivation`, [AssertionDerivation.v](../theories/AssertionDerivation.v); `assertion_derivation_sound`, [AssertionSoundness.v](../theories/AssertionSoundness.v) | Entire assertion grammar, including wands; no global processor-count, finiteness or invariant hypothesis. |
+| CONS and UNLOCK from assertion proofs | `owned_assertion_consequence`, `owned_assertion_unlock`, [OwnedAssertionRules.v](../theories/OwnedAssertionRules.v) | Derived interfaces to the existing program constructors; no new program rule. |
 | Soundness by induction | `owned_calculus_sound`, same file | `invariant_fragment J` and `two_active_processors active`. No finiteness axiom. |
 | Adequacy directly from a derivation | `owned_derivation_adequacy`, same file | Concrete free-lock start, disjoint invariant pool; empty external frame instantiated internally. Every finite run avoids abort; termination gives the postcondition and ownership decomposition. |
 | Semantic adequacy | `owned_valid_adequacy`, [OwnedAdequacy.v](../theories/OwnedAdequacy.v) | Same standing hypotheses; takes semantic validity. |
@@ -56,6 +58,76 @@ INV, FRAME-STM and SHARE are not hidden unproved constructors: they are
 absent. There is no auxiliary-variable elimination rule. Expression-valued
 lock schemas, recursive predicates and general shared-read permissions are
 not implemented.
+
+## Every assertion constructor and its semantic lemma
+
+All 47 constructors are in `AssertionDerivation.v`; the induction is in
+`AssertionSoundness.v`. Equivalence rules use
+`assertion_equivalence_direction` to select the indicated direction.
+The cell disequality is retained as a pure conjunct. Individual atomic
+processor conditions stay on their constructors; no global hypothesis is
+added by soundness.
+
+| Constructor | Semantic lemma | Source / qualification |
+| --- | --- | --- |
+| `AssertRefl` | `assertion_rule_refl` | [AssertionLogicalRules.v](../theories/AssertionLogicalRules.v) |
+| `AssertTrans` | `assertion_rule_trans` | Same file |
+| `AssertTrue` | `assertion_rule_true` | Same file |
+| `AssertFalse` | `assertion_rule_false` | Same file |
+| `AssertAndIntro` | `assertion_rule_and_intro` | Same file |
+| `AssertAndLeft` | `assertion_rule_and_left` | Same file |
+| `AssertAndRight` | `assertion_rule_and_right` | Same file |
+| `AssertOrLeft` | `assertion_rule_or_left` | Same file |
+| `AssertOrRight` | `assertion_rule_or_right` | Same file |
+| `AssertOrCases` | `assertion_rule_or_cases` | Same file; retains additive context |
+| `AssertExistsIntro` | `assertion_rule_exists_intro` | Same file; capture-avoiding substitution |
+| `AssertExistsElim` | `assertion_rule_exists_elim` | Same file; context and result freshness |
+| `AssertForallIntro` | `assertion_rule_forall_intro` | Same file; antecedent freshness |
+| `AssertForallElim` | `assertion_rule_forall_elim` | Same file |
+| `AssertSubstitute` | `assertion_rule_substitute` | Same file |
+| `AssertPure` | `assertion_rule_pure` | Same file; boolean-only implication premise |
+| `AssertPureCases` | `assertion_rule_pure_cases` | Same file; decidable boolean case split |
+| `AssertEquality` | `assertion_rule_equality` | Same file; equality of expression evaluations |
+| `AssertSeparateMono` | `assertion_conjunction_mono` | [AssertionAlgebra.v](../theories/AssertionAlgebra.v), spatial/temporal instances |
+| `AssertUnitLeft` | `assertion_conjunction_unit_left` | Same file, spatial/temporal instances |
+| `AssertUnitRight` | `assertion_conjunction_unit_right` | Same file, spatial/temporal instances |
+| `AssertAssociative` | `assertion_spatial_associative`, `assertion_temporal_associative` | Same file |
+| `AssertSpatialComm` | `assertion_spatial_commutative` | Same file |
+| `AssertOrSeparateLeft` | `assertion_rule_or_separate_left` | [AssertionLogicalRules.v](../theories/AssertionLogicalRules.v) |
+| `AssertOrSeparateRight` | `assertion_rule_or_separate_right` | Same file |
+| `AssertExistsSeparateLeft` | `assertion_rule_exists_separate_left` | Same file; right operand freshness |
+| `AssertExistsSeparateRight` | `assertion_rule_exists_separate_right` | Same file; left operand freshness |
+| `AssertPureSeparateLeft` | `assertion_rule_pure_separate_left` | Same file; all components use the same stack |
+| `AssertPureSeparateRight` | `assertion_rule_pure_separate_right` | Same file; no buffer-freedom premise |
+| `AssertSpatialWandIntro` | `persistent_spatial_wand_adjoint`, forward | [PersistentRules.v](../theories/PersistentRules.v) |
+| `AssertSpatialWandElim` | `persistent_spatial_wand_adjoint`, backward | Same file |
+| `AssertTemporalWandLeftIntro` | `persistent_temporal_wand_left_adjoint`, forward | Same file |
+| `AssertTemporalWandLeftElim` | `persistent_temporal_wand_left_adjoint`, backward | Same file |
+| `AssertTemporalWandRightIntro` | `persistent_temporal_wand_right_adjoint`, forward | Same file |
+| `AssertTemporalWandRightElim` | `persistent_temporal_wand_right_adjoint`, backward | Same file |
+| `AssertBarrierEmp` | `assertion_barrier_entails_emp` | [AssertionAlgebra.v](../theories/AssertionAlgebra.v) |
+| `AssertBarrierDuplicate` | `assertion_barrier_idempotent` | Same file, spatial/temporal instances |
+| `AssertBarrierDistribute` | `assertion_barrier_distributes_spatial`, `assertion_barrier_distributes_temporal` | [AssertionBarrierAlgebra.v](../theories/AssertionBarrierAlgebra.v) |
+| `AssertBarrierSpatial` | `assertion_strong_barrier_temporal`, spatial projection | [AssertionAlgebra.v](../theories/AssertionAlgebra.v) |
+| `AssertLockRight` | `assertion_temporal_lock_right_spatial` | [AssertionLockAlgebra.v](../theories/AssertionLockAlgebra.v) |
+| `AssertLockLeft` | `assertion_temporal_lock_left_spatial` | Same file |
+| `AssertLocksExclusive` | `assertion_lock_multiplication_common_blocker` | [AssertionAlgebra.v](../theories/AssertionAlgebra.v); explicit active common blocker |
+| `AssertWritesExclusive` | `assertion_spatial_writes_exclusive`, forward | Same file |
+| `AssertWritesCollapse` | `assertion_successive_writes_collapse` | [AssertionWriteAlgebra.v](../theories/AssertionWriteAlgebra.v) |
+| `AssertPointsToWrite` | `assertion_points_to_write_active` | Same file; annotation always denotes an active processor |
+| `AssertCellsSeparate` | `assertion_cells_separate` | [AssertionCellAlgebra.v](../theories/AssertionCellAlgebra.v); pure address disequality |
+| `AssertCellOverwrite` | `assertion_cell_overwrite` | Same file; one-way, later value wins |
+
+The four cell proof trees are `assert_derive_cells_exclusive`,
+`assert_derive_drained_write_cell`, `assert_derive_cell_value_hiding` and
+`assert_derive_drained_history` in
+[AssertionDerivedRules.v](../theories/AssertionDerivedRules.v). They use
+no semantic entailment premises. Syntactic substitution normalization and
+bound-name regressions are in
+[AssertionCellSubstitution.v](../theories/AssertionCellSubstitution.v) and
+[AssertionDerivationExamples.v](../theories/AssertionDerivationExamples.v).
+See [the checkpoint report](../review/paper-assertion-soundness.md) for
+freshness details and the unchanged constructor counts.
 
 ## Derived rules and examples
 
@@ -155,14 +227,14 @@ all-processor statements when describing the printed calculus in the paper.
 
 ## Mechanization figures and outstanding work
 
-At this batch, `make check` passes with **947 audited declarations closed**,
-no axioms and no admitted proofs, using Rocq 9.3.0. There are **148 theory
-files and 24,957 physical lines** listed in `_CoqProject`, including comments,
+At this batch, `make check` passes with **1,007 audited declarations closed**,
+no axioms and no admitted proofs, using Rocq 9.3.0. There are **155 theory
+files and 25,666 physical lines** listed in `_CoqProject`, including comments,
 blank lines, the audit commands, original transcriptions and superseded
 experiments. This is the entire checked development, not a claim that the
-active soundness proof alone is that large. The nine added theory files
-have 1,600 physical lines; 32 historical review results and 52 new results
-account for the 84 newly audited declarations. Declaration totals count
+active soundness proof alone is that large. The seven files added for the
+assertion soundness checkpoint have 634 physical lines and 60 newly audited
+declarations. Declaration totals count
 `Print Assumptions` entries, not every generated inductive eliminator.
 
 Reproduce the line count by summing `len(path.read_text().splitlines())` for
@@ -172,13 +244,14 @@ checks the imported proof objects after compilation. The complete fixed
 bounded-search output for common splitting is in
 [paper-common-split-search.jsonl](../review/paper-common-split-search.jsonl).
 
-Remaining main work: review the 4B assertion-rule statement, prove its
-soundness, rebuild the container without semantic entailment premises (4C),
+Remaining main work: review the completed assertion soundness checkpoint,
+rebuild the container without semantic entailment premises (4C),
 then the original message-passing example and named-lock/mailbox examples.
-The semantic restricted SHARE statement and its mode scope remain open.
+Restricted SHARE's semantic lock-free pre/post premises are approved;
+its proof and mode scope remain open and are deferred until after priority 1.
 Fenced Dekker lacks a shared-access rule; see the scope paragraph in the
 [batch report](../review/paper-independent-batch.md). No completeness or
-automation claim is made for the proposed assertion system.
+automation claim is made for the sound assertion system.
 
 The historical `RepairedSafety`, `PersistentCalculus`, `OwnershipCalculus`,
 `PrivateCalculus`, `RegionalCalculus`, `SeparatedCalculus` and `Retired*`

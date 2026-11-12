@@ -3,8 +3,9 @@ From WMLR Require Import Expressions Machine Assertions AssertionSemantics
   AssertionSubstitution InvariantFragment.
 Import ListNotations.
 
-(** Paper checkpoint 4B: proposed rule statements, not yet a soundness
-    theorem. Nothing in the existing program calculus uses this relation.
+(** Paper checkpoint 4B: the approved 47-constructor assertion basis.
+    [AssertionSoundness.v] proves soundness for the full interpretation;
+    [OwnedAssertionRules.v] supplies derived CONS/UNLOCK interfaces.
     The grammar and interpretation of assertions are unchanged. *)
 Inductive assertion_separator := SepSpatial | SepTemporal.
 

@@ -146,4 +146,11 @@ theories/OwnedAlternativeCounterexamples.v
 theories/PrintedStrongFrame.v
 theories/OwnedCommonSplit.v
 theories/OwnedCommonSplitExamples.v
+theories/AssertionCellAlgebra.v
+theories/AssertionLogicalRules.v
+theories/AssertionSoundness.v
+theories/AssertionCellSubstitution.v
+theories/AssertionDerivedRules.v
+theories/OwnedAssertionRules.v
+theories/AssertionDerivationExamples.v
 theories/Audit.v

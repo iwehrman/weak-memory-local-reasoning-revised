@@ -33,8 +33,9 @@ every law and both readings of the small-exchange premise. Spatial and
 temporal associativity, lock symmetry and the barrier/write laws survive;
 strong-temporal associativity and exchange fail. The assertion
 interpretation and proved program calculus are unchanged. The assertion
-proof-rule [statement is ready](review/paper-assertion-rules-statement.md),
-with its soundness proof still ahead. The
+proof basis now has [checked soundness and derived cell rules](review/paper-assertion-soundness.md)
+for all 47 approved constructors. Derived CONS/UNLOCK interfaces accept
+assertion proof trees; reconstructing the container through them is next. The
 [review response](review/lead-response-after-algebra-audit.md) also checks
 the requested remaining counterexamples in the original interpretation.
 [Independent follow-up](review/paper-independent-results.md) derives the
@@ -91,7 +92,7 @@ make check
 
 `make` compiles every file in `_CoqProject`. `make check` additionally runs
 `rocq check` on `WMLR.Audit` and its dependencies. The audit currently reports
-**947 declarations closed under the global context**, including every new
+**1,007 declarations closed under the global context**, including every new
 lemma/theorem in the final calculus, retrying container, paper algebra audit
 and independent follow-up work.
 There are no admitted proofs or declared axioms. The proofs do not require
@@ -102,10 +103,11 @@ For a fresh build, run `make clean` followed by `make check`. Editors can use
 
 ## Scope and next work
 
-The active calculus-level soundness proof is complete. Assertion entailments
-are still proved semantically by hand. A proposed 47-constructor assertion
-derivation type now type-checks; its soundness theorem and reconstruction
-of the container's entailment proofs are next. Completeness and proof
+The active program and assertion calculi have soundness proofs. The approved
+47-constructor assertion basis also derives cell exclusion, drained-write
+conversion, value hiding and drained-history collapse. The existing container
+proofs still use semantic entailments; rebuilding those obligations as assertion
+derivations is the next checkpoint. Completeness and proof
 automation are outside the current work queue. Expression-valued lock schemas,
 recursive predicates and Chapter 5's experimental extensions are outside the
 proved calculus. LOCK/UNLOCK currently use constant positive processor IDs;

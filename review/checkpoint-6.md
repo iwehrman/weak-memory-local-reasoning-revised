@@ -1,5 +1,10 @@
 # Checkpoint 6 — general lock rules proved; FRAME-STM in disjoint mode refuted
 
+**Subsequent status:** the accepted review dropped FRAME-STM from the active
+target. [Checkpoint 7](checkpoint-7.md) proves FRAME-SP in both modes and
+semantic FRAME-TM from overlap-mode validity, without changing definitions.
+The checkpoint-6 results and reasoning below remain unchanged.
+
 **The general LOCK and UNLOCK rules are proved for the approved invariant
 fragment. The proposed unrestricted FRAME-STM rule in disjoint mode is
 false.** This is a counterexample to the semantic rule itself, not just to

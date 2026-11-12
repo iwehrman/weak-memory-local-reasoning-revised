@@ -27,9 +27,17 @@ are now proved for arbitrary fragment invariants, with UNLOCK in disjoint
 mode. However, unrestricted FRAME-STM in disjoint mode is refuted: the
 spatial and temporal conjuncts may use different splits, and donation can
 destroy the temporal witness. This is a checked invalid semantic triple,
-not merely an auxiliary-lemma failure. The safety predicate is unchanged.
-General FRAME-SP, overlap-mode FRAME-TM, concurrency, and full soundness
-remain open. See [the lock rules and FRAME-STM counterexample](../review/checkpoint-6.md),
+not merely an auxiliary-lemma failure. FRAME-STM has been dropped from the
+current rule target, leaving its assertion abbreviation unchanged.
+General FRAME-SP in both modes and semantic FRAME-TM from overlap-mode
+validity are now proved, after bounded reconstruction searches. The proofs
+add no lock-free-frame, no-unlock, or processor-count condition. FRAME-TM
+uses the approved invariant fragment; FRAME-SP does not need that restriction.
+The safety predicate is unchanged. Development stops before general parallel
+composition, which remains open alongside the full container derivation,
+the original strong-temporal LOAD/STORE axioms for this target, and full
+soundness. See [the general framing checkpoint](../review/checkpoint-7.md),
+[the lock rules and FRAME-STM counterexample](../review/checkpoint-6.md),
 [the implementation checkpoint](../review/checkpoint-5-implementation.md),
 [checkpoint 5](../review/checkpoint-5.md),
 [checkpoint 4](../review/checkpoint-4.md), [checkpoint 3](../review/checkpoint-3.md),

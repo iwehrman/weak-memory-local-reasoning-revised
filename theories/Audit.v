@@ -22,9 +22,30 @@ From WMLR Require Import ResidualUniqueness FlushAttribution FixedFrameExamples.
 From WMLR Require Import LockRepresentation.
 From WMLR Require Import ProgramSteps OwnedSafety OwnedAdequacy OwnedResources OwnedAcceptance.
 From WMLR Require Import OwnedRules StrongTemporalCounterexample.
+From WMLR Require Import OwnedFraming OwnedFramingExamples.
 From WMLR Require Import RetiredHeaps RetiredSafety RetiredTransfer RetiredRules RetiredExamples RetirementFlushing.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
+Print Assumptions resource_repaired_domain.
+Print Assumptions owned_mode_parts.
+Print Assumptions owned_environment_unframe.
+Print Assumptions owned_environment_reframe.
+Print Assumptions owned_update_frame.
+Print Assumptions owned_spatial_reconstruction.
+Print Assumptions owned_safe_spatial_frame.
+Print Assumptions owned_spatial_frame_valid.
+Print Assumptions program_step_buffer_shape.
+Print Assumptions program_step_earns_empty.
+Print Assumptions owned_environment_buffer_merge.
+Print Assumptions ordered_fixed_frame_prefix.
+Print Assumptions owned_temporal_reconstruction.
+Print Assumptions owned_safe_temporal_frame.
+Print Assumptions owned_temporal_frame_valid.
+Print Assumptions owned_counterexample_spatial_frame_valid.
+Print Assumptions owned_holder_spatial_store_valid.
+Print Assumptions owned_pending_temporal_lock_valid.
+Print Assumptions owned_pending_temporal_lock_enabled.
+
 Print Assumptions owned_lock_payload_held.
 Print Assumptions owned_marked_barrier_intro.
 Print Assumptions owned_barrier_suffix_intro.

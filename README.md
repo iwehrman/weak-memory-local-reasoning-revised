@@ -82,10 +82,16 @@ client adequacy theorem; it does not require finiteness. General LOCK and
 UNLOCK are now proved for arbitrary fragment invariants. A checked
 counterexample refutes the proposed unrestricted FRAME-STM rule in disjoint
 mode: its spatial and temporal conjuncts can use different resource splits,
-and donation need not preserve both. The definition is unchanged. General
-FRAME-SP, overlap-mode FRAME-TM, and concurrency remain open for this target;
-development stopped for review before the parallel proof.
-See [the lock rules and FRAME-STM counterexample](review/checkpoint-6.md),
+and donation need not preserve both. FRAME-STM is now omitted from the
+active target while its assertion abbreviation remains unchanged.
+**General FRAME-SP in both modes and semantic FRAME-TM from overlap-mode
+validity are now proved**, after bounded searches found no counterexamples.
+They add no lock-free-frame or no-unlock condition and need no processor-count
+assumption. FRAME-TM uses the existing invariant fragment. The safety and
+assertion definitions are unchanged. Development stops for review before
+the general parallel proof; full corrected soundness remains open.
+See [the general framing checkpoint](review/checkpoint-7.md),
+[the lock rules and FRAME-STM counterexample](review/checkpoint-6.md),
 [the implementation checkpoint](review/checkpoint-5-implementation.md),
 [the definition proposal](review/checkpoint-5.md),
 [its acceptance tests](review/checkpoint-5-acceptance.md),
@@ -202,8 +208,10 @@ Page numbers below are the dissertation's printed page numbers.
 | `theories/OwnedAdequacy.v` | Actual flush attribution, exact empty-frame execution, and operational adequacy | Partial correctness without mode-specific client premises |
 | `theories/OwnedResources.v` | Local updates, donation reassembly, disjointness preservation, and mode inclusion | Resource lemmas for the active target |
 | `theories/OwnedRules.v` | General LOCK in both modes and UNLOCK in disjoint mode, for arbitrary fragment invariants | Checked explicit ownership-transfer rules |
+| `theories/OwnedFraming.v` | General FRAME-SP in both modes; FRAME-TM from overlap validity; exact-frame reconstruction and mark preservation | Checked semantic frame rules for the active target |
 | `theories/OwnedAcceptance.v` | All three fixed acceptance tests, double acquisition, split-token fault, and externally blocked local future | Checked checkpoint-5 implementation regressions |
 | `theories/StrongTemporalCounterexample.v` | Valid unframed release and invalid strong-temporally framed instance, with independent spatial/temporal witnesses | Counterexample to unrestricted FRAME-STM in disjoint mode |
+| `theories/OwnedFramingExamples.v` | Spatially framed donation and private store; temporal acquisition with a genuine foreign pending write | Applications of the proved frame rules |
 | `theories/OwnershipTransfer.v` | Protected-to-private withdrawal at fence/unlock; disjoint-history donation reassembly | Checked transfer rules and a restricted boundary lemma |
 | `theories/OwnershipTransferLimits.v` | Scoped cell versus ordinary points-to; general retained-history donation obstruction | Concrete invalid donation and positive disjoint-history instance |
 | `theories/TransferExamples.v` | Known-present withdrawal, release, private load and retained foreign write | All-run proofs, concrete traces, rejected all-processor transfer postcondition |

@@ -35,6 +35,27 @@ From WMLR Require Import OwnedExists OwnedCalculus OwnedDerivedRules OwnedContai
 From WMLR Require Import AssertionResourceEquivalence AssertionUnits OwnedBufferedLoad OwnedBufferedLoadExamples.
 From WMLR Require Import AssertionAlgebra AssertionAlgebraCounterexamples.
 From WMLR Require Import OriginalLocalCounterexamples OwnedModeElimination.
+From WMLR Require Import OwnedNecessity.
+
+Print Assumptions two_locks_inhabited.
+Print Assumptions two_locks_block_every_processor.
+Print Assumptions all_blocked_has_no_owned_environment.
+Print Assumptions owned_inhabited_but_environmentless_unlock_valid.
+Print Assumptions owned_universal_donation_obstruction_refuted.
+Print Assumptions owned_disjoint_temporal_frame_invalid.
+Print Assumptions owned_disjoint_temporal_frame_counterexample.
+Print Assumptions all_processor_initial_environment.
+Print Assumptions all_processor_lock_post_foreign_mark.
+Print Assumptions owned_all_processor_lock_invalid.
+Print Assumptions owned_soundness_without_fragment_refuted.
+Print Assumptions single_pool_models.
+Print Assumptions single_initial_environment.
+Print Assumptions owned_singleton_double_acquire_derived.
+Print Assumptions single_first_acquire_step.
+Print Assumptions single_second_acquire_step.
+Print Assumptions single_double_acquire_execution.
+Print Assumptions owned_singleton_double_acquire_invalid.
+Print Assumptions owned_soundness_without_two_processors_refuted.
 
 Print Assumptions original_impossible_future_before.
 Print Assumptions original_wand_after_barrier_composition.
@@ -43,6 +64,7 @@ Print Assumptions original_wand_flush.
 Print Assumptions original_pointwise_temporal_wand_not_flush_closed.
 Print Assumptions original_flushing_closure_false.
 Print Assumptions original_arbitrary_invariant_unlock_invalid.
+Print Assumptions original_inv_alone_counterexample.
 Print Assumptions owned_derivation_unlock_free_overlap.
 Print Assumptions owned_derivation_overlap_unlock_free.
 Print Assumptions owned_overlap_derivable_iff_unlock_free.

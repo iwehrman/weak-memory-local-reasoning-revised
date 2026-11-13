@@ -193,4 +193,5 @@ theories/OwnedShareOverlap.v
 theories/OwnedShareOverlapExamples.v
 theories/OriginalLocalCounterexamples.v
 theories/OwnedModeElimination.v
+theories/OwnedNecessity.v
 theories/Audit.v

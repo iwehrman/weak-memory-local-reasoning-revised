@@ -109,3 +109,30 @@ Proof.
   - apply full_satisfies_pure in HJ; discriminate.
   - apply two_processor_empty_not_locked,Hheld.
 Qed.
+
+(** Optional D1: INV alone, with an explicitly vacuous valid premise and
+    an inhabited invalid conclusion. No frame rule is used. *)
+Theorem original_inv_alone_counterexample :
+  valid_specification two_processors A.Emp
+    (A.Spatial (A.Pure BFalse) (A.Spatial A.Emp (A.Lock (EVal 1%Z))))
+    (Concurrent.skip (EVal 1%Z))
+    (A.Spatial (A.Pure BFalse) (A.Spatial (A.Pure BFalse) (A.Lock (EVal 1%Z)))) /\
+  ~ valid_specification two_processors (A.Pure BFalse)
+    (A.Spatial A.Emp (A.Lock (EVal 1%Z))) (Concurrent.skip (EVal 1%Z))
+    (A.Spatial (A.Pure BFalse) (A.Lock (EVal 1%Z))).
+Proof.
+  split.
+  - intros s m (r & Er & a & b & Hsp & Hfalse & HB); discriminate Hfalse.
+  - intros Hvalid.
+    assert (HP : full_satisfies two_processors zero_stack owned_lock_memory
+      (A.Spatial A.Emp (A.Lock (EVal 1%Z)))).
+    { exists owned_lock_resource; split; [reflexivity |].
+      exists (empty_resource_value two_processors),owned_lock_resource; split.
+      - apply spatial_empty_left.
+      - split.
+        + split; [intros; reflexivity |]. split; [intros; reflexivity |intros i H; exact H].
+        + split; [intros; reflexivity |]. split; [intros; reflexivity |apply owned_lock_held]. }
+    destruct (Hvalid _ _ HP 1) as [Hterminal _].
+    destruct (Hterminal ltac:(eexists; reflexivity)) as (r & Er & a & b & Hsp & Hfalse & HB).
+    discriminate Hfalse.
+Qed.

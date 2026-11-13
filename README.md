@@ -108,9 +108,9 @@ make check
 
 `make` compiles every file in `_CoqProject`. `make check` additionally runs
 `rocq check` on `WMLR.Audit` and its dependencies. The audit currently reports
-**1,284 declarations closed under the global context**, including every new
+**1,316 declarations closed under the global context**, including every new
 lemma/theorem in the final calculus, retrying container, paper algebra audit
-and independent follow-up work.
+and paper-strengthening work.
 There are no admitted proofs or declared axioms. The proofs do not require
 choice, functional extensionality, or a finite processor domain.
 
@@ -138,6 +138,16 @@ is present without
 a separate complete sequential soundness theorem.
 
 The original transcriptions and checked counterexamples remain available.
+
+The paper-strengthening results are recorded in the
+[A/B report](review/paper-strengthening-ab.md) and
+[C/D report](review/paper-strengthening-c.md). They include counterexamples
+under the original semantics, elimination of the overlap-mode judgment for
+unlock-free derivations, and counterexamples establishing the need for the
+framing and soundness restrictions. The proposed universal donation
+obstruction needs a stronger non-vacuity hypothesis; the isolated original
+FRAME-TM counterexample remains optional work. The core semantics and both
+calculus definitions are unchanged.
 See [the obstruction history](notes/soundness-status.md),
 [the independent review](review/independent-review.md) and
 [the response establishing the replacement direction](review/lead-response.md).

@@ -5,9 +5,11 @@
 The dissertation opens with Dekker's algorithm, made correct on this
 machine by a fence after each store. Each thread reads a flag that the
 other writes, with no lock. The calculus cannot express that: a thread may
-touch a cell only if it owns it or holds the lock. The dissertation's
-``daring'' rules were meant for this and were left as future work; they
-still are.
+touch a cell only if it owns it or holds the lock. The dissertation's ``daring'' rules were meant for this. They would let a
+thread load from or store to the invariant's cells without the lock,
+provided that the single command, specified with $J$ in hand, gives $J$
+back. The dissertation doubted their soundness and left them as future
+work; they still are.
 
 \paragraph{Realistic locks.}
 The one lock is global and blocks every other processor. Programmer-level

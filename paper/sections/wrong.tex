@@ -44,7 +44,8 @@ Assertions are closed under flushing (Prop.~9)
     pending write, and fails once the write flushes.
     \rocq{original_flushing_closure_false}
   & Implications quantify over all futures of the current memory. \\[2pt]
-Conjecture~1
+Conjecture~1: after a step, a spatiotemporal split of a spatially
+split memory is spatial
   & A cell duplicated across $\shash$ with equal values is not a spatial
     split. \rocq{printed_conjecture1_false}
   & Not needed by the final proof. \\[2pt]
@@ -54,7 +55,8 @@ Conjecture~1
   & See Section~\ref{sec:changes}. \\
 \bottomrule
 \end{tabularx}
-\caption{Original claims that fail, each with a checked counterexample.}
+\caption{Original claims that fail, each with a checked counterexample.
+Appendix~\ref{app:definitions} states the three repaired definitions.}
 \label{tab:local}
 \end{table}
 

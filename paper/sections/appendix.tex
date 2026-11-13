@@ -84,11 +84,122 @@ In \rn{lock} and \rn{unlock} the processor is a constant.}
 \end{figure}
 
 \FloatBarrier
+\section{The safety predicate in full}
+\label{app:safety}
+
+This appendix spells out the definitions that Section~\ref{sec:model} gives
+in prose (\rocq{owned_safe}, \rocq{owned_valid}).
+
+\paragraph{Resources and futures.}
+A \emph{resource} $\nu = (\mu,\Gamma)$ is a well-formed generalized memory
+whose marks $\Gamma$ are active processors, and whose heap is empty if
+$\Gamma$ is. Its \emph{futures}, written $\nu' \modrefines \nu$, are the
+resources reachable by any number of steps of two kinds:
+\begin{itemize}[nosep]
+  \item add marks: $(\mu,\Gamma)$ becomes $(\mu,\Gamma')$ with
+        $\Gamma \subseteq \Gamma'$;
+  \item flush: $(\mu,\Gamma)$ becomes $(\mu',\Gamma')$, where $\mu'$ is
+        $\mu$ after the oldest buffered write of some processor $i$ not
+        blocked in $\mu$ moves to the heap, and
+        $\Gamma \cup \set{i} \subseteq \Gamma'$.
+\end{itemize}
+
+\paragraph{Environments.}
+An \emph{environment} of $\nu$ at stack $s$, in mode $m$, consists of a
+pool $\mu_J$, a frame resource $\nu_F$, a machine memory $\mu_0$ and a
+phase $\phi$, which is either \textsf{free} or $\textsf{held}(i)$, such
+that
+\begin{enumerate}[nosep]
+  \item $\mu_0 \in \mu_J \ssep \mu$ for the memory $\mu$ of some resource in
+        $\nu_F \mhash \nu$;
+  \item in mode $\modedj$, the addresses of $\nu_F$ and of $\nu$ are
+        disjoint;
+  \item if $\phi = \textsf{free}$, no processor is blocked in $\mu_0$ and
+        $(s,\mu_J,\setprocessors) \sentails J$; and
+  \item if $\phi = \textsf{held}(i)$, the processors blocked in $\mu_0$ are
+        exactly those other than $i$, and $\mu_J$ is empty.
+\end{enumerate}
+
+\paragraph{Updates.}
+Let a program step perform the primitive command $\alpha$, taking the local
+resource from $\nu = (\mu,\Gamma)$ to $\nu' = (\mu',\Gamma')$, the pool from
+$\mu_J$ to $\mu'_J$ and the phase from $\phi$ to $\phi'$. The step is a
+permitted \emph{update} when
+\begin{enumerate}[nosep]
+  \item \emph{transfer:}
+    if $\alpha$ is $\clock_i$ then $\phi = \textsf{free}$,
+    $\phi' = \textsf{held}(i)$, $\mu'_J$ is empty and $\mu'$ blocks exactly
+    the processors other than $i$;
+    if $\alpha$ is $\cunlock_i$ then $\phi = \textsf{held}(i)$,
+    $\phi' = \textsf{free}$, $\mu$ blocks exactly the processors other than
+    $i$ and $\mu'$ blocks none;
+    otherwise $\phi' = \phi$, $\mu'_J = \mu_J$, and $\mu'$ blocks the same
+    processors as $\mu$;
+  \item \emph{footprint:} every address of $\mu'_J$ or $\mu'$ is an address
+    of $\mu_J$ or $\mu$; and
+  \item \emph{mark budget:} $\Gamma' \subseteq \Gamma \cup \set{i}$ if
+    $\alpha$ is $\cfence_i$, $\clock_i$ or $\cunlock_i$, and
+    $\Gamma' \subseteq \Gamma$ otherwise.
+\end{enumerate}
+
+\paragraph{Safety and validity.}
+$\safe{0}{c,s,\nu,J,Q}$ always holds. $\safe{n+1}{c,s,\nu,J,Q}$ holds in
+mode $m$ when, for every future $\nu_1 \modrefines \nu$:
+\begin{enumerate}[nosep]
+  \item if $c$ has terminated then $s,\nu_1 \sentails Q$; and
+  \item for every environment $(\mu_J,\nu_F,\mu_0,\phi)$ of $\nu_1$ at $s$,
+    the configuration $c,(s,\mu_0)$ does not abort, and for every program
+    step from it to $c',(s',\mu_1)$ there are $\nu'$, $\mu'_J$ and $\phi'$
+    such that $(\mu'_J,\nu_F,\mu_1,\phi')$ is an environment of $\nu'$ at
+    $s'$, the step is a permitted update from $(\nu_1,\mu_J,\phi)$ to
+    $(\nu',\mu'_J,\phi')$, and $\safe{n}{c',s',\nu',J,Q}$.
+\end{enumerate}
+$\mtruespec{J}{m}{P}{c}{Q}$ holds when $s,\nu \sentails P$ implies
+$\safe{n}{c,s,\nu,J,Q}$ in mode $m$ for every $n$. Flushes by the machine
+are not program steps. They are accounted for by the quantification over
+futures of the local resource, and by the fresh choice of frame at each
+level of the definition.
+
+\section{The repaired definitions}
+\label{app:definitions}
+
+Three definitions of the dissertation's model were replaced
+(Table~\ref{tab:local}). Each replacement is more restrictive than the
+original.
+
+\paragraph{Buffer overriding.}
+Originally, $b \override b'$ is the set of interleavings of the buffers $b$
+and $b'$ in which the most recent write to each address is the one that
+$b'$ overriding $b$ would give. That constrains only the last write to each
+address. In the repair, an interleaving is built from the oldest write
+onwards, and a write to address $\ell$ may be taken from the later buffer
+$b'$ only when no write to $\ell$ remains in $b$
+(\rocq{ordered_overrides}). All of $b$'s writes to an address therefore
+precede all of $b'$'s.
+
+\paragraph{Temporal compatibility.}
+Originally, $\mu_0$ may precede $\mu_1$ when their blocked sets are
+disjoint and, for processors $i \neq j$ that are \emph{unblocked in both},
+buffer $i$ of $\mu_0$ writes to no address in the heap of $\mu_1$ and to no
+address written by buffer $j$ of $\mu_1$. In the repair the same two
+conditions are required of all active processors, blocked or not
+(\rocq{stable_compatible}).
+
+\paragraph{Implications.}
+Originally, $\nu$ satisfies $P \fsepi Q$ when every composition of $\nu$
+with a resource satisfying $P$ satisfies $Q$, and similarly for the two
+temporal implications. In the repair the same is required of every future
+of $\nu$, so that an implication which holds now cannot be falsified by a
+flush.
+
+\FloatBarrier
 \section{The dissertation's assertion laws}
 \label{app:statements}
 
-Table~\ref{tab:algebra} classifies every law of the dissertation's
-Figures~4.5 and~4.6 in the final interpretation. A proved law holds for all
+The dissertation states its laws for assertions in two figures, one of
+equivalences and one of entailments (Figures~4.5 and~4.6).
+Table~\ref{tab:algebra} classifies every one of them in the final
+interpretation. A proved law holds for all
 assertions, implications included, and all processor domains. Each refuted
 law is also refuted in the dissertation's original interpretation.
 
@@ -302,3 +413,102 @@ Daring load and store & Not available (Section~\ref{sec:open}). \\
 Alternative Axioms and Inference Rules''.}
 \label{tab:derived}
 \end{table}
+
+\FloatBarrier
+\section{The programs of Section~\ref{sec:proofs}}
+\label{app:examples}
+
+This appendix gives the programs and specifications that
+Section~\ref{sec:proofs} describes in prose. Conditionals and loops are the
+dissertation's abbreviations for choice, iteration and $\cassume{}$.
+
+\paragraph{The retrying container.}
+With $J = f \fcell 0 \disj (f \fcell 1 \fsep X)$ as in
+Section~\ref{sec:proofs}, taking the item is
+\begin{align*}
+\mathit{take} \;=\;\;
+ & \cassign{g}{0}_1;\ \opwhile\ g = 0\ \opdo \\
+ & \quad (\clock_1;\ \cload{r}{f}_1;\
+     \opif\ r = 1\ \opthen\ (\cstore{f}{0}_1;\ \cunlock_1;\ \cassign{g}{1}_1)\
+     \opelse\ (\cunlock_1;\ \cassign{g}{0}_1))
+\end{align*}
+and $\mathit{put}$ is the same with the test $r = 0$ and the store
+$\cstore{f}{1}_1$. The program is
+$\mathit{take};\ \cstore{x}{9}_1;\ \mathit{put}$, and the derived
+specification is $\spec{J}{R}{c}{R}$ with $R = y \fwrite{2} 17$
+(\rocq{owned_retrying_container_derived}).
+
+\paragraph{Message passing.}
+With $J$ as in Section~\ref{sec:own-example-repaired}, the two threads and
+their composition have the specifications
+\begin{align*}
+ & \spec{J}{t \fcell 0}
+    {\cseq{\clock_1}{\cseq{\cstore{d}{1}_1}{\cunlock_1}}}{\femp} \\
+ & \spec{J}{r \fcell 0}{\mathit{receiver}}
+    {(r \fcell 0 \conj x = 0) \disj (d \fcell 2 \conj x = 1)} \\
+ & \spec{J}{t \fcell 0 \fsep r \fcell 0}{\mathit{sender} \oppar
+    \mathit{receiver}}
+    {(r \fcell 0 \conj x = 0) \disj (d \fcell 2 \conj x = 1)}
+\end{align*}
+(\rocq{mp_sender_derived}, \rocq{mp_receiver_derived},
+\rocq{mp_parallel_derived}). The sender gives up its token. The receiver
+ends either still holding its token, having read $0$, or owning the data
+cell with the value $2$, having read $1$.
+
+\paragraph{Named locks.}
+For a flag cell $l$, a processor $i$ and a scratch register $x$:
+\begin{align*}
+\mathit{acquire}_i(l,x) \;=\;\;
+ & \cassign{x}{1}_i;\ \opwhile\ x = 1\ \opdo \\
+ & \quad (\clock_i;\ \cload{x}{l}_i;\
+     \opif\ x = 0\ \opthen\ (\cstore{l}{1}_i;\ \cunlock_i)\
+     \opelse\ \cunlock_i) \\
+\mathit{release}_i(l) \;=\;\;
+ & \clock_i;\ \cstore{l}{0}_i;\ \cunlock_i
+\end{align*}
+The loop exits with $x = 0$, the value read from a flag that was clear and
+is now set. For locks $l_1,\dots,l_n$ with invariants $I_1,\dots,I_n$, the
+global invariant is
+\[
+  J \;=\; \bigl((l_1 \fcell 0 \fsep I_1) \disj l_1 \fcell 1\bigr) \fsep
+          \cdots \fsep
+          \bigl((l_n \fcell 0 \fsep I_n) \disj l_n \fcell 1\bigr),
+\]
+and the two derived rules of Section~\ref{sec:proofs} hold for each $l_k$,
+given $x \notin \fv{J}$.
+
+\paragraph{The mailbox.}
+There is one named lock $l$, a flag cell $m$ that says whether the mailbox
+is full, and message cells $a_1,\dots,a_K$ that are to receive the values
+$v_1,\dots,v_K$. Write $A(\vec{w})$ for
+$a_1 \fcell w_1 \fsep \cdots \fsep a_K \fcell w_K$. The lock's invariant is
+\[
+  I_l \;=\; m \fcell 0 \;\disj\; (m \fcell 1 \fsep A(\vec{v})),
+\]
+and $J = (l \fcell 0 \fsep I_l) \disj l \fcell 1$. The producer runs on
+processor $1$ and the consumer on processor $2$; the processor
+annotations on their stores, loads and assignments are omitted here:
+\begin{align*}
+\mathit{producer} \;=\;\;
+ & \cstore{a_1}{v_1};\ \dots;\ \cstore{a_K}{v_K};\
+   \mathit{acquire}_1(l,z);\ \cstore{m}{1};\ \mathit{release}_1(l) \\
+\mathit{consumer} \;=\;\;
+ & \cassign{y}{1};\ \opwhile\ y = 1\ \opdo \\
+ & \quad (\mathit{acquire}_2(l,y);\ \cload{y}{m}; \\
+ & \quad\ \ \opif\ y = 1\ \opthen\
+     (\cstore{m}{0};\ \mathit{release}_2(l);\ \cassign{y}{0})\
+     \opelse\ (\mathit{release}_2(l);\ \cassign{y}{1})); \\
+ & \cload{w}{a_1};\ \dots;\ \cload{w}{a_K}
+\end{align*}
+The derived specifications are
+\begin{align*}
+ & \spec{J}{A(\vec{0})}{\mathit{producer}}{\femp} \\
+ & \spec{J}{\femp}{\mathit{consumer}}{A(\vec{v})} \\
+ & \spec{J}{A(\vec{0})}{\mathit{producer} \oppar \mathit{consumer}}
+        {A(\vec{v})}
+\end{align*}
+(\rocq{mailbox_producer_derived}, \rocq{mailbox_consumer_derived},
+\rocq{mailbox_parallel_derived}). The producer starts with the message
+cells, all zero, and ends with nothing: it has put them in the mailbox. The
+consumer starts with nothing and ends owning the message cells with the
+producer's values.

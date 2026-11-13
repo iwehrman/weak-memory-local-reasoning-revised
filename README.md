@@ -119,5 +119,9 @@ University of Texas at Austin, December 2012.
 The definitions were transcribed from the LaTeX source at blob
 `ac4c24370dc22b3ca0892294206c2c6ac138d993`.
 
+## License
+
+[MIT](LICENSE).
+
 [dissertation]: https://wehrman.org/pub/dissertation.pdf
 [latex]: https://github.com/iwehrman/Weak-Memory-Local-Reasoning

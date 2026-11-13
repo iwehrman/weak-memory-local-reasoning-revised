@@ -16,11 +16,11 @@ Definition repaired_spatiotemporal active a b out : Prop :=
 Definition repaired_temporal active a b out : Prop :=
   stable_compatible active (underlying a) (underlying b) /\ temporal active a b out.
 
-Theorem repaired_in_printed active a b out :
+Theorem repaired_in_original active a b out :
   repaired_spatiotemporal active a b out -> spatiotemporal active a b out.
 Proof.
   intros [[Hcompat Hmerge] Hg]. split; [|exact Hg].
-  apply ordered_in_printed. split; [apply stable_implies_printed_compatible, Hcompat | exact Hmerge].
+  apply ordered_in_original. split; [apply stable_implies_original_compatible, Hcompat | exact Hmerge].
 Qed.
 
 Lemma spatial_compatible_stable active a b :
@@ -51,7 +51,7 @@ Theorem repaired_well_formed active a b out :
   repaired_spatiotemporal active a b out -> generalized_well_formed active out.
 Proof.
   intros Ha Hb H. eapply spatiotemporal_well_formed; [exact Ha | exact Hb |].
-  apply repaired_in_printed, H.
+  apply repaired_in_original, H.
 Qed.
 
 Lemma repaired_empty_left active r : repaired_spatiotemporal active empty_generalized r r.
@@ -62,11 +62,11 @@ Proof. apply spatial_in_repaired, spatial_empty_right. Qed.
 
 Lemma repaired_empty_left_unique active r out :
   repaired_spatiotemporal active empty_generalized r out -> generalized_equiv out r.
-Proof. intros H; apply (spatiotemporal_empty_left_unique active), repaired_in_printed, H. Qed.
+Proof. intros H; apply (spatiotemporal_empty_left_unique active), repaired_in_original, H. Qed.
 
 Lemma repaired_empty_right_unique active r out :
   repaired_spatiotemporal active r empty_generalized out -> generalized_equiv out r.
-Proof. intros H; apply (spatiotemporal_empty_right_unique active), repaired_in_printed, H. Qed.
+Proof. intros H; apply (spatiotemporal_empty_right_unique active), repaired_in_original, H. Qed.
 
 (** Compatibility depends only on domains and blocking, not on the order of
     an intermediate merge. This transfers the compatibility theorem from
@@ -240,7 +240,7 @@ Lemma repaired_temporal_join active a b :
   repaired_temporal active a b (generalized_temporal_join a b).
 Proof.
   intros Hstable Hcomplete. split; [exact Hstable |]. split.
-  - split; [apply stable_implies_printed_compatible, Hstable |].
+  - split; [apply stable_implies_original_compatible, Hstable |].
     split; [intros loc; reflexivity |]. split; intros i; reflexivity.
   - split; [exact Hcomplete | intros i; reflexivity].
 Qed.
@@ -262,7 +262,7 @@ Proof.
     + apply repaired_temporal_join; [exact Sab |].
       intros i Hi. apply Hsc, (Hfg i); left; exact Hi.
     + split; [exact Sout |]. split.
-      * split; [apply stable_implies_printed_compatible, Sout |]. split.
+      * split; [apply stable_implies_original_compatible, Sout |]. split.
         -- intros loc. rewrite Hsh. cbn [generalized_temporal_join underlying temporal_join shared_heap].
            unfold heap_override. rewrite Hfh. unfold heap_override.
            destruct (shared_heap (underlying c) loc); [reflexivity |].
@@ -289,7 +289,7 @@ Proof.
     exists (generalized_temporal_join b c). split.
     + apply repaired_temporal_join; [exact Sbc |]. intros i Hi; exact (proj2 (Hempty i Hi)).
     + split; [exact Sout |]. split.
-      * split; [apply stable_implies_printed_compatible, Sout |]. split.
+      * split; [apply stable_implies_original_compatible, Sout |]. split.
         -- intros loc. rewrite Hsh. cbn [generalized_temporal_join underlying temporal_join shared_heap].
            unfold heap_override. rewrite Hfh. unfold heap_override.
            destruct (shared_heap (underlying c) loc); [reflexivity |].

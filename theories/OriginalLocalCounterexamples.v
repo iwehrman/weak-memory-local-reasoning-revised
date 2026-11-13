@@ -8,17 +8,17 @@ Import ListNotations.
     Unlike [generalized_future], this relation has no mark-only step.
     Both endpoints below are well-formed resources, so membership of marks
     in the active processor domain is already enforced. *)
-Definition printed_generalized_flush active (before after : generalized_memory) : Prop :=
+Definition original_generalized_flush active (before after : generalized_memory) : Prop :=
   exists i, active i /\
     (forall j, complete before j -> complete after j) /\
     complete after i /\ flush_at active i (underlying before) (underlying after).
 
-Inductive printed_generalized_future active : generalized_memory -> generalized_memory -> Prop :=
-| PrintedFutureRefl before : printed_generalized_future active before before
-| PrintedFutureNext before middle after :
-    printed_generalized_flush active before middle ->
-    printed_generalized_future active middle after ->
-    printed_generalized_future active before after.
+Inductive original_generalized_future active : generalized_memory -> generalized_memory -> Prop :=
+| OriginalFutureRefl before : original_generalized_future active before before
+| OriginalFutureNext before middle after :
+    original_generalized_flush active before middle ->
+    original_generalized_future active middle after ->
+    original_generalized_future active before after.
 
 Lemma original_impossible_future_before s :
   models two_processors s wand_pending_resource impossible_future.
@@ -48,7 +48,7 @@ Proof.
 Qed.
 
 Lemma original_wand_flush :
-  printed_generalized_flush two_processors (proj1_sig wand_pending_resource)
+  original_generalized_flush two_processors (proj1_sig wand_pending_resource)
     (proj1_sig wand_flushed_resource).
 Proof.
   exists 1%positive; split; [left; reflexivity |].
@@ -57,18 +57,18 @@ Proof.
 Qed.
 
 Theorem original_pointwise_temporal_wand_not_flush_closed s :
-  printed_generalized_future two_processors (proj1_sig wand_pending_resource)
+  original_generalized_future two_processors (proj1_sig wand_pending_resource)
     (proj1_sig wand_flushed_resource) /\
   models two_processors s wand_pending_resource impossible_future /\
   ~ models two_processors s wand_flushed_resource impossible_future.
 Proof.
-  split; [eapply PrintedFutureNext; [apply original_wand_flush |constructor] |].
+  split; [eapply OriginalFutureNext; [apply original_wand_flush |constructor] |].
   split; [apply original_impossible_future_before |apply original_impossible_future_after].
 Qed.
 
 Theorem original_flushing_closure_false :
   ~ (forall p s (before after : resource two_processors),
-      printed_generalized_future two_processors (proj1_sig before) (proj1_sig after) ->
+      original_generalized_future two_processors (proj1_sig before) (proj1_sig after) ->
       models two_processors s before p -> models two_processors s after p).
 Proof.
   intros Hclosed; apply (original_impossible_future_after zero_stack).

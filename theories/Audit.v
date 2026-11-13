@@ -451,22 +451,22 @@ Print Assumptions concrete_points_to_cell.
 Print Assumptions concrete_pending_not_points_to.
 Print Assumptions temporal_rejects_pending_before_complete.
 Print Assumptions spatiotemporal_permits_pending_before_complete.
-Print Assumptions printed_conjecture1_false.
+Print Assumptions original_conjecture1_false.
 Print Assumptions steps_domain_subset.
 Print Assumptions spatial_frame_recombination_sets.
 Print Assumptions spatial_frame_recombination_region.
 Print Assumptions ordered_is_override.
 Print Assumptions ordered_associative.
 Print Assumptions ordered_head_origin.
-Print Assumptions printed_buffer_override_not_associative.
+Print Assumptions original_buffer_override_not_associative.
 Print Assumptions spatial_in_ordered.
 Print Assumptions temporal_in_ordered.
 Print Assumptions ordered_flush_split.
 Print Assumptions ordered_flushes_split.
-Print Assumptions stable_implies_printed_compatible.
+Print Assumptions stable_implies_original_compatible.
 Print Assumptions stable_compatibility_associative.
 Print Assumptions temporal_join_associative.
-Print Assumptions printed_spatiotemporal_not_associative.
+Print Assumptions original_spatiotemporal_not_associative.
 Print Assumptions safe_index_mono.
 Print Assumptions consequence_valid.
 Print Assumptions disjunction_valid.
@@ -475,13 +475,13 @@ Print Assumptions safe_execution_no_abort.
 Print Assumptions safe_execution_post.
 Print Assumptions assignment_preserves_environment.
 Print Assumptions repaired_assignment_action.
-Print Assumptions printed_assignment_invalid.
-Print Assumptions printed_assignment_soundness_false.
+Print Assumptions original_assignment_invalid.
+Print Assumptions original_assignment_soundness_false.
 
 Print Assumptions ordered_results_spec.
 Print Assumptions select_left_spec.
 Print Assumptions select_right_spec.
-Print Assumptions repaired_in_printed.
+Print Assumptions repaired_in_original.
 Print Assumptions spatial_in_repaired.
 Print Assumptions repaired_temporal_in_spatiotemporal.
 Print Assumptions repaired_well_formed.
@@ -836,7 +836,7 @@ Print Assumptions assertion_temporal_empty_left_spatial.
 Print Assumptions assertion_strong_barrier_temporal.
 Print Assumptions assertion_barrier_suffix_elim.
 Print Assumptions assertion_barrier_suffix_buffer.
-Print Assumptions assertion_wand_free_in_printed.
+Print Assumptions assertion_wand_free_in_original.
 Print Assumptions assertion_empty_self_spatial.
 Print Assumptions assertion_spatial_empty_buffers_temporal.
 Print Assumptions assertion_barrier_idempotent.
@@ -859,9 +859,9 @@ Print Assumptions assertion_lock_multiplication_model.
 Print Assumptions assertion_lock_multiplication_refuted.
 Print Assumptions assertion_lock_countermodel_not_lock_complete.
 Print Assumptions assertion_lock_countermodel_no_environment.
-Print Assumptions assertion_strong_associativity_printed_right_model.
-Print Assumptions assertion_strong_associativity_printed_left_not_model.
-Print Assumptions assertion_lock_multiplication_printed_model.
+Print Assumptions assertion_strong_associativity_original_right_model.
+Print Assumptions assertion_strong_associativity_original_left_not_model.
+Print Assumptions assertion_lock_multiplication_original_model.
 
 (** Complete paper 4A audit: barriers, locks, writes and all exchange cases. *)
 Print Assumptions assertion_strong_associativity_left_spatial_not_model.
@@ -974,54 +974,54 @@ Print Assumptions owned_store_fence_cell_witness.
 (** Independent paper queue batch after the 4B statement. *)
 From WMLR Require Import ReviewObstructions.
 Print Assumptions ReviewObstructions.retired_later_cell_can_erase_earlier.
-Print Assumptions ReviewObstructions.printed_history_invention.
-From WMLR Require Import PrintedDerivations.
-Print Assumptions PrintedDerivations.cell_elim.
-Print Assumptions PrintedDerivations.cell_intro.
-Print Assumptions PrintedDerivations.spatial_nobuf.
-Print Assumptions PrintedDerivations.spatial_parts.
-Print Assumptions PrintedDerivations.lock_elim.
-Print Assumptions PrintedDerivations.emp_elim.
-Print Assumptions PrintedDerivations.E_invent.
-Print Assumptions PrintedDerivations.temporal_parts.
-Print Assumptions PrintedDerivations.E_unit.
-Print Assumptions PrintedDerivations.E_donate.
-Print Assumptions PrintedDerivations.E_import.
-Print Assumptions PrintedDerivations.entails_refl.
-Print Assumptions PrintedDerivations.skip_frame_condition.
-Print Assumptions PrintedDerivations.printed_derives_stale_value.
-Print Assumptions PrintedDerivations.printed_derives_foreign_barrier.
-Print Assumptions PrintedDerivations.skip_needs_post.
-Print Assumptions PrintedDerivations.two_wf.
-Print Assumptions PrintedDerivations.cell7_wf.
-Print Assumptions PrintedDerivations.held7_wf.
-Print Assumptions PrintedDerivations.held7_pre.
-Print Assumptions PrintedDerivations.held7_not_post.
-Print Assumptions PrintedDerivations.printed_calculus_stale_value_unsound.
-Print Assumptions PrintedDerivations.pend_wf.
-Print Assumptions PrintedDerivations.held_pend_wf.
-Print Assumptions PrintedDerivations.bare_lock_wf.
-Print Assumptions PrintedDerivations.held_pend_pre.
-Print Assumptions PrintedDerivations.held_pend_not_post.
-Print Assumptions PrintedDerivations.printed_calculus_foreign_barrier_unsound.
-From WMLR Require Import PrintedPointsToDerivations.
-Print Assumptions PrintedPointsToDerivations.printed_cell_elim.
-Print Assumptions PrintedPointsToDerivations.printed_cell_intro.
-Print Assumptions PrintedPointsToDerivations.printed_points_invent.
-Print Assumptions PrintedPointsToDerivations.printed_points_unit.
-Print Assumptions PrintedPointsToDerivations.printed_points_donate.
-Print Assumptions PrintedPointsToDerivations.printed_points_import.
-Print Assumptions PrintedPointsToDerivations.printed_points_derives_stale_value.
-Print Assumptions PrintedPointsToDerivations.printed_points_derives_foreign_barrier.
-Print Assumptions PrintedPointsToDerivations.printed_points_held7_pre.
-Print Assumptions PrintedPointsToDerivations.printed_points_held7_not_post.
-Print Assumptions PrintedPointsToDerivations.printed_points_stale_value_unsound.
-Print Assumptions PrintedPointsToDerivations.printed_points_foreign_barrier_unsound.
-From WMLR Require Import PrintedStrongFrame.
-Print Assumptions PrintedStrongFrame.printed_stm_donation_derivation.
-Print Assumptions PrintedStrongFrame.printed_stm_initial_models.
-Print Assumptions PrintedStrongFrame.printed_stm_final_impossible.
-Print Assumptions PrintedStrongFrame.printed_strong_frame_counterexample.
+Print Assumptions ReviewObstructions.original_history_invention.
+From WMLR Require Import OriginalDerivations.
+Print Assumptions OriginalDerivations.cell_elim.
+Print Assumptions OriginalDerivations.cell_intro.
+Print Assumptions OriginalDerivations.spatial_nobuf.
+Print Assumptions OriginalDerivations.spatial_parts.
+Print Assumptions OriginalDerivations.lock_elim.
+Print Assumptions OriginalDerivations.emp_elim.
+Print Assumptions OriginalDerivations.E_invent.
+Print Assumptions OriginalDerivations.temporal_parts.
+Print Assumptions OriginalDerivations.E_unit.
+Print Assumptions OriginalDerivations.E_donate.
+Print Assumptions OriginalDerivations.E_import.
+Print Assumptions OriginalDerivations.entails_refl.
+Print Assumptions OriginalDerivations.skip_frame_condition.
+Print Assumptions OriginalDerivations.original_derives_stale_value.
+Print Assumptions OriginalDerivations.original_derives_foreign_barrier.
+Print Assumptions OriginalDerivations.skip_needs_post.
+Print Assumptions OriginalDerivations.two_wf.
+Print Assumptions OriginalDerivations.cell7_wf.
+Print Assumptions OriginalDerivations.held7_wf.
+Print Assumptions OriginalDerivations.held7_pre.
+Print Assumptions OriginalDerivations.held7_not_post.
+Print Assumptions OriginalDerivations.original_calculus_stale_value_unsound.
+Print Assumptions OriginalDerivations.pend_wf.
+Print Assumptions OriginalDerivations.held_pend_wf.
+Print Assumptions OriginalDerivations.bare_lock_wf.
+Print Assumptions OriginalDerivations.held_pend_pre.
+Print Assumptions OriginalDerivations.held_pend_not_post.
+Print Assumptions OriginalDerivations.original_calculus_foreign_barrier_unsound.
+From WMLR Require Import OriginalPointsToDerivations.
+Print Assumptions OriginalPointsToDerivations.original_cell_elim.
+Print Assumptions OriginalPointsToDerivations.original_cell_intro.
+Print Assumptions OriginalPointsToDerivations.original_points_invent.
+Print Assumptions OriginalPointsToDerivations.original_points_unit.
+Print Assumptions OriginalPointsToDerivations.original_points_donate.
+Print Assumptions OriginalPointsToDerivations.original_points_import.
+Print Assumptions OriginalPointsToDerivations.original_points_derives_stale_value.
+Print Assumptions OriginalPointsToDerivations.original_points_derives_foreign_barrier.
+Print Assumptions OriginalPointsToDerivations.original_points_held7_pre.
+Print Assumptions OriginalPointsToDerivations.original_points_held7_not_post.
+Print Assumptions OriginalPointsToDerivations.original_points_stale_value_unsound.
+Print Assumptions OriginalPointsToDerivations.original_points_foreign_barrier_unsound.
+From WMLR Require Import OriginalStrongFrame.
+Print Assumptions OriginalStrongFrame.original_stm_donation_derivation.
+Print Assumptions OriginalStrongFrame.original_stm_initial_models.
+Print Assumptions OriginalStrongFrame.original_stm_final_impossible.
+Print Assumptions OriginalStrongFrame.original_strong_frame_counterexample.
 From WMLR Require Import OwnedAlternativeRules.
 Print Assumptions OwnedAlternativeRules.alternative_temporal_wand_elim.
 Print Assumptions OwnedAlternativeRules.owned_derive_fence_backward.
@@ -1048,7 +1048,7 @@ Print Assumptions OwnedAlternativeCounterexamples.literal_store_p_post_false.
 Print Assumptions OwnedAlternativeCounterexamples.literal_store_p_environment.
 Print Assumptions OwnedAlternativeCounterexamples.owned_literal_store_p_invalid.
 Print Assumptions OwnedAlternativeCounterexamples.share_lock_post_duplicate_false.
-Print Assumptions OwnedAlternativeCounterexamples.owned_printed_share_lock_counterexample.
+Print Assumptions OwnedAlternativeCounterexamples.owned_original_share_lock_counterexample.
 Print Assumptions OwnedAlternativeCounterexamples.share_hidden_lock_derivation.
 Print Assumptions OwnedAlternativeCounterexamples.share_hidden_lock_post_duplicate_false.
 Print Assumptions OwnedAlternativeCounterexamples.owned_syntactic_lock_free_share_counterexample.

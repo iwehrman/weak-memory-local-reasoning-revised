@@ -5,7 +5,7 @@ Import ListNotations.
 (** A conservative candidate repair of list overriding. A future write may
     be selected only after every past write to its address has been selected.
     This tracks order of events, not just equality of final lookup values.
-    The printed separation model is retained unchanged in Separation.v. *)
+    The original separation model is retained unchanged in Separation.v. *)
 Inductive ordered_overrides : write_buffer -> write_buffer -> write_buffer -> Prop :=
 | OrderedNil : ordered_overrides [] [] []
 | OrderedLeft w past future out :
@@ -111,9 +111,9 @@ Definition write_one : location * value := (1%positive, 1%Z).
 Definition write_two : location * value := (1%positive, 2%Z).
 Definition write_three : location * value := (1%positive, 3%Z).
 
-(** Proposition 2(2) is false for the printed lookup-based operation, even
+(** Proposition 2(2) is false for the original lookup-based operation, even
     after its prose restriction to interleavings has been made explicit. *)
-Theorem printed_buffer_override_not_associative :
+Theorem original_buffer_override_not_associative :
   (exists bc, buffer_overrides [write_two] [write_three] bc /\
     buffer_overrides [write_one] bc [write_two; write_one; write_three]) /\
   ~ (exists ab, buffer_overrides [write_one] [write_two] ab /\

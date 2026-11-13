@@ -2,13 +2,13 @@ From Stdlib Require Import List ZArith.
 From WMLR Require Import Expressions Machine BufferRelations Separation OrderedBuffers.
 Import ListNotations.
 
-(** Candidate repair of the spatiotemporal separator: retain the printed
+(** Candidate repair of the spatiotemporal separator: retain the original
     compatibility relation, but require ordered rather than lookup-only
     overriding. It is deliberately separate from the transcription. *)
 Definition memory_ordered active a b out : Prop :=
   temporal_compatible active a b /\ memory_merge ordered_overrides a b out.
 
-Theorem ordered_in_printed active a b out :
+Theorem ordered_in_original active a b out :
   memory_ordered active a b out -> memory_spatiotemporal active a b out.
 Proof.
   intros [Hcompat [Hh [Hb Hk]]]. split; [exact Hcompat |].

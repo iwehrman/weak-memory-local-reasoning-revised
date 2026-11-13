@@ -12,7 +12,7 @@ Definition stable_compatible (active : processor_domain) a b : Prop :=
   (forall i j, active i -> active j -> i <> j ->
     disjoint (buffer_domain (buffers a i)) (buffer_domain (buffers b j))).
 
-Theorem stable_implies_printed_compatible active a b :
+Theorem stable_implies_original_compatible active a b :
   stable_compatible active a b -> temporal_compatible active a b.
 Proof.
   intros [Hk [Hh Hb]]. split; [exact Hk |]. split.
@@ -147,7 +147,7 @@ Proof.
   - exists 2%Z. apply heap_update_same.
 Qed.
 
-Theorem printed_memory_compatibility_not_associative :
+Theorem original_memory_compatibility_not_associative :
   (exists bc, memory_ordered every_processor masked_future later_blocker bc /\
     memory_ordered every_processor masked_past bc
       (temporal_join masked_past (temporal_join masked_future later_blocker))) /\
@@ -161,7 +161,7 @@ Proof.
   - intros [ab [[Hcompat _] _]]. apply masked_pair_incompatible, Hcompat.
 Qed.
 
-Corollary printed_spatiotemporal_not_associative :
+Corollary original_spatiotemporal_not_associative :
   (exists bc, memory_spatiotemporal every_processor masked_future later_blocker bc /\
     memory_spatiotemporal every_processor masked_past bc
       (temporal_join masked_past (temporal_join masked_future later_blocker))) /\
@@ -171,7 +171,7 @@ Corollary printed_spatiotemporal_not_associative :
 Proof.
   split.
   - exists (temporal_join masked_future later_blocker). split;
-      apply ordered_in_printed;
+      apply ordered_in_original;
       [apply masked_future_blocker_ordered | apply masked_group_ordered].
   - intros [ab [[Hcompat _] _]]. apply masked_pair_incompatible, Hcompat.
 Qed.

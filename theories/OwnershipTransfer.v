@@ -28,7 +28,7 @@ Proof.
   intros [Hcompatible [Hheap [Hbuffers Hblocks]]] Hempty Hbefore; split.
   - apply spatial_compatible_stable, Hcompatible.
   - split.
-    + split; [apply stable_implies_printed_compatible, spatial_compatible_stable, Hcompatible |].
+    + split; [apply stable_implies_original_compatible, spatial_compatible_stable, Hcompatible |].
       split; [exact Hheap |]. split; [|exact Hblocks].
       intros i; rewrite Hempty, app_nil_r; specialize (Hbuffers i); rewrite Hempty in Hbuffers.
       apply interleaves_nil_right, Hbuffers.

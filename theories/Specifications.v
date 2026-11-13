@@ -39,7 +39,7 @@ Definition frame_variable_condition
 
 (** A sufficient side condition for an assignment to preserve an invariant's
     stack-dependent meaning. This lemma supports a candidate repair of the
-    printed assignment rule; it does not impose a new global restriction. *)
+    original assignment rule; it does not impose a new global restriction. *)
 Theorem assignment_preserves_invariant {resource}
     (model : interpretation resource) invariant s r x rhs :
   ~ In x (ConcurrentAssertion.fv invariant) ->

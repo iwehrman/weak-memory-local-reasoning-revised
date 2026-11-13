@@ -91,11 +91,11 @@ Proof.
   exact (proj2 (spatial_in_ordered active _ _ _ H)).
 Qed.
 
-Lemma memory_repaired_in_printed active a b out :
+Lemma memory_repaired_in_original active a b out :
   memory_repaired active a b out -> memory_spatiotemporal active a b out.
 Proof.
-  intros [Hcompat Hmerge]. apply ordered_in_printed.
-  split; [apply stable_implies_printed_compatible, Hcompat | exact Hmerge].
+  intros [Hcompat Hmerge]. apply ordered_in_original.
+  split; [apply stable_implies_original_compatible, Hcompat | exact Hmerge].
 Qed.
 
 Theorem spatial_flush_split active a b whole whole' :
@@ -107,11 +107,11 @@ Proof.
   destruct (repaired_flush_split _ _ _ _ _ (memory_spatial_in_repaired active _ _ _ Hsp) Hflush)
     as [[a' [Ha Hsep]] | [b' [Hb Hsep]]].
   - left; exists a'; split; [exact Ha |].
-    eapply spatial_frame_recombination; [exact Hsp | | |apply memory_repaired_in_printed, Hsep].
+    eapply spatial_frame_recombination; [exact Hsp | | |apply memory_repaired_in_original, Hsep].
     + apply (flush_domain_subset _ _ _ Ha).
     + intros loc H; exact H.
   - right; exists b'; split; [exact Hb |].
-    eapply spatial_frame_recombination; [exact Hsp | | |apply memory_repaired_in_printed, Hsep].
+    eapply spatial_frame_recombination; [exact Hsp | | |apply memory_repaired_in_original, Hsep].
     + intros loc H; exact H.
     + apply (flush_domain_subset _ _ _ Hb).
 Qed.

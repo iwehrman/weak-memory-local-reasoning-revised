@@ -67,7 +67,7 @@ hypotheses than the combined soundness theorem.
 | `OwnedExists` / EX | `owned_exists_valid` | [OwnedExists.v](../theories/OwnedExists.v); binder fresh for command, postcondition and invariant |
 | `OwnedFrameSP` / FRAME-SP | `owned_spatial_frame_valid` | [OwnedFraming.v](../theories/OwnedFraming.v); usual modified/free-variable condition |
 | `OwnedFrameTM` / FRAME-TM | `owned_temporal_frame_valid` | Same file; fragment invariant, usual variable condition; OV only |
-| `OwnedParallel` / CONC | `owned_parallel_valid` | [OwnedParallel.v](../theories/OwnedParallel.v); printed mutual interference condition and neither command modifies `fv(J)` |
+| `OwnedParallel` / CONC | `owned_parallel_valid` | [OwnedParallel.v](../theories/OwnedParallel.v); original mutual interference condition and neither command modifies `fv(J)` |
 | `OwnedWeaken` / OV → DJ | `owned_valid_overlap_disjoint` | [OwnedResources.v](../theories/OwnedResources.v) |
 
 INV, FRAME-STM and SHARE are not hidden unproved constructors: they are
@@ -180,8 +180,8 @@ is not represented as proof of the source's literal formula.
 
 | Repair or choice | Checked support | Status |
 | --- | --- | --- |
-| Preserve occurrence order in buffer overriding | `ordered_associative`, [OrderedBuffers.v](../theories/OrderedBuffers.v) | Repair of failed printed algebra |
-| Compatibility must include blocked processors | `stable_compatibility_associative`, `stable_implies_printed_compatible`, [StableCompatibility.v](../theories/StableCompatibility.v) | Conservative repair; admits fewer compositions |
+| Preserve occurrence order in buffer overriding | `ordered_associative`, [OrderedBuffers.v](../theories/OrderedBuffers.v) | Repair of failed original algebra |
+| Compatibility must include blocked processors | `stable_compatibility_associative`, `stable_implies_original_compatible`, [StableCompatibility.v](../theories/StableCompatibility.v) | Conservative repair; admits fewer compositions |
 | Combine repaired merge and compatibility | `repaired_resource_associative`, `repaired_temporal_resource_associative`, [RepairedSeparation.v](../theories/RepairedSeparation.v) | Active resource algebra |
 | Full flushing closure, including wands | `persistent_assertion_flushing_closed`, [PersistentAssertions.v](../theories/PersistentAssertions.v) | Future-quantified wand interpretation |
 | Preserve all three wand adjunctions | `persistent_spatial_wand_adjoint`, `persistent_temporal_wand_left_adjoint`, `persistent_temporal_wand_right_adjoint`, [PersistentRules.v](../theories/PersistentRules.v) | Full assertion grammar |
@@ -207,16 +207,16 @@ contexts. No additional validity predicate has been layered on top of it.
 
 | Claim or regression | Checked declaration / source | Interpretation and qualification |
 | --- | --- | --- |
-| Printed Conjecture 1 | `printed_conjecture1_false`, [SeparationExamples.v](../theories/SeparationExamples.v) | Original relation; arbitrary overlapping heaps obstruct the proposed decomposition |
-| Printed buffer associativity | `printed_buffer_override_not_associative`, [OrderedBuffers.v](../theories/OrderedBuffers.v) | Original overriding |
-| Printed compatibility / spatiotemporal associativity | `printed_memory_compatibility_not_associative`, `printed_spatiotemporal_not_associative`, [StableCompatibility.v](../theories/StableCompatibility.v) | Original blocking exception |
-| Unqualified assignment | `printed_assignment_invalid`, `printed_assignment_soundness_false`, [SafetyExamples.v](../theories/SafetyExamples.v) | Printed safety; changing an invariant variable breaks the environment |
+| Original Conjecture 1 | `original_conjecture1_false`, [SeparationExamples.v](../theories/SeparationExamples.v) | Original relation; arbitrary overlapping heaps obstruct the proposed decomposition |
+| Original buffer associativity | `original_buffer_override_not_associative`, [OrderedBuffers.v](../theories/OrderedBuffers.v) | Original overriding |
+| Original compatibility / spatiotemporal associativity | `original_memory_compatibility_not_associative`, `original_spatiotemporal_not_associative`, [StableCompatibility.v](../theories/StableCompatibility.v) | Original blocking exception |
+| Unqualified assignment | `original_assignment_invalid`, `original_assignment_soundness_false`, [SafetyExamples.v](../theories/SafetyExamples.v) | Original safety; changing an invariant variable breaks the environment |
 | Pointwise temporal wand flushing closure | `pointwise_temporal_wand_not_flush_closed`, [FlushingCounterexample.v](../theories/FlushingCounterexample.v) | Checked for the earlier repaired, pointwise-wand interpretation; do not silently relabel this theorem as an original-`models` theorem |
-| INV + FRAME-TM stale value | `printed_points_stale_value_unsound`, [PrintedPointsToDerivations.v](../theories/PrintedPointsToDerivations.v) | Original `models`, original all-processor points-to, printed derivation and invalidity |
-| INV + FRAME-TM foreign barrier | `printed_points_foreign_barrier_unsound`, same file | Same original scope; an actual foreign write remains pending |
-| INV + FRAME-STM witness mismatch | `printed_strong_frame_counterexample`, [PrintedStrongFrame.v](../theories/PrintedStrongFrame.v) | Original interpretation and points-to; minimal adapted witness, not the identical checkpoint-6 program; does not isolate FRAME-STM from INV |
-| Strong associativity, both directions | `assertion_strong_associativity_printed_right_model`, `assertion_strong_associativity_printed_left_not_model`, [AssertionAlgebraCounterexamples.v](../theories/AssertionAlgebraCounterexamples.v); opposite direction in [OriginalAlgebraCounterexamples.v](../theories/OriginalAlgebraCounterexamples.v) | Original and final interpretations; table in algebra audit |
-| Unrestricted lock multiplication | `assertion_lock_multiplication_printed_model`, `assertion_lock_multiplication_refuted`, [AssertionAlgebraCounterexamples.v](../theories/AssertionAlgebraCounterexamples.v) | Original and final; witness has no admissible machine environment; same-owner exclusion survives with two processors |
+| INV + FRAME-TM stale value | `original_points_stale_value_unsound`, [OriginalPointsToDerivations.v](../theories/OriginalPointsToDerivations.v) | Original `models`, original all-processor points-to, original derivation and invalidity |
+| INV + FRAME-TM foreign barrier | `original_points_foreign_barrier_unsound`, same file | Same original scope; an actual foreign write remains pending |
+| INV + FRAME-STM witness mismatch | `original_strong_frame_counterexample`, [OriginalStrongFrame.v](../theories/OriginalStrongFrame.v) | Original interpretation and points-to; minimal adapted witness, not the identical checkpoint-6 program; does not isolate FRAME-STM from INV |
+| Strong associativity, both directions | `assertion_strong_associativity_original_right_model`, `assertion_strong_associativity_original_left_not_model`, [AssertionAlgebraCounterexamples.v](../theories/AssertionAlgebraCounterexamples.v); opposite direction in [OriginalAlgebraCounterexamples.v](../theories/OriginalAlgebraCounterexamples.v) | Original and final interpretations; table in algebra audit |
+| Unrestricted lock multiplication | `assertion_lock_multiplication_original_model`, `assertion_lock_multiplication_refuted`, [AssertionAlgebraCounterexamples.v](../theories/AssertionAlgebraCounterexamples.v) | Original and final; witness has no admissible machine environment; same-owner exclusion survives with two processors |
 | T4 with invalid writer annotation | `original_points_to_invalid_writer_refuted`, [OriginalAlgebraCounterexamples.v](../theories/OriginalAlgebraCounterexamples.v) | Original and final; active annotation is the qualification |
 | T7/T8 with strong connective outside | `original_small_exchange_strong_left_refuted`, `original_small_exchange_strong_right_refuted`, same file | Original-model counterparts; literal/uniform premise distinction remains essential |
 | T9 full exchange | `original_full_exchange_refuted`, same file | Original and final interpretations |
@@ -231,7 +231,7 @@ contexts. No additional validity predicate has been layered on top of it.
 | Strong-temporal frame over release | `owned_disjoint_strong_temporal_frame_invalid`, [StrongTemporalCounterexample.v](../theories/StrongTemporalCounterexample.v) | Current DJ validity, weak-conjunction abbreviation; corresponding spatial frame is valid in [OwnedFramingExamples.v](../theories/OwnedFramingExamples.v) |
 | Unfenced flushed-cell postcondition | `owned_plain_store_cell_invalid`, `owned_plain_store_cell_not_derivable`, [OwnedFenceExamples.v](../theories/OwnedFenceExamples.v) | Current semantics/calculus, both modes; inhabited precondition |
 | Literal displayed STORE-P | `owned_literal_store_p_invalid`, [OwnedAlternativeCounterexamples.v](../theories/OwnedAlternativeCounterexamples.v) | Final interpretation; literal postcondition false on all resources; source transcription separated from corrected derived form |
-| Unrestricted SHARE with transferring LOCK | `owned_printed_share_lock_counterexample`, same file | Current semantics, both modes; duplicates a cell |
+| Unrestricted SHARE with transferring LOCK | `owned_original_share_lock_counterexample`, same file | Current semantics, both modes; duplicates a cell |
 | Merely syntactically lock-free SHARE | `owned_syntactic_lock_free_share_counterexample`, same file | `emp` and `C * true` contain no Lock atom but the latter can hide its token; the semantic restriction is proved in both modes by the restricted SHARE theorems |
 | Retirement erases unrelated live ownership | `ReviewObstructions.retired_later_cell_can_erase_earlier`, [ReviewObstructions.v](../theories/ReviewObstructions.v) | Abandoned retirement interpretation only |
 | General framing/unit/transfer tension | `ReviewObstructions.trilemma`, same file | Abstract conditional theorem, not a discharged soundness theorem |
@@ -240,8 +240,8 @@ All individual E1–E12 / T1–T9 instances, including mixed spatial/temporal
 exchange and the precise nonempty-domain qualifications, remain enumerated
 in the [algebra table](../review/paper-algebra-audit.md). The original review's
 owner-specific derivations and history-invention lemma are also audited in
-`PrintedDerivations.v` and `ReviewObstructions.v`; use the newer
-all-processor statements when describing the printed calculus in the paper.
+`OriginalDerivations.v` and `ReviewObstructions.v`; use the newer
+all-processor statements when describing the original calculus in the paper.
 
 ## Original message-passing example
 
@@ -254,7 +254,7 @@ all-processor statements when describing the printed calculus in the paper.
 | Both outcomes and pending private store | `message_passing_zero_trace`, `message_passing_one_trace`, `message_passing_one_pending_trace`, [MessagePassingTrace.v](../theories/MessagePassingTrace.v) | 16-step and 20-step complete original-heap runs; 17-step prefix with private write still buffered. |
 
 The [result report](../review/paper-message-passing.md) distinguishes this
-execution theorem from an emp-invariant derivation of the printed triple.
+execution theorem from an emp-invariant derivation of the original triple.
 Neither SHARE nor AUX is added. The original derivation's rejected steps
 are classified in the [design diagnosis](../review/paper-priority-1-design.md).
 

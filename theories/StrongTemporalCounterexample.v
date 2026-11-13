@@ -163,7 +163,7 @@ Proof.
         unfold buffer_update in Hv, Hw.
         destruct (Pos.eq_dec i 2%positive), (Pos.eq_dec j 2%positive); subst; contradiction. }
     split; [exact Hstable |]. split.
-    + split; [apply stable_implies_printed_compatible, Hstable |].
+    + split; [apply stable_implies_original_compatible, Hstable |].
       split; [intros; reflexivity |]. split.
       * intros i; cbn [stm_pending proj1_sig underlying buffers].
         unfold buffer_update; destruct (Pos.eq_dec i 2%positive); reflexivity.
@@ -273,7 +273,7 @@ Proof.
   { split; [intros i H; contradiction |]. split;
       [intros i _ loc [v H] |intros i j _ _ _ loc [v H]]; rewrite Hempty in H; contradiction. }
   split; [exact Hstable |]. split.
-  - split; [apply stable_implies_printed_compatible, Hstable |]. split.
+  - split; [apply stable_implies_original_compatible, Hstable |]. split.
     + intros loc; cbn [stm_payload stm_holder acquired_resource resource_memory proj1_sig underlying acquire shared_heap].
       unfold heap_override, heap_update, empty_heap; destruct (Pos.eq_dec loc 3%positive); reflexivity.
     + split.

@@ -162,7 +162,7 @@ Proof.
         unfold buffer_update in Hw; destruct (Pos.eq_dec j actor) as [-> |Hother]; [|contradiction].
         destruct Hw as [E |Hfalse]; [inversion E; subst; exact (Hforeign i Hne HL) |contradiction]. }
     split; [exact Hstable |]. split.
-    + split; [apply stable_implies_printed_compatible, Hstable |].
+    + split; [apply stable_implies_original_compatible, Hstable |].
       split; [intros; reflexivity |]. split.
       * intros i; cbn [owned_enqueue_resource pending_write_resource proj1_sig underlying enqueue buffers pending_write_memory].
         unfold buffer_update; destruct (Pos.eq_dec i actor) as [-> |Hne]; [reflexivity |rewrite app_nil_r; reflexivity].

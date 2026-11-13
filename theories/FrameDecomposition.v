@@ -130,7 +130,7 @@ Proof.
   exact (proj1 (spatial_in_spatiotemporal active _ _ _ Hsp)).
 Qed.
 
-(** Equality of result sets, matching the conclusion needed by the printed
+(** Equality of result sets, matching the conclusion needed by the original
     argument, now with an operational justification for residual ownership. *)
 Theorem spatial_frame_recombination_sets active frame local whole frame' local'
     command next s s' :

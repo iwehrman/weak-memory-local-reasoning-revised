@@ -63,7 +63,7 @@ Proof.
   intros Hinvalid H.
   assert (HC : models two_processors (fun _ => 0%Z) checkpoint_full_cell
     (A.points_to (EVal 2%Z) (EVal 7%Z))).
-  { apply assertion_wand_free_in_printed; [cbn [A.points_to wand_free]; tauto |apply assertion_full_cell_points_to]. }
+  { apply assertion_wand_free_in_original; [cbn [A.points_to wand_free]; tauto |apply assertion_full_cell_points_to]. }
   specialize (H _ _ HC); destruct annotation as [|owner|neg]; try contradiction.
   exact (Hinvalid owner eq_refl (proj1 H)).
 Qed.
@@ -237,18 +237,18 @@ Theorem original_small_exchange_strong_left_refuted kind :
 Proof.
   split; [apply original_strong_inclusion |]. intros H; destruct kind.
   - apply (original_exchange_strong_spatial_left_not_model (fun _ => 0%Z)),H.
-    apply assertion_wand_free_in_printed; [repeat split; exact I |apply assertion_exchange_strong_spatial_left_model].
+    apply assertion_wand_free_in_original; [repeat split; exact I |apply assertion_exchange_strong_spatial_left_model].
   - apply (original_exchange_strong_temporal_left_not_model (fun _ => 0%Z)),H.
-    apply assertion_wand_free_in_printed; [repeat split; exact I |apply assertion_exchange_strong_temporal_left_model].
-  - apply (assertion_strong_associativity_printed_left_not_model (fun _ => 0%Z)),H,
-      assertion_strong_associativity_printed_right_model.
+    apply assertion_wand_free_in_original; [repeat split; exact I |apply assertion_exchange_strong_temporal_left_model].
+  - apply (assertion_strong_associativity_original_left_not_model (fun _ => 0%Z)),H,
+      assertion_strong_associativity_original_right_model.
 Qed.
 
 Theorem original_strong_associativity_left_model s :
   models two_processors s exchange_right_whole
     (A.strong_temporal (A.strong_temporal algebra_P exchange_right_Q) exchange_right_R).
 Proof.
-  apply assertion_wand_free_in_printed; [repeat split; exact I |apply assertion_strong_associativity_left_model].
+  apply assertion_wand_free_in_original; [repeat split; exact I |apply assertion_strong_associativity_left_model].
 Qed.
 
 Theorem original_strong_associativity_right_not_model s :
@@ -265,11 +265,11 @@ Theorem original_small_exchange_strong_right_refuted kind :
 Proof.
   split; [apply original_strong_inclusion |]. intros H; destruct kind.
   - apply (original_exchange_strong_spatial_right_not_model (fun _ => 0%Z)),H.
-    apply assertion_wand_free_in_printed; [repeat split; exact I |].
+    apply assertion_wand_free_in_original; [repeat split; exact I |].
     eapply assertion_conjunction_mono with (kind := StrongKind);
       [apply assertion_strong_entails_spatial |intros t r HP; exact HP |apply assertion_strong_associativity_left_model].
   - apply (original_exchange_strong_temporal_right_not_model (fun _ => 0%Z)),H.
-    apply assertion_wand_free_in_printed; [repeat split; exact I |apply assertion_exchange_strong_temporal_right_model].
+    apply assertion_wand_free_in_original; [repeat split; exact I |apply assertion_exchange_strong_temporal_right_model].
   - apply (original_strong_associativity_right_not_model (fun _ => 0%Z)),H,
       original_strong_associativity_left_model.
 Qed.
@@ -278,7 +278,7 @@ Theorem original_full_exchange_left_model s :
   models two_processors s algebra_whole
     (A.strong_temporal (A.Spatial algebra_P A.Emp) (A.Spatial algebra_Q algebra_R)).
 Proof.
-  apply assertion_wand_free_in_printed; [repeat split; exact I |apply assertion_full_exchange_left_model].
+  apply assertion_wand_free_in_original; [repeat split; exact I |apply assertion_full_exchange_left_model].
 Qed.
 
 Theorem original_full_exchange_right_not_model s :

@@ -61,7 +61,7 @@ Definition while_do (b : bexpr) (body : command) : command :=
 End Sequential.
 
 (** Concurrent syntax, section 4.2. Processor annotations are expressions,
-    including expressions with variables, as in the printed grammar. *)
+    including expressions with variables, as in the original grammar. *)
 Module Concurrent.
 
 Inductive primitive : Type :=

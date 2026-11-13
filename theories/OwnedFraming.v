@@ -268,7 +268,7 @@ Proof.
   pose proof (owned_environment_buffer_merge _ _ _ _ _ _ _ _ _ Hfragment Hsmall') as HG'.
   destruct Hinner as [_ [[_ [_ [Hconcat _]]] [Hbefore _]]].
   split; [exact Hstable |]. split.
-  - split; [apply stable_implies_printed_compatible, Hstable |].
+  - split; [apply stable_implies_original_compatible, Hstable |].
     split; [exact Hheap |]. split; [|exact Hblocks].
     intros i; apply (ordered_fixed_frame_prefix _ _ _ _ _ _ _ _ _ (HF i) (HG i) (HF' i) (HG' i) (Hconcat i)).
     destruct (program_step_buffer_shape _ _ _ _ _ _ Hstep) as [Hsame |(actor & w & Happend)].

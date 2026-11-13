@@ -29,7 +29,7 @@ Proof.
            ++ left; intros [H |H]; contradiction.
 Qed.
 
-(** T4 as literally printed fails for a nonprocessor or inactive annotation,
+(** T4 as literally original fails for a nonprocessor or inactive annotation,
     despite an inhabited all-processor cell. EVal 0 and EVal 3 are examples. *)
 Theorem assertion_points_to_invalid_writer_refuted annotation :
   (forall owner, annotation = Z.pos owner -> ~ two_processors owner) ->

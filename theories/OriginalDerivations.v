@@ -264,19 +264,19 @@ Proof.
       split; [exact He | right; right; exact HJc].
 Qed.
 
-(** * The printed rules used below (Figures 4.7 and 4.8): SKIP, CONS, INV, FRAME-TM.
+(** * The original rules used below (Figures 4.7 and 4.8): SKIP, CONS, INV, FRAME-TM.
     INV's [J * P * lock_i] is parsed as [J * (P * lock_i)]. *)
-Inductive printed active : A.assertion -> A.assertion -> Concurrent.command -> A.assertion -> Prop :=
-| PSkip J P annotation : printed active J P (Concurrent.skip annotation) P
+Inductive original active : A.assertion -> A.assertion -> Concurrent.command -> A.assertion -> Prop :=
+| PSkip J P annotation : original active J P (Concurrent.skip annotation) P
 | PCons J P P' c Q' Q :
-    assertion_entails active P P' -> printed active J P' c Q' -> assertion_entails active Q' Q ->
-    printed active J P c Q
+    assertion_entails active P P' -> original active J P' c Q' -> assertion_entails active Q' Q ->
+    original active J P c Q
 | PInv J P Q c i :
-    printed active A.Emp (A.Spatial J (A.Spatial P (lockA i))) c (A.Spatial J (A.Spatial Q (lockA i))) ->
-    printed active J (A.Spatial P (lockA i)) c (A.Spatial Q (lockA i))
+    original active A.Emp (A.Spatial J (A.Spatial P (lockA i))) c (A.Spatial J (A.Spatial Q (lockA i))) ->
+    original active J (A.Spatial P (lockA i)) c (A.Spatial Q (lockA i))
 | PFrameTm J P c Q R :
-    printed active J P c Q -> frame_variable_condition c R ->
-    printed active J (A.Temporal R P) c (A.Temporal R Q).
+    original active J P c Q -> frame_variable_condition c R ->
+    original active J (A.Temporal R P) c (A.Temporal R Q).
 
 Lemma entails_refl active p : assertion_entails active p p.
 Proof. intros s r H; exact H. Qed.
@@ -287,8 +287,8 @@ Proof. intros z H. inversion H. Qed.
 Definition skip1 i := Concurrent.skip (EVal (Z.pos i)).
 
 (** ** Derivation 1: a skip that "changes" a cell from [v] to [old]. *)
-Theorem printed_derives_stale_value active k x old v i :
-  printed active (A.Or A.Emp (processor_cell k x v))
+Theorem original_derives_stale_value active k x old v i :
+  original active (A.Or A.Emp (processor_cell k x v))
     (A.Spatial (processor_cell k x v) (lockA i)) (skip1 i)
     (A.Spatial (processor_cell k x old) (lockA i)).
 Proof.
@@ -299,8 +299,8 @@ Proof.
 Qed.
 
 (** ** Derivation 2: a skip that imports the cell writer's barrier past any frame. *)
-Theorem printed_derives_foreign_barrier active k x v i R :
-  printed active (processor_cell k x v)
+Theorem original_derives_foreign_barrier active k x v i R :
+  original active (processor_cell k x v)
     (A.Temporal R (A.Spatial A.Emp (lockA i))) (skip1 i)
     (A.Temporal R (A.Spatial (barA k) (lockA i))).
 Proof.
@@ -364,18 +364,18 @@ Proof.
   rewrite heap_update_same in Hh. discriminate.
 Qed.
 
-(** The printed rules derive a specification that is false of a terminal
-    state, and invalid for the printed safety predicate. *)
-Theorem printed_calculus_stale_value_unsound :
+(** The original rules derive a specification that is false of a terminal
+    state, and invalid for the original safety predicate. *)
+Theorem original_calculus_stale_value_unsound :
   let J := A.Or A.Emp (processor_cell P1 X 7%Z) in
   let pre := A.Spatial (processor_cell P1 X 7%Z) (lockA P1) in
   let post := A.Spatial (processor_cell P1 X 5%Z) (lockA P1) in
-  printed two_processors J pre (skip1 P1) post /\
+  original two_processors J pre (skip1 P1) post /\
   (forall s, full_satisfies two_processors s held7 pre /\
              ~ full_satisfies two_processors s held7 post) /\
   ~ valid_specification two_processors J pre (skip1 P1) post.
 Proof.
-  split; [apply printed_derives_stale_value |].
+  split; [apply original_derives_stale_value |].
   split; [intros s; split; [apply held7_pre | apply held7_not_post] |].
   apply (skip_needs_post _ _ _ _ _ (fun _ => 0%Z) held7); [apply held7_pre | apply held7_not_post].
 Qed.
@@ -441,16 +441,16 @@ Proof.
   rewrite buffer_update_same in Hb. discriminate.
 Qed.
 
-Theorem printed_calculus_foreign_barrier_unsound :
+Theorem original_calculus_foreign_barrier_unsound :
   let J := processor_cell P2 X 7%Z in
   let pre := A.Temporal Rpend (A.Spatial A.Emp (lockA P1)) in
   let post := A.Temporal Rpend (A.Spatial (barA P2) (lockA P1)) in
-  printed two_processors J pre (skip1 P1) post /\
+  original two_processors J pre (skip1 P1) post /\
   (forall s, full_satisfies two_processors s held_pend pre /\
              ~ full_satisfies two_processors s held_pend post) /\
   ~ valid_specification two_processors J pre (skip1 P1) post.
 Proof.
-  split; [apply printed_derives_foreign_barrier |].
+  split; [apply original_derives_foreign_barrier |].
   split; [intros s; split; [apply held_pend_pre | apply held_pend_not_post] |].
   apply (skip_needs_post _ _ _ _ _ (fun _ => 0%Z) held_pend);
     [apply held_pend_pre | apply held_pend_not_post].

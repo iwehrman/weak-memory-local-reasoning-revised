@@ -32,7 +32,7 @@ Record environment active (invariant : state_predicate) s local shared frame who
 
 (** The three clauses on pp. 131-132, including the existential post-step
     decomposition and the requirement that the external frame only flush.
-    This is the printed safety semantics, not an ownership-aware replacement. *)
+    This is the original safety semantics, not an ownership-aware replacement. *)
 Fixpoint safe active (n : nat) c s local
     (invariant post : state_predicate) : Prop :=
   match n with

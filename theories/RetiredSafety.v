@@ -116,7 +116,7 @@ Proof.
            apply (proj1 (satisfies_agrees (RH.interpretation active) frame s t Hagrees retained)), HR.
 Qed.
 
-(** Printed variable condition, for every assertion including wands. The
+(** Original variable condition, for every assertion including wands. The
     limitation is the resource universe (no pending buffers), not the frame. *)
 Theorem retired_FRAME_TM active owner invariant start protected_pre pre command finish protected_post post frame :
   retired_valid active owner invariant start protected_pre pre command finish protected_post post ->

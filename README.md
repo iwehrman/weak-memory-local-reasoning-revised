@@ -12,8 +12,8 @@ rules. A container that removes a shared item, uses it privately, and returns
 it has an actual derivation tree; a second version uses choice and loops to
 retry. Both have concrete executions and all-execution safety results.
 
-This does not prove the printed Theorem 1 unchanged. Checked counterexamples
-refute several printed claims. The repaired system removes INV, omits
+This does not prove the original Theorem 1 unchanged. Checked counterexamples
+refute several original claims. The repaired system removes INV, omits
 unrestricted SHARE and FRAME-STM, restricts temporal framing through a mode index, transfers the
 invariant at lock actions, and makes the semantic and variable conditions
 explicit. Its two standing hypotheses are a guarded heap invariant and two
@@ -77,7 +77,7 @@ errors, repair choices and remaining scope.
 | Exact heap-or-buffer address-domain preservation for every execution | [ExecutionDomain.v](theories/ExecutionDomain.v) |
 | Exact LOAD-P, corrected STORE-P, and forward/backward fence and lock variants | [OwnedPointsToRules.v](theories/OwnedPointsToRules.v), [OwnedAlternativeRules.v](theories/OwnedAlternativeRules.v) |
 | Common-split resource framing and enabled release with pending foreign writes | [OwnedCommonSplit.v](theories/OwnedCommonSplit.v), [OwnedCommonSplitExamples.v](theories/OwnedCommonSplitExamples.v) |
-| Original-points-to INV counterexamples and a printed FRAME-STM counterexample | [PrintedPointsToDerivations.v](theories/PrintedPointsToDerivations.v), [PrintedStrongFrame.v](theories/PrintedStrongFrame.v) |
+| Original-points-to INV counterexamples and a original FRAME-STM counterexample | [OriginalPointsToDerivations.v](theories/OriginalPointsToDerivations.v), [OriginalStrongFrame.v](theories/OriginalStrongFrame.v) |
 | Restricted SHARE in DJ and OV, with semantic lock-free pre/postconditions | [OwnedShare.v](theories/OwnedShare.v), [OwnedShareOverlap.v](theories/OwnedShareOverlap.v) |
 | SHARE and literal STORE-P counterexamples in the final interpretation | [OwnedAlternativeCounterexamples.v](theories/OwnedAlternativeCounterexamples.v) |
 | Further assertion laws and checked associativity/lock countermodels | [AssertionAlgebra.v](theories/AssertionAlgebra.v), [AssertionAlgebraCounterexamples.v](theories/AssertionAlgebraCounterexamples.v) |

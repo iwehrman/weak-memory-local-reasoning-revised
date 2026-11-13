@@ -7,7 +7,7 @@ From WMLR Require Import Expressions Languages Machine BufferRelations Separatio
   AssertionAlgebra AssertionWriteAlgebra AssertionWriteExamples OwnedFraming RepairedSeparation.
 Import ListNotations.
 
-(** Printed STORE-P has both a load command and a strong-temporal write
+(** Original STORE-P has both a load command and a strong-temporal write
     suffix. The suffix is impossible even if the command typo is fixed. *)
 Definition literal_store_p_pre := A.strong_temporal (A.points_to (EVal 2%Z) (EVal 7%Z)) A.Emp.
 Definition literal_store_p_post := A.strong_temporal literal_store_p_pre
@@ -81,7 +81,7 @@ Proof.
     rewrite Hc,heap_update_same; reflexivity.
 Qed.
 
-Theorem owned_printed_share_lock_counterexample mode :
+Theorem owned_original_share_lock_counterexample mode :
   owned_derivation two_processors share_cell mode A.Emp acceptance_acquire share_lock_post /\
   (forall s, persistent_models two_processors s checkpoint_full_cell (A.Spatial share_cell A.Emp)) /\
   ~ owned_valid two_processors mode A.Emp (A.Spatial share_cell A.Emp) acceptance_acquire

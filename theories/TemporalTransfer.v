@@ -83,7 +83,7 @@ Proof.
       - intros i j Hi Hj Hneq loc Hp [v Hv]. apply (proj2 (proj2 Hstable) i j Hi Hj Hneq loc Hp).
         exists v; rewrite <- Eb in Hv; exact Hv. }
     split; [exact Hnewstable |]. split.
-    + split; [apply stable_implies_printed_compatible, Hnewstable |]. split.
+    + split; [apply stable_implies_original_compatible, Hnewstable |]. split.
       * intros loc; change (shared_heap (resource_memory active whole) loc =
           heap_override (shared_heap (resource_memory active past)) (shared_heap (resource_memory active pool)) loc).
         unfold heap_override; rewrite <- Eh; exact (Hh loc).

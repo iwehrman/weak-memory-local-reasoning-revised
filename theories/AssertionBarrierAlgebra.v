@@ -54,7 +54,7 @@ Proof.
     - intros i _ loc _ [v H]; rewrite Hh in H; discriminate.
     - intros i j _ _ _ loc _ [v H]; rewrite Hb in H; contradiction. }
   split; [exact Hstable |]. split.
-  - split; [apply stable_implies_printed_compatible,Hstable |].
+  - split; [apply stable_implies_original_compatible,Hstable |].
     split; [intros loc; unfold heap_override; rewrite Hh; reflexivity |].
     split; [intros i; rewrite Hb,app_nil_r; reflexivity |].
     intros i; split; [auto |intros [H |H]; [exact H |exfalso; exact (Hk i H)]].

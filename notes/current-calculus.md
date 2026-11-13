@@ -7,7 +7,7 @@ active judgment; `owned_safe` / `owned_valid` remain the single safety target
 introduced at checkpoint 5. No safety definition changed at checkpoint 11.
 
 This is a soundness theorem for an explicitly repaired calculus. It is not
-a proof of Theorem 1 with the printed rules and assertion interpretation
+a proof of Theorem 1 with the original rules and assertion interpretation
 unchanged. Checked counterexamples rule out that claim. This document is the
 consolidated comparison; earlier reports record historical checkpoints.
 
@@ -57,24 +57,24 @@ machine encoding instead of adding an owner field.
 existing atoms. `P ⋉ Q` still abbreviates `(P * Q) ∧ (P ; Q)`, with potentially
 different witnesses for the two conjuncts.
 
-| Printed rule or family | Current checked treatment |
+| Original rule or family | Current checked treatment |
 | --- | --- |
 | SKIP, ASSUME, ASSERT | Same forms, either mode. A false assumption waits; a false assertion aborts. |
 | CONS, DISJ, SEQ, CHOICE, LOOP | Same forms, either mode. CONS keeps semantic entailment premises. Sequence, choice, and parallel premises use a common mode; weakening can align them. |
 | ASSIGN | Full capture-avoiding substitution over the whole assertion grammar. Requires the destination absent from `fv(J)`, to preserve the shared invariant when the lock is free. |
-| LOAD | Printed strong-temporal form is proved. The destination must be absent from the address, processor annotation, asserted value, retained assertion, and invariant. The appendix's freshness qualifications are explicit; they are not inferred from the unqualified figure. |
-| STORE | Printed strong-temporal form is proved, without a new variable side condition. |
+| LOAD | Original strong-temporal form is proved. The destination must be absent from the address, processor annotation, asserted value, retained assertion, and invariant. The appendix's freshness qualifications are explicit; they are not inferred from the unqualified figure. |
+| STORE | Original strong-temporal form is proved, without a new variable side condition. |
 | LOAD-ANY, STORE-ANY | Added rules accessing `C(a,v)` regardless of its existential writer. Needed for cells transferred from the pool. These rules do not grant the acting processor a completeness mark. LOAD-ANY requires destination freshness for the address, asserted value, retained assertion, and `J`; it does not need annotation freshness because that annotation is absent from the preserved cell assertion. |
-| FENCE | The printed small form `{emp} fence_i {bar(i)}` is a constructor at either mode. The more general `{P} fence_i {P ; bar(i)}` is derived at either mode by `owned_derive_fence_after` in `OwnedFenceExamples.v`; it is not an extra calculus constructor. |
+| FENCE | The original small form `{emp} fence_i {bar(i)}` is a constructor at either mode. The more general `{P} fence_i {P ; bar(i)}` is derived at either mode by `owned_derive_fence_after` in `OwnedFenceExamples.v`; it is not an extra calculus constructor. |
 | LOCK | Replaced by explicit acquisition: `{emp} acquire(i) {(lock(i) * J) ; bar(i)}`, either mode. The invariant's cells become local ownership, with no imported foreign-processor marks. |
 | UNLOCK | Replaced by explicit restoration/donation: from `A ; bar(i) ⊨ J * B`, derive `{lock(i) * A} release(i) {B}` in DJ only. `A` and `B` are arbitrary assertions. The machine's existing release guard supplies the actor's drain; there is no extra fence instruction. |
 | INV | Removed. Invariant transfer occurs at the actual acquire/release actions. Retaining INV would reintroduce the checked stale-value and foreign-barrier derivations. |
 | FRAME-SP | Same assertion form and usual variable condition, either mode. No lock-free-frame or register-preservation condition. |
 | FRAME-TM | Original assertion form and variable condition, restricted to an OV premise and conclusion. There is no syntactic “no unlock” premise. DJ validity alone is insufficient. |
 | FRAME-STM | Omitted. A checked DJ counterexample exploits independent witnesses in the two conjuncts of `⋉`. The connective itself is retained unchanged and works in LOAD/STORE. No common-witness constructor was added. `owned_safe_common_frame` now proves resource-level framing when the same witnesses satisfy both relations, in either mode, including release; the abbreviation alone does not imply that premise. Soundness or failure of the unrestricted abbreviation rule in OV is not claimed. |
-| CONC | Printed mutual variable-interference condition, plus neither command modifies a free variable of `J`. Supports arbitrary commands, nested parallel composition, and disjoint register updates. |
-| EX | Printed freshness in command and postcondition, plus freshness in `J`. `owned_exists_valid` proves the rule in both modes by stack-agreement transport. |
-| SHARE | Unrestricted form omitted. `owned_printed_share_lock_counterexample` now refutes unrestricted SHARE with the transferring LOCK rule in both modes. Syntactic absence of Lock atoms is also insufficient (`owned_syntactic_lock_free_share_counterexample`). Restricted SHARE requiring every pre/post model to be lock-free is now proved in DJ and OV (`owned_share_valid`, `owned_share_overlap_valid`), with no extra premise. These are semantic theorems with corollaries from derivations; no new constructor is added. Top-level adequacy already starts directly with a pool satisfying `J`. |
+| CONC | Original mutual variable-interference condition, plus neither command modifies a free variable of `J`. Supports arbitrary commands, nested parallel composition, and disjoint register updates. |
+| EX | Original freshness in command and postcondition, plus freshness in `J`. `owned_exists_valid` proves the rule in both modes by stack-agreement transport. |
+| SHARE | Unrestricted form omitted. `owned_original_share_lock_counterexample` now refutes unrestricted SHARE with the transferring LOCK rule in both modes. Syntactic absence of Lock atoms is also insufficient (`owned_syntactic_lock_free_share_counterexample`). Restricted SHARE requiring every pre/post model to be lock-free is now proved in DJ and OV (`owned_share_valid`, `owned_share_overlap_valid`), with no extra premise. These are semantic theorems with corollaries from derivations; no new constructor is added. Top-level adequacy already starts directly with a pool satisfying `J`. |
 | Mode weakening | New explicit OV → DJ rule. It packages the proved inclusion of semantic validities. |
 
 There are 21 constructors. None contains `owned_safe`, `owned_valid`, or an
@@ -100,9 +100,9 @@ whose displayed syntax is unchanged.
 
 | Area | Difference and reason |
 | --- | --- |
-| Temporal compatibility | Conflicts are checked for all active processors, including blocked ones. The printed blocking exception allows regrouping to change whether a composition is defined. `StableCompatibility.v` proves the repair and its conservativity. |
-| Spatiotemporal buffer merge (`#`) | Uses event-ordered overriding, retaining write occurrences and requiring earlier-component writes to precede later-component writes to the same address. The printed interleaving-plus-lookup condition loses occurrence information. The repaired operation has constructive associativity and actual flush decomposition. |
-| Separating implications | All three wands quantify over resource futures before testing extensions. The printed pointwise temporal wand is not flushing closed. The repaired semantics has closure for the whole assertion grammar and proved wand adjunctions. Wand-free formulas agree with the earlier repaired interpretation, not necessarily with the original compatibility relation. |
+| Temporal compatibility | Conflicts are checked for all active processors, including blocked ones. The original blocking exception allows regrouping to change whether a composition is defined. `StableCompatibility.v` proves the repair and its conservativity. |
+| Spatiotemporal buffer merge (`#`) | Uses event-ordered overriding, retaining write occurrences and requiring earlier-component writes to precede later-component writes to the same address. The original interleaving-plus-lookup condition loses occurrence information. The repaired operation has constructive associativity and actual flush decomposition. |
+| Separating implications | All three wands quantify over resource futures before testing extensions. The original pointwise temporal wand is not flushing closed. The repaired semantics has closure for the whole assertion grammar and proved wand adjunctions. Wand-free formulas agree with the earlier repaired interpretation, not necessarily with the original compatibility relation. |
 | Atomic assertions and grammar | No new atom or constructor. `emp`, write, lock, and barrier atoms keep their pre-retirement meanings. There are no tombstones or retirement marks. The original all-processor `A.points_to` abbreviation remains available unchanged under its own name. |
 | Weakened cell abbreviation | `C(a,v) = ∃k. (a ↦ₖ v ; bar(k))`, with a fresh binder. It describes a flushed cell with some writer's mark, rather than marks for every active processor. This is an abbreviation in the existing grammar. |
 | Shared invariants | Syntactic fragment: `emp`, `C(a,v)`, spatial conjunction, disjunction, existential quantification, and guards `b ∧ H` with `H` itself in the fragment. Bare pure assertions are excluded because they can absorb pending buffers. Arbitrary assertions, including wands, remain allowed in specifications and frames. |

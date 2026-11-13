@@ -100,11 +100,11 @@ Proof.
   destruct (indexed_repaired_flush_split _ _ _ _ _ _ (memory_spatial_in_repaired active _ _ _ Hsp) Hflush)
     as [[a' [Ha Hsep]] | [b' [Hb Hsep]]].
   - left; exists a'; split; [exact Ha |].
-    eapply spatial_frame_recombination; [exact Hsp | | |apply memory_repaired_in_printed, Hsep].
+    eapply spatial_frame_recombination; [exact Hsp | | |apply memory_repaired_in_original, Hsep].
     + apply (flush_domain_subset _ _ _ (flush_at_forget _ _ _ _ Ha)).
     + intros loc H; exact H.
   - right; exists b'; split; [exact Hb |].
-    eapply spatial_frame_recombination; [exact Hsp | | |apply memory_repaired_in_printed, Hsep].
+    eapply spatial_frame_recombination; [exact Hsp | | |apply memory_repaired_in_original, Hsep].
     + intros loc H; exact H.
     + apply (flush_domain_subset _ _ _ (flush_at_forget _ _ _ _ Hb)).
 Qed.
@@ -190,7 +190,7 @@ Lemma stable_temporal_lift active ma mb out ga gb gout :
   repaired_temporal active (Generalized ma ga) (Generalized mb gb) (Generalized out gout).
 Proof.
   intros [Hstable Hmerge] Hbefore Hcomplete. split; [exact Hstable |]. split.
-  - split; [apply stable_implies_printed_compatible, Hstable | exact Hmerge].
+  - split; [apply stable_implies_original_compatible, Hstable | exact Hmerge].
   - split; assumption.
 Qed.
 

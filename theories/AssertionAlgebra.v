@@ -175,8 +175,8 @@ Proof.
 Qed.
 
 (** Positive formulas transfer from the final interpretation to the
-    printed one. This is one-way: stable compatibility is stronger. *)
-Lemma assertion_wand_free_in_printed active p : wand_free p -> forall s r,
+    original one. This is one-way: stable compatibility is stronger. *)
+Lemma assertion_wand_free_in_original active p : wand_free p -> forall s r,
   persistent_models active s r p -> models active s r p.
 Proof.
   induction p; intros Hfree s r HP; cbn [wand_free] in Hfree;

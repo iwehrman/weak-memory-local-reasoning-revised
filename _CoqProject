@@ -138,12 +138,12 @@ theories/RetirementFlushing.v
 theories/Specifications.v
 theories/Examples.v
 theories/ReviewObstructions.v
-theories/PrintedDerivations.v
-theories/PrintedPointsToDerivations.v
+theories/OriginalDerivations.v
+theories/OriginalPointsToDerivations.v
 theories/OwnedPointsToRules.v
 theories/OwnedAlternativeRules.v
 theories/OwnedAlternativeCounterexamples.v
-theories/PrintedStrongFrame.v
+theories/OriginalStrongFrame.v
 theories/OwnedCommonSplit.v
 theories/OwnedCommonSplitExamples.v
 theories/AssertionCellAlgebra.v

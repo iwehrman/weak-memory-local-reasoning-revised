@@ -55,12 +55,12 @@ Proof.
     unfold RH.retire. rewrite RH.set_same. reflexivity.
 Qed.
 
-(** * R3. History invention in the PRINTED interpretation: the model does not
+(** * R3. History invention in the ORIGINAL interpretation: the model does not
     record history, so a current flushed cell entails any stale earlier value
     at the same address.  Hence [C(x,7)] and [C(x,5) ; C(x,7)] are equivalent. *)
 Definition cellm loc v := Memory (heap_update empty_heap loc v) empty_buffers no_blocked.
 
-Theorem printed_history_invention active s (r : resource active) i x old v :
+Theorem original_history_invention active s (r : resource active) i x old v :
   models active s r (processor_cell i x v) ->
   models active s r (A.Temporal (processor_cell i x old) (processor_cell i x v)).
 Proof.

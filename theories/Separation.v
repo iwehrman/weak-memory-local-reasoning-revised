@@ -294,7 +294,7 @@ Proof.
   exact (proj1 (proj1 (spatial_empty_right r))).
 Qed.
 
-(** Reflexive finite flushing, used in the printed frame conjecture. *)
+(** Reflexive finite flushing, used in the original frame conjecture. *)
 Inductive memory_flushes active : memory -> memory -> Prop :=
 | MemoryFlushesRefl m : memory_flushes active m m
 | MemoryFlushesNext a b c :

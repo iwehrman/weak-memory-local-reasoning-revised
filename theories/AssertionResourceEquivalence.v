@@ -72,7 +72,7 @@ Proof.
   assert (Hst' : stable_compatible active (underlying a') (underlying b'))
     by (eapply assertion_stable_equiv; eassumption).
   split; [exact Hst' |]. split.
-  - split; [apply stable_implies_printed_compatible,Hst' |eapply assertion_merge_equiv; eassumption].
+  - split; [apply stable_implies_original_compatible,Hst' |eapply assertion_merge_equiv; eassumption].
   - split.
     + intros i Hi; rewrite <- (proj1 (proj2 Ha) i); apply Hbefore, Gb, Hi.
     + intros i; rewrite <- Ga, <- Gb, <- Gc; apply Gout.

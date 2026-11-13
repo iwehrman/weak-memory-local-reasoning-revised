@@ -104,7 +104,7 @@ Proof.
     (resource_memory two_processors (buffered_resource false b))).
   { apply single_buffer_stable; intros; reflexivity. }
   split; [exact Hstable |]. split.
-  - split; [apply stable_implies_printed_compatible, Hstable |].
+  - split; [apply stable_implies_original_compatible, Hstable |].
     split; [intros; reflexivity |]. split.
     + intros i; change (one_buffer (a ++ b) i = one_buffer a i ++ one_buffer b i).
       unfold one_buffer, buffer_update; destruct (Pos.eq_dec i 1%positive); reflexivity.

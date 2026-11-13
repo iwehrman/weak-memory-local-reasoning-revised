@@ -38,7 +38,7 @@ Definition zero_stack : stack := fun _ => 0%Z.
 
 (** A concrete instance of Figure 4.7's unrestricted assignment axiom. The
     conclusion uses precisely the full safety semantics of pp. 131-132. *)
-Theorem printed_assignment_invalid :
+Theorem original_assignment_invalid :
   ~ valid_specification all_processors invariant_x_zero pure_true set_x_one pure_true.
 Proof.
   intros Hvalid.
@@ -61,22 +61,22 @@ Proof.
   - apply empty_memory_not_locked, Hlocked.
 Qed.
 
-(** Only the pure-postcondition subset of the printed assignment axiom is
+(** Only the pure-postcondition subset of the original assignment axiom is
     needed for the refutation. This is not a replacement definition of the
     entire dissertation calculus. *)
-Inductive printed_pure_assignment : ConcurrentAssertion.assertion ->
+Inductive original_pure_assignment : ConcurrentAssertion.assertion ->
     ConcurrentAssertion.assertion -> Concurrent.command -> ConcurrentAssertion.assertion -> Prop :=
-| PrintedPureAssign invariant b x rhs processor :
-    printed_pure_assignment invariant
+| OriginalPureAssign invariant b x rhs processor :
+    original_pure_assignment invariant
       (ConcurrentAssertion.Pure (subst_bexpr x rhs b))
       (Concurrent.Prim (Concurrent.Common (Sequential.Assign x rhs)) processor)
       (ConcurrentAssertion.Pure b).
 
-Theorem printed_assignment_soundness_false :
+Theorem original_assignment_soundness_false :
   ~ (forall invariant pre c post,
-    printed_pure_assignment invariant pre c post ->
+    original_pure_assignment invariant pre c post ->
     valid_specification all_processors invariant pre c post).
 Proof.
-  intros Hsound. apply printed_assignment_invalid.
-  apply Hsound. exact (PrintedPureAssign invariant_x_zero BTrue 0 (EVal 1%Z) (EVal 1%Z)).
+  intros Hsound. apply original_assignment_invalid.
+  apply Hsound. exact (OriginalPureAssign invariant_x_zero BTrue 0 (EVal 1%Z) (EVal 1%Z)).
 Qed.

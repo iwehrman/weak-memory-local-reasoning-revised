@@ -109,7 +109,7 @@ Proof.
         [intros i _ address [w Hw] |intros i j _ _ _ address [w Hw]];
         rewrite Hbuffers in Hw; contradiction. }
     split; [exact Hstable |]. split.
-    + split; [apply stable_implies_printed_compatible, Hstable |].
+    + split; [apply stable_implies_original_compatible, Hstable |].
       split; [intros; reflexivity |]. split.
       * intros i; cbn [owned_enqueue_resource pending_write_resource proj1_sig underlying enqueue buffers pending_write_memory].
         unfold buffer_update; destruct (Pos.eq_dec i actor) as [-> |Hne];

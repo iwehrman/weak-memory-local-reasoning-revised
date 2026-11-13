@@ -1,16 +1,16 @@
 From Stdlib Require Import List ZArith.
 From WMLR Require Import Expressions Languages Machine BufferRelations Separation
   Assertions AssertionSemantics ConcreteAssertions TransferredCells Safety Specifications
-  ExecutionExamples UnlockCounterexample PrintedDerivations.
+  ExecutionExamples UnlockCounterexample OriginalDerivations.
 Import ListNotations.
 
 (** The review's two INV counterexamples, now using exactly the dissertation's
     all-processor points-to abbreviation, in the original [models] semantics.
-    The original four-rule [printed] calculus is unchanged. *)
-Definition printed_cell x v := A.points_to (EVal (Z.pos x)) (EVal v).
+    The original four-rule [original] calculus is unchanged. *)
+Definition original_cell x v := A.points_to (EVal (Z.pos x)) (EVal v).
 
-Lemma printed_cell_elim active s r x v :
-  models active s r (printed_cell x v) ->
+Lemma original_cell_elim active s r x v :
+  models active s r (original_cell x v) ->
   (exists k, active k) /\
   (forall l, hp (proj1_sig r) l = heap_update empty_heap x v l) /\
   (forall j, bf (proj1_sig r) j = []) /\
@@ -28,13 +28,13 @@ Proof.
   right; apply (proj2 (proj2 Htm)); right; exact Hmark.
 Qed.
 
-Lemma printed_cell_intro active s r x v :
+Lemma original_cell_intro active s r x v :
   (exists k, active k) ->
   (forall l, hp (proj1_sig r) l = heap_update empty_heap x v l) ->
   (forall j, bf (proj1_sig r) j = []) ->
   lock_free (gmem active r) ->
   (forall j, ~ active j \/ complete (proj1_sig r) j) ->
-  models active s r (printed_cell x v).
+  models active s r (original_cell x v).
 Proof.
   intros [k Hk] Hh Hb Hf Hall.
   destruct (proj2_sig r) as [_ [Hact _]].
@@ -65,12 +65,12 @@ Proof.
 Qed.
 
 
-Lemma printed_points_invent active x old v i :
-  assertion_entails active (A.Spatial (printed_cell x v) (lockA i))
-    (A.Temporal (printed_cell x old) (A.Spatial (printed_cell x v) (lockA i))).
+Lemma original_points_invent active x old v i :
+  assertion_entails active (A.Spatial (original_cell x v) (lockA i))
+    (A.Temporal (original_cell x old) (A.Spatial (original_cell x v) (lockA i))).
 Proof.
   intros s r Hr. pose proof Hr as Hr0. destruct Hr as (rc & rl & Hsp & Hc & Hl).
-  destruct (printed_cell_elim _ _ _ _ _ Hc) as [[k Hk] (Hch & Hcb & Hcf & Hall)].
+  destruct (original_cell_elim _ _ _ _ _ Hc) as [[k Hk] (Hch & Hcb & Hcf & Hall)].
   destruct (lock_elim _ _ _ _ Hl) as (Hlh & Hlb & _).
   destruct (spatial_parts _ _ _ Hsp) as (Hh & Hb & Hbk & Hg & _).
   destruct (proj2_sig r) as [_ [Hact _]].
@@ -93,19 +93,19 @@ Proof.
       * split; [intros j; reflexivity | intros j; simpl; unfold no_blocked; tauto].
     + intros j _; reflexivity.
     + intros j; simpl; tauto.
-  - apply printed_cell_intro; [exists k; exact Hk | | | |].
+  - apply original_cell_intro; [exists k; exact Hk | | | |].
     + intros; reflexivity.
     + intros; reflexivity.
     + intros j H; exact H.
     + intros j; destruct (Hall j) as [H |H]; [left; exact H |right; apply Hg; left; exact H].
 Qed.
 
-Lemma printed_points_unit active x v i :
-  assertion_entails active (A.Temporal (printed_cell x v) (A.Spatial A.Emp (lockA i)))
-    (A.Spatial (printed_cell x v) (lockA i)).
+Lemma original_points_unit active x v i :
+  assertion_entails active (A.Temporal (original_cell x v) (A.Spatial A.Emp (lockA i)))
+    (A.Spatial (original_cell x v) (lockA i)).
 Proof.
   intros s r (a & m & Ht & Hc & (e & rl & Hsp & He & Hl)).
-  destruct (printed_cell_elim _ _ _ _ _ Hc) as [[k Hk] (Hah & Hab & Haf & Hall)].
+  destruct (original_cell_elim _ _ _ _ _ Hc) as [[k Hk] (Hah & Hab & Haf & Hall)].
   destruct (lock_elim _ _ _ _ Hl) as (Hlh & Hlb & Hheld).
   destruct (emp_elim _ _ _ He) as (Heh & Heb & Hek).
   destruct (spatial_parts _ _ _ Hsp) as (Hmh & Hmb & Hmk & Hmg & _).
@@ -133,24 +133,24 @@ Proof.
       * intros [H | H]; [left; exact H | right; right; exact H].
     + intros j. simpl. split; [intros H; left; exact H |].
       intros [H | H]; [exact H |]. apply Hg. right. apply Hmg. right. exact H.
-  - apply printed_cell_intro; [exists k; exact Hk |exact Hah |exact Hab |exact Haf |].
+  - apply original_cell_intro; [exists k; exact Hk |exact Hah |exact Hab |exact Haf |].
     intros j; destruct (Hall j) as [H |H]; [left; exact H |right; apply Hg; left; exact H].
 Qed.
 
-Lemma printed_points_donate active x v i :
+Lemma original_points_donate active x v i :
   assertion_entails active
-    (A.Spatial (A.Or A.Emp (printed_cell x v)) (A.Spatial (printed_cell x v) (lockA i)))
-    (A.Spatial (A.Or A.Emp (printed_cell x v)) (A.Spatial A.Emp (lockA i))).
+    (A.Spatial (A.Or A.Emp (original_cell x v)) (A.Spatial (original_cell x v) (lockA i)))
+    (A.Spatial (A.Or A.Emp (original_cell x v)) (A.Spatial A.Emp (lockA i))).
 Proof.
   intros s r (rJ & rest & Hsp & HJ & (rc & rl & Hsp2 & Hc & Hl)).
-  destruct (printed_cell_elim _ _ _ _ _ Hc) as [[k Hk] (Hch & Hcb & Hcf & Hall)].
+  destruct (original_cell_elim _ _ _ _ _ Hc) as [[k Hk] (Hch & Hcb & Hcf & Hall)].
   destruct (lock_elim _ _ _ _ Hl) as (Hlh & Hlb & Hheld).
   destruct (spatial_parts _ _ _ Hsp) as (Hh & Hb & Hbk & Hg & Hdis).
   destruct (spatial_parts _ _ _ Hsp2) as (Hrh & Hrb & Hrk & Hrg & _).
   unfold hp in Hch.
   unfold gmem in *.
   destruct HJ as [He | HJc].
-  2:{ exfalso. destruct (printed_cell_elim _ _ _ _ _ HJc) as [_ (HJh & _)].
+  2:{ exfalso. destruct (original_cell_elim _ _ _ _ _ HJc) as [_ (HJh & _)].
       apply (Hdis x v v).
       - unfold hp, gmem in *. rewrite HJh. apply heap_update_same.
       - rewrite Hrh. unfold heap_override. rewrite Hlh. unfold hp. rewrite Hch. apply heap_update_same. }
@@ -193,13 +193,13 @@ Proof.
     + intros j. simpl. tauto.
 Qed.
 
-Lemma printed_points_import active k x v i : active k ->
+Lemma original_points_import active k x v i : active k ->
   assertion_entails active
-    (A.Spatial (printed_cell x v) (A.Spatial A.Emp (lockA i)))
-    (A.Spatial (printed_cell x v) (A.Spatial (barA k) (lockA i))).
+    (A.Spatial (original_cell x v) (A.Spatial A.Emp (lockA i)))
+    (A.Spatial (original_cell x v) (A.Spatial (barA k) (lockA i))).
 Proof.
   intros Hactive s r (rJ & rest & Hsp & HJ & (re & rl & Hsp2 & He & Hl)).
-  destruct (printed_cell_elim _ _ _ _ _ HJ) as [_ (_ & _ & _ & Hall)].
+  destruct (original_cell_elim _ _ _ _ _ HJ) as [_ (_ & _ & _ & Hall)].
   destruct (lock_elim _ _ _ _ Hl) as (Hlh & Hlb & Hheld).
   destruct (emp_elim _ _ _ He) as (Heh & Heb & Hek).
   destruct (spatial_parts _ _ _ Hsp2) as (Hrh & _ & _ & Hrg & _).
@@ -222,27 +222,27 @@ Proof.
       split; [exact He | right; right; destruct (Hall k); [contradiction |assumption]].
 Qed.
 
-Theorem printed_points_derives_stale_value active x old v i :
-  printed active (A.Or A.Emp (printed_cell x v))
-    (A.Spatial (printed_cell x v) (lockA i)) (skip1 i)
-    (A.Spatial (printed_cell x old) (lockA i)).
+Theorem original_points_derives_stale_value active x old v i :
+  original active (A.Or A.Emp (original_cell x v))
+    (A.Spatial (original_cell x v) (lockA i)) (skip1 i)
+    (A.Spatial (original_cell x old) (lockA i)).
 Proof.
-  eapply PCons; [apply printed_points_invent | |apply printed_points_unit].
+  eapply PCons; [apply original_points_invent | |apply original_points_unit].
   apply PFrameTm; [|apply skip_frame_condition].
-  apply PInv; eapply PCons; [apply printed_points_donate |apply PSkip |apply entails_refl].
+  apply PInv; eapply PCons; [apply original_points_donate |apply PSkip |apply entails_refl].
 Qed.
 
-Theorem printed_points_derives_foreign_barrier active k x v i R : active k ->
-  printed active (printed_cell x v)
+Theorem original_points_derives_foreign_barrier active k x v i R : active k ->
+  original active (original_cell x v)
     (A.Temporal R (A.Spatial A.Emp (lockA i))) (skip1 i)
     (A.Temporal R (A.Spatial (barA k) (lockA i))).
 Proof.
   intros Hk; apply PFrameTm; [|apply skip_frame_condition].
-  apply PInv; eapply PCons; [apply printed_points_import,Hk |apply PSkip |apply entails_refl].
+  apply PInv; eapply PCons; [apply original_points_import,Hk |apply PSkip |apply entails_refl].
 Qed.
 
-Lemma printed_points_held7_pre s : full_satisfies two_processors s held7
-  (A.Spatial (printed_cell X 7%Z) (lockA P1)).
+Lemma original_points_held7_pre s : full_satisfies two_processors s held7
+  (A.Spatial (original_cell X 7%Z) (lockA P1)).
 Proof.
   exists (exist _ _ (two_wf _ held7_wf)). split; [reflexivity |].
   exists (exist _ _ (two_wf _ cell7_wf)), owned_lock_resource. split; [| split].
@@ -251,7 +251,7 @@ Proof.
     + intros j H _; exact H.
     + intros j. unfold no_blocked. tauto.
     + intros j. tauto.
-  - apply printed_cell_intro; [exists 1%positive; left; reflexivity | | | |].
+  - apply original_cell_intro; [exists 1%positive; left; reflexivity | | | |].
     + intros; reflexivity.
     + intros; reflexivity.
     + intros j H; exact H.
@@ -263,11 +263,11 @@ Proof.
     split; [reflexivity |]. split; [reflexivity | exact owned_lock_held].
 Qed.
 
-Lemma printed_points_held7_not_post s : ~ full_satisfies two_processors s held7
-  (A.Spatial (printed_cell X 5%Z) (lockA P1)).
+Lemma original_points_held7_not_post s : ~ full_satisfies two_processors s held7
+  (A.Spatial (original_cell X 5%Z) (lockA P1)).
 Proof.
   intros (r & Hr & (rc & rl & Hsp & Hc & Hl)).
-  destruct (printed_cell_elim _ _ _ _ _ Hc) as [_ (Hch & _)].
+  destruct (original_cell_elim _ _ _ _ _ Hc) as [_ (Hch & _)].
   destruct (lock_elim _ _ _ _ Hl) as (Hlh & _).
   destruct (spatial_parts _ _ _ Hsp) as (Hh & _).
   specialize (Hh X). unfold heap_override in Hh. rewrite Hlh in Hh.
@@ -275,33 +275,33 @@ Proof.
   rewrite heap_update_same in Hh. discriminate.
 Qed.
 
-(** The printed rules derive a specification that is false of a terminal
-    state, and invalid for the printed safety predicate. *)
-Theorem printed_points_stale_value_unsound :
-  let J := A.Or A.Emp (printed_cell X 7%Z) in
-  let pre := A.Spatial (printed_cell X 7%Z) (lockA P1) in
-  let post := A.Spatial (printed_cell X 5%Z) (lockA P1) in
-  printed two_processors J pre (skip1 P1) post /\
+(** The original rules derive a specification that is false of a terminal
+    state, and invalid for the original safety predicate. *)
+Theorem original_points_stale_value_unsound :
+  let J := A.Or A.Emp (original_cell X 7%Z) in
+  let pre := A.Spatial (original_cell X 7%Z) (lockA P1) in
+  let post := A.Spatial (original_cell X 5%Z) (lockA P1) in
+  original two_processors J pre (skip1 P1) post /\
   (forall s, full_satisfies two_processors s held7 pre /\
              ~ full_satisfies two_processors s held7 post) /\
   ~ valid_specification two_processors J pre (skip1 P1) post.
 Proof.
-  split; [apply printed_points_derives_stale_value |].
-  split; [intros s; split; [apply printed_points_held7_pre | apply printed_points_held7_not_post] |].
-  apply (skip_needs_post _ _ _ _ _ (fun _ => 0%Z) held7); [apply printed_points_held7_pre | apply printed_points_held7_not_post].
+  split; [apply original_points_derives_stale_value |].
+  split; [intros s; split; [apply original_points_held7_pre | apply original_points_held7_not_post] |].
+  apply (skip_needs_post _ _ _ _ _ (fun _ => 0%Z) held7); [apply original_points_held7_pre | apply original_points_held7_not_post].
 Qed.
 
 
-Theorem printed_points_foreign_barrier_unsound :
-  let J := printed_cell X 7%Z in
+Theorem original_points_foreign_barrier_unsound :
+  let J := original_cell X 7%Z in
   let pre := A.Temporal Rpend (A.Spatial A.Emp (lockA P1)) in
   let post := A.Temporal Rpend (A.Spatial (barA P2) (lockA P1)) in
-  printed two_processors J pre (skip1 P1) post /\
+  original two_processors J pre (skip1 P1) post /\
   (forall s, full_satisfies two_processors s held_pend pre /\
              ~ full_satisfies two_processors s held_pend post) /\
   ~ valid_specification two_processors J pre (skip1 P1) post.
 Proof.
-  split; [apply printed_points_derives_foreign_barrier; right; reflexivity |].
+  split; [apply original_points_derives_foreign_barrier; right; reflexivity |].
   split; [intros s; split; [apply held_pend_pre | apply held_pend_not_post] |].
   apply (skip_needs_post _ _ _ _ _ (fun _ => 0%Z) held_pend);
     [apply held_pend_pre | apply held_pend_not_post].

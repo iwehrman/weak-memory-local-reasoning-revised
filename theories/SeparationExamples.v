@@ -151,7 +151,7 @@ Qed.
 
 (** The quantified assertion of Conjecture 1, p. 174, on the concrete
     operational model. Flushing is oriented from the original to its residual. *)
-Definition printed_conjecture1 active : Prop :=
+Definition original_conjecture1 active : Prop :=
   forall frame local whole frame' local' whole' command next s s',
     memory_spatial frame local whole ->
     step active command (State s whole) next (State s' whole') ->
@@ -160,7 +160,7 @@ Definition printed_conjecture1 active : Prop :=
     forall out, memory_spatiotemporal active frame' local' out <->
       memory_spatial frame' local' out.
 
-Theorem printed_conjecture1_false : ~ printed_conjecture1 all_processors.
+Theorem original_conjecture1_false : ~ original_conjecture1 all_processors.
 Proof.
   intros Hconjecture.
   set (cell := cell_memory 1%positive 7%Z).

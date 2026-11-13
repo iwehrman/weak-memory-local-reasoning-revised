@@ -4,7 +4,7 @@ From WMLR Require Import Expressions Machine BufferRelations Separation
 Import ListNotations.
 
 (** Candidate assertion semantics: retain the atoms and spatial separator;
-    use the stable temporal separator. This is separate from the printed
+    use the stable temporal separator. This is separate from the original
     interpretation, including for the universally quantified wands. *)
 Definition repaired_interpretation active : interpretation (resource active) := {|
   empty_resource := fun r => empty_atom (proj1_sig r);

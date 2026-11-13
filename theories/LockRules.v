@@ -101,7 +101,7 @@ Proof.
         split; [exact Hi |intros k; reflexivity].
 Qed.
 
-(** The printed arbitrary-invariant unlock rule is invalid (see the checked
+(** The original arbitrary-invariant unlock rule is invalid (see the checked
     counterexample). For a pure invariant, explicitly requiring its truth in
     the precondition suffices to restore it at release. *)
 Theorem persistent_unlock_pure_valid active invariant i :

@@ -172,7 +172,7 @@ Proof.
   { split; [intros i H _; exact H |]. split;
       [intros i _ loc [v H] |intros i j _ _ _ loc [v H]]; contradiction. }
   split; [exact Hstable |]. split.
-  - split; [apply stable_implies_printed_compatible, Hstable |]. split.
+  - split; [apply stable_implies_original_compatible, Hstable |]. split.
     + intros loc; change (heap_update empty_heap 2%positive 7%Z loc =
         heap_override (heap_update empty_heap 2%positive 7%Z) (heap_update empty_heap 2%positive 7%Z) loc).
       unfold heap_override, heap_update, empty_heap; destruct (Pos.eq_dec loc 2%positive); reflexivity.

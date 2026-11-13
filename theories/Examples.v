@@ -77,7 +77,7 @@ Example substitution_evaluates_in_original_stack :
 Proof. reflexivity. Qed.
 
 (** The pure-assertion part of the assignment issue is model-independent.
-    A refutation of the full printed soundness theorem still needs the
+    A refutation of the full original soundness theorem still needs the
     concrete safety predicate and derivation rules. *)
 Example assignment_can_break_pure_invariant {resource}
     (model : interpretation resource) (r : resource) (s : stack) x :

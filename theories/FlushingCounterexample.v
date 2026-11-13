@@ -67,7 +67,7 @@ Proof.
     + intros i j _ _ _ loc [v H]; rewrite wand_flushed_buffers in H; contradiction.
   - split.
     + split.
-      * apply stable_implies_printed_compatible. split; [intros i H; contradiction |]. split.
+      * apply stable_implies_original_compatible. split; [intros i H; contradiction |]. split.
         -- intros i _ loc [v H]; rewrite wand_flushed_buffers in H; contradiction.
         -- intros i j _ _ _ loc [v H]; rewrite wand_flushed_buffers in H; contradiction.
       * split; [intros loc; reflexivity |]. split.

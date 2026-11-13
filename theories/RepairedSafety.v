@@ -21,7 +21,7 @@ Record repaired_environment active (invariant : state_predicate) s local shared 
     must come from their previous combined ownership region. This permits
     transfers through the invariant but excludes inventing overlap with an
     external spatial frame. It is an extra witness obligation, not a theorem
-    about arbitrary decompositions admitted by the printed safety predicate. *)
+    about arbitrary decompositions admitted by the original safety predicate. *)
 Definition ownership_preserved local shared local' shared' : Prop :=
   (forall loc, memory_domain local' loc -> memory_domain local loc \/ memory_domain shared loc) /\
   (forall loc, memory_domain shared' loc -> memory_domain local loc \/ memory_domain shared loc).

@@ -62,7 +62,7 @@ Qed.
 Lemma alternative_points_to_writer active address value :
   persistent_entails active (A.points_to address value) (writer_points_to address value).
 Proof.
-  intros s r HP; apply assertion_wand_free_in_printed in HP;
+  intros s r HP; apply assertion_wand_free_in_original in HP;
     [|cbn [A.points_to wand_free]; tauto].
   destruct (points_to_requires_flushed _ _ _ _ _ HP)
     as (loc & owner & E & Hi & [Hh [Hb [Hk Hm]]] & Hall).

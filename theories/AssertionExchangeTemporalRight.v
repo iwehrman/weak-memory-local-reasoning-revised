@@ -80,7 +80,7 @@ Proof.
   { split; [intros i H; contradiction |]. split;
       [intros i _ loc [v H]; contradiction |intros i j _ _ _ loc [v H]; contradiction]. }
   split; [exact Hstable |]. split.
-  - split; [apply stable_implies_printed_compatible,Hstable |]. split.
+  - split; [apply stable_implies_original_compatible,Hstable |]. split.
     + exact (proj1 (proj2 (proj1 exchange_temporal_right_spatial))).
     + split; [intros; reflexivity |intros i; cbn; unfold no_blocked; tauto].
   - split; [intros; reflexivity |intros i; cbn; tauto].

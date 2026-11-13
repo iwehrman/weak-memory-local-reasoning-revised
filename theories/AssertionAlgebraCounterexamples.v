@@ -59,7 +59,7 @@ Proof.
   { split; [intros i H; contradiction |]. split;
       [intros i _ loc [v H]; contradiction |intros i j _ _ _ loc [v H]; contradiction]. }
   split; [exact Hstable |]. split.
-  - split; [apply stable_implies_printed_compatible,Hstable |].
+  - split; [apply stable_implies_original_compatible,Hstable |].
     split; [intros; reflexivity |]. split; [intros; reflexivity |intros i; cbn; tauto].
   - split; [intros; reflexivity |].
     intros i; change (i = 1%positive <-> i = 1%positive \/ False \/ i = 1%positive); tauto.
@@ -225,16 +225,16 @@ Proof.
     apply Hheld in Hblocked; destruct Hblocked as [_ Hne]; contradiction.
 Qed.
 
-(** Both countermodels also refute the laws in the printed interpretation.
+(** Both countermodels also refute the laws in the original interpretation.
     They are not introduced by future-aware wands or stable compatibility. *)
-Theorem assertion_strong_associativity_printed_right_model s :
+Theorem assertion_strong_associativity_original_right_model s :
   models two_processors s algebra_whole
     (A.strong_temporal algebra_P (A.strong_temporal algebra_Q algebra_R)).
 Proof.
-  apply assertion_wand_free_in_printed; [repeat split; exact I |apply assertion_strong_associativity_right_model].
+  apply assertion_wand_free_in_original; [repeat split; exact I |apply assertion_strong_associativity_right_model].
 Qed.
 
-Theorem assertion_strong_associativity_printed_left_not_model s :
+Theorem assertion_strong_associativity_original_left_not_model s :
   ~ models two_processors s algebra_whole
     (A.strong_temporal (A.strong_temporal algebra_P algebra_Q) algebra_R).
 Proof.
@@ -261,9 +261,9 @@ Proof.
   - rewrite Hb in Hbuffers; discriminate.
 Qed.
 
-Theorem assertion_lock_multiplication_printed_model kind s :
+Theorem assertion_lock_multiplication_original_model kind s :
   models two_processors s algebra_both_blocked
     (assertion_conjunction kind (A.Lock (EVal 1%Z)) (A.Lock (EVal 2%Z))).
 Proof.
-  apply assertion_wand_free_in_printed; [destruct kind; repeat split; exact I |apply assertion_lock_multiplication_model].
+  apply assertion_wand_free_in_original; [destruct kind; repeat split; exact I |apply assertion_lock_multiplication_model].
 Qed.

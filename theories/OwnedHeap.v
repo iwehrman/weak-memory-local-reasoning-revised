@@ -145,7 +145,7 @@ Proof.
   intros s local [Hsp Htm] actor E; exact (spatial_write_access _ _ _ _ _ _ _ _ Hsp E).
 Qed.
 
-(** Explicit additions to the printed schemas: a buffer-free cell can be
+(** Explicit additions to the original schemas: a buffer-free cell can be
     read or written by any processor, without adding completeness marks. *)
 Theorem owned_load_any_writer_valid active mode invariant address value annotation tail x :
   ~ In x (A.fv invariant) -> ~ In x (expr_fv address ++ expr_fv value ++ A.fv tail) ->

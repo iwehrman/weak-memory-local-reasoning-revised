@@ -47,7 +47,7 @@ Proof.
   intros Hnone address; exfalso; exact (Hnone owner Hmark).
 Defined.
 
-(** E12: the printed successive-write collapse, for arbitrary expressions.
+(** E12: the original successive-write collapse, for arbitrary expressions.
     No active-processor premise is needed: invalid annotations make both
     sides false. Old and new values may differ. *)
 Theorem assertion_successive_writes_collapse active address annotation old next s r :
@@ -79,7 +79,7 @@ Proof.
     { split; [intros i H; contradiction |]. split;
         [intros i _ l [v H]; contradiction |intros i j _ _ _ l [v H]; contradiction]. }
     split; [exact Hstable |]. split.
-    + split; [apply stable_implies_printed_compatible,Hstable |]. split.
+    + split; [apply stable_implies_original_compatible,Hstable |]. split.
       * intros l; change (shared_heap (resource_memory active r) l =
           heap_override (heap_update empty_heap loc (eval_expr s old)) (shared_heap (resource_memory active r)) l).
         unfold resource_memory,heap_override; rewrite Hh; unfold heap_update,empty_heap.
@@ -88,14 +88,14 @@ Proof.
     + split; [intros; reflexivity |intros i; cbn; tauto].
 Qed.
 
-(** T4's valid form for the printed all-processor cell. *)
+(** T4's valid form for the original all-processor cell. *)
 Theorem assertion_points_to_write_active active address value annotation :
   (forall s, exists owner, eval_expr s annotation = Z.pos owner /\ active owner) ->
   persistent_entails active (A.points_to address value) (A.LeadsTo address annotation value).
 Proof.
   intros Hannotation s r HP.
-  pose proof (assertion_wand_free_in_printed active (A.points_to address value) ltac:(cbn [A.points_to wand_free]; tauto) s r HP) as Hprinted.
-  destruct (points_to_requires_flushed _ _ _ _ _ Hprinted) as
+  pose proof (assertion_wand_free_in_original active (A.points_to address value) ltac:(cbn [A.points_to wand_free]; tauto) s r HP) as Horiginal.
+  destruct (points_to_requires_flushed _ _ _ _ _ Horiginal) as
     (loc & writer & Eaddr & Hwriter & [Hheap [Hbuffers [Hfree HwriterMark]]] & Hall).
   destruct (Hannotation s) as (owner & Eowner & Hi).
   change (write_atom active (eval_expr s address) (eval_expr s annotation) (eval_expr s value) (proj1_sig r)).

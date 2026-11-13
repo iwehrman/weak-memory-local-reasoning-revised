@@ -168,7 +168,7 @@ Proof.
       * intros j k _ _ _ address [w Hw]; rewrite Hbuffers in Hw; contradiction.
     + split.
       * split.
-        -- apply stable_implies_printed_compatible. split; [intros j Hj Hfalse; contradiction |]. split.
+        -- apply stable_implies_original_compatible. split; [intros j Hj Hfalse; contradiction |]. split.
            ++ intros j _ address [w Hw]; rewrite Hbuffers in Hw; contradiction.
            ++ intros j k _ _ _ address [w Hw]; rewrite Hbuffers in Hw; contradiction.
         -- split; [intros address; reflexivity |]. split.

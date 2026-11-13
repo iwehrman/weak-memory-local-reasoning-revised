@@ -10,7 +10,7 @@ proof unfinished. This repository finishes the job, with one caveat: the
 logic as originally stated is not sound. The mechanization shows where it
 fails, repairs it, and proves the repaired logic sound.
 
-**Start with the report: [paper/main.pdf](paper/main.pdf).** It recalls
+**Start with the report: [paper/weak-memory-local-reasoning-revised.pdf](paper/weak-memory-local-reasoning-revised.pdf).** It recalls
 the original logic, explains what was wrong and what changed, and walks
 through example proofs. It is written for a reader who knew the
 dissertation but has forgotten the details.
@@ -57,7 +57,7 @@ proofs.
 The report is built with [Tectonic](https://tectonic-typesetting.github.io):
 
 ```sh
-tectonic paper/main.tex
+tectonic paper/weak-memory-local-reasoning-revised.tex
 ```
 
 ## Where to look

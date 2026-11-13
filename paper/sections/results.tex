@@ -9,7 +9,8 @@ also $\mtruespec{J}{\modeov}{P}{c}{Q}$.
 \end{theorem}
 
 The proof is by induction on the mode-indexed derivation, one semantic
-lemma per rule. Both hypotheses are needed: dropping either admits a
+lemma per rule; the overlap-mode half first replays the derivation in
+overlap mode (\rocq{owned_derivation_unlock_free_overlap}). Both hypotheses are needed: dropping either admits a
 derivation of an invalid specification (Sections~\ref{sec:changes}
 and~\ref{sec:calculus}).
 No rule has a premise about safety or validity. \rn{cons} and \rn{unlock}

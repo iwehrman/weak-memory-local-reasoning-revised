@@ -49,16 +49,17 @@ $\mod{c_k} \cap \fv{J} = \nil$ added.}
 \rn{frame-tm} is the dissertation's rule with one more side condition: the
 command must not contain $\cunlock$, anywhere. The reason is the semantic
 one of Section~\ref{sec:model}. What the rules derive for a command that never releases is
-valid in overlap mode, where overlapping history is tolerated; a release
-is valid only in disjoint mode. The mechanized judgment carries the mode as an
+valid in overlap mode, where overlapping history is tolerated; the
+general \rn{unlock} rule is provided only in disjoint mode. The mechanized judgment carries the mode as an
 index and has 21 rules, among them a temporal frame rule for overlap mode
 and a rule weakening overlap to disjoint (Appendix~\ref{app:rules}). The
 judgment displayed here is its disjoint mode, and the displayed
 \rn{frame-tm} is derived in it: a derivation for a command without
 $\cunlock$ can be replayed in overlap mode, framed, and weakened
-(\rocq{owned_derive_temporal_frame_unlock_free}). The side condition is
-exact for the calculus, in that a specification has an overlap-mode
-derivation if and only if its command contains no $\cunlock$. It is also
+(\rocq{owned_derive_temporal_frame_unlock_free}). The side condition is exact for the calculus: among the derivable
+specifications, those with an overlap-mode derivation are the ones whose
+command contains no $\cunlock$
+(\rocq{owned_overlap_derivable_iff_unlock_free}). It is also
 needed: \rn{frame-tm} applied to a valid specification of a release can
 yield an invalid one (\rocq{owned_disjoint_temporal_frame_counterexample}).
 

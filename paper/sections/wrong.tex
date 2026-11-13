@@ -25,19 +25,19 @@ Original claim & Counterexample & Repair \\
   & With $J$ the assertion $x = 0$, the axiom derives
     $\spec{J}{\bexpt}{\cassign{x}{1}_1}{\bexpt}$, and the assignment
     falsifies $J$ with the lock free.
-    \rocq{printed_assignment_invalid}
+    \rocq{original_assignment_invalid}
   & Require $x \notin \fv{J}$. \\[2pt]
 Buffer overriding is associative (Prop.~2)
   & Three one-element buffers writing $1$, $2$, $3$ to one address: the
     list $[2,1,3]$ is in $a \override (b \override c)$ but not in
     $(a \override b) \override c$.
-    \rocq{printed_buffer_override_not_associative}
+    \rocq{original_buffer_override_not_associative}
   & A write from the later buffer may be taken only after the earlier
     buffer's writes to that address. \\[2pt]
 Spatiotemporal separation is associative
   & Compatibility ignores blocked processors, so whether two memories
     compose can depend on a third that supplies the blocking fact.
-    \rocq{printed_spatiotemporal_not_associative}
+    \rocq{original_spatiotemporal_not_associative}
   & Check conflicts whether or not the processor is blocked. \\[2pt]
 Assertions are closed under flushing (Prop.~9)
   & $\bexpf \fseqri \fbar{1}$ holds vacuously while processor $1$ has a
@@ -45,9 +45,10 @@ Assertions are closed under flushing (Prop.~9)
     \rocq{original_flushing_closure_false}
   & Implications quantify over all futures of the current memory. \\[2pt]
 Conjecture~1: after a step, a spatiotemporal split of a spatially
-split memory is spatial
+split memory is spatial, if its first part is a flushed descendant of the
+original first part
   & A cell duplicated across $\shash$ with equal values is not a spatial
-    split. \rocq{printed_conjecture1_false}
+    split. \rocq{original_conjecture1_false}
   & Not needed by the final proof. \\[2pt]
 \rn{unlock} is sound for every invariant
   & With $J = \bexpf$ and the lock held, $\cunlock_i$ is enabled and
@@ -117,7 +118,7 @@ The conclusion says that a thread holding the lock and a cell containing
 $7$ may do nothing and then own that cell containing $5$. In the state
 where processor $1$ holds the lock and $x$ contains $7$, the precondition
 holds and the postcondition does not.
-(\rocq{printed_points_stale_value_unsound}; the mechanized statement parses
+(\rocq{original_points_stale_value_unsound}; the mechanized statement parses
 \rn{inv}'s premise as $J \fsep (P \fsep \flock{i})$.)
 
 \paragraph{A $\cskip$ that drains another processor's buffer.}
@@ -134,7 +135,7 @@ $\spec{J}{\femp \fsep \flock{1}}{\cskip_1}{\fbar{2} \fsep \flock{1}}$, and
 When processor $1$ holds the lock and processor $2$'s write to $y$ is still
 buffered, the precondition holds. The postcondition places a barrier for
 processor $2$ after its pending write, which that memory does not satisfy.
-(\rocq{printed_points_foreign_barrier_unsound}.)
+(\rocq{original_points_foreign_barrier_unsound}.)
 
 \paragraph{The strong temporal frame rule does not escape.}
 One might hope that \rn{frame-stm} is safe, since its frame is also
@@ -144,7 +145,7 @@ different splits. Take $R = \femp \disj x \fpointsto 5$. In the state above,
 the spatial conjunct of $R \fsseq (x \fpointsto 7 \fsep \flock{1})$ holds
 with $R$ empty, and the temporal conjunct holds with $R$ the stale cell.
 Applying \rn{frame-stm} to step~2 yields a postcondition that the unchanged
-state cannot satisfy. (\rocq{printed_strong_frame_counterexample}; this
+state cannot satisfy. (\rocq{original_strong_frame_counterexample}; this
 derivation uses \rn{inv} and \rn{frame-stm} but not \rn{frame-tm}.)
 
 All three conclusions are also invalid for the original safety predicate,

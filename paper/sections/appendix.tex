@@ -91,16 +91,18 @@ This appendix spells out the definitions that Section~\ref{sec:model} gives
 in prose (\rocq{owned_safe}, \rocq{owned_valid}).
 
 \paragraph{Resources and futures.}
-A \emph{resource} $\nu = (\mu,\Gamma)$ is a well-formed generalized memory
-whose marks $\Gamma$ are active processors, and whose heap is empty if
-$\Gamma$ is. Its \emph{futures}, written $\nu' \modrefines \nu$, are the
+Every memory here blocks only active processors and has empty buffers at
+inactive ones. A \emph{resource} $\nu = (\mu,\Gamma)$ is a generalized
+memory whose marks $\Gamma$ are active processors, and whose heap is empty
+if $\Gamma$ is. A memory \emph{holds the lock for $i$} when $i$ is active
+and the memory blocks exactly the other active processors. Its \emph{futures}, written $\nu' \modrefines \nu$, are the
 resources reachable by any number of steps of two kinds:
 \begin{itemize}[nosep]
   \item add marks: $(\mu,\Gamma)$ becomes $(\mu,\Gamma')$ with
         $\Gamma \subseteq \Gamma'$;
   \item flush: $(\mu,\Gamma)$ becomes $(\mu',\Gamma')$, where $\mu'$ is
-        $\mu$ after the oldest buffered write of some processor $i$ not
-        blocked in $\mu$ moves to the heap, and
+        $\mu$ after the oldest buffered write of some active processor $i$
+        not blocked in $\mu$ moves to the heap, and
         $\Gamma \cup \set{i} \subseteq \Gamma'$.
 \end{itemize}
 
@@ -116,37 +118,39 @@ that
         disjoint;
   \item if $\phi = \textsf{free}$, no processor is blocked in $\mu_0$ and
         $(s,\mu_J,\setprocessors) \sentails J$; and
-  \item if $\phi = \textsf{held}(i)$, the processors blocked in $\mu_0$ are
-        exactly those other than $i$, and $\mu_J$ is empty.
+  \item if $\phi = \textsf{held}(i)$, $\mu_0$ holds the lock for $i$, and
+        $\mu_J$ is empty.
 \end{enumerate}
 
 \paragraph{Updates.}
-Let a program step perform the primitive command $\alpha$, taking the local
-resource from $\nu = (\mu,\Gamma)$ to $\nu' = (\mu',\Gamma')$, the pool from
+A program step carries an action label $\alpha$: fence by $i$, acquire by
+$i$, release by $i$, or ordinary. Stores, loads, assignments and the
+structural steps of choice, iteration and composition are ordinary. Let
+such a step take the local resource from $\nu = (\mu,\Gamma)$ to $\nu' = (\mu',\Gamma')$, the pool from
 $\mu_J$ to $\mu'_J$ and the phase from $\phi$ to $\phi'$. The step is a
 permitted \emph{update} when
 \begin{enumerate}[nosep]
   \item \emph{transfer:}
-    if $\alpha$ is $\clock_i$ then $\phi = \textsf{free}$,
-    $\phi' = \textsf{held}(i)$, $\mu'_J$ is empty and $\mu'$ blocks exactly
-    the processors other than $i$;
-    if $\alpha$ is $\cunlock_i$ then $\phi = \textsf{held}(i)$,
-    $\phi' = \textsf{free}$, $\mu$ blocks exactly the processors other than
-    $i$ and $\mu'$ blocks none;
+    if $\alpha$ is an acquire by $i$ then $\phi = \textsf{free}$,
+    $\phi' = \textsf{held}(i)$, $\mu'_J$ is empty and $\mu'$ holds the lock
+    for $i$;
+    if $\alpha$ is a release by $i$ then $\phi = \textsf{held}(i)$,
+    $\phi' = \textsf{free}$, $\mu$ holds the lock for $i$ and $\mu'$ blocks
+    no processor;
     otherwise $\phi' = \phi$, $\mu'_J = \mu_J$, and $\mu'$ blocks the same
     processors as $\mu$;
   \item \emph{footprint:} every address of $\mu'_J$ or $\mu'$ is an address
     of $\mu_J$ or $\mu$; and
   \item \emph{mark budget:} $\Gamma' \subseteq \Gamma \cup \set{i}$ if
-    $\alpha$ is $\cfence_i$, $\clock_i$ or $\cunlock_i$, and
-    $\Gamma' \subseteq \Gamma$ otherwise.
+    $\alpha$ is a fence, acquire or release by $i$, and
+    $\Gamma' \subseteq \Gamma$ if $\alpha$ is ordinary.
 \end{enumerate}
 
 \paragraph{Safety and validity.}
 $\safe{0}{c,s,\nu,J,Q}$ always holds. $\safe{n+1}{c,s,\nu,J,Q}$ holds in
 mode $m$ when, for every future $\nu_1 \modrefines \nu$:
 \begin{enumerate}[nosep]
-  \item if $c$ has terminated then $s,\nu_1 \sentails Q$; and
+  \item if $c$ is $\cskip$ then $s,\nu_1 \sentails Q$; and
   \item for every environment $(\mu_J,\nu_F,\mu_0,\phi)$ of $\nu_1$ at $s$,
     the configuration $c,(s,\mu_0)$ does not abort, and for every program
     step from it to $c',(s',\mu_1)$ there are $\nu'$, $\mu'_J$ and $\phi'$
@@ -155,17 +159,20 @@ mode $m$ when, for every future $\nu_1 \modrefines \nu$:
     $(\nu',\mu'_J,\phi')$, and $\safe{n}{c',s',\nu',J,Q}$.
 \end{enumerate}
 $\mtruespec{J}{m}{P}{c}{Q}$ holds when $s,\nu \sentails P$ implies
-$\safe{n}{c,s,\nu,J,Q}$ in mode $m$ for every $n$. Flushes by the machine
-are not program steps. They are accounted for by the quantification over
-futures of the local resource, and by the fresh choice of frame at each
-level of the definition.
+$\safe{n}{c,s,\nu,J,Q}$ in mode $m$ for every $n$. Flushes by the machine are not program steps. When $J$ is in the
+invariant fragment the pool has no buffered writes, so each flush belongs
+either to the local resource or to the frame
+(\rocq{pooled_resource_flush_attribution}). A local flush is covered by
+the quantification over futures. A flush of the frame is covered by
+choosing the environment again, since the definition quantifies over all
+of them.
 
 \section{The repaired definitions}
 \label{app:definitions}
 
 Three definitions of the dissertation's model were replaced
-(Table~\ref{tab:local}). Each replacement is more restrictive than the
-original.
+(Table~\ref{tab:local}). The first two admit fewer compositions than the originals, and the third
+adds a requirement to each implication.
 
 \paragraph{Buffer overriding.}
 Originally, $b \override b'$ is the set of interleavings of the buffers $b$
@@ -178,19 +185,22 @@ $b'$ only when no write to $\ell$ remains in $b$
 precede all of $b'$'s.
 
 \paragraph{Temporal compatibility.}
-Originally, $\mu_0$ may precede $\mu_1$ when their blocked sets are
-disjoint and, for processors $i \neq j$ that are \emph{unblocked in both},
-buffer $i$ of $\mu_0$ writes to no address in the heap of $\mu_1$ and to no
-address written by buffer $j$ of $\mu_1$. In the repair the same two
-conditions are required of all active processors, blocked or not
-(\rocq{stable_compatible}).
+Originally, $\mu_0$ may precede $\mu_1$ when three conditions hold. Their
+blocked sets are disjoint. For each active processor $i$ \emph{unblocked
+in both}, buffer $i$ of $\mu_0$ writes to no address in the heap of
+$\mu_1$. For each pair of distinct active processors $i$ and $j$
+\emph{unblocked in both}, buffer $i$ of $\mu_0$ and buffer $j$ of $\mu_1$
+write to disjoint sets of addresses. The repair drops ``unblocked in
+both'' from the second and third conditions (\rocq{stable_compatible}).
 
 \paragraph{Implications.}
 Originally, $\nu$ satisfies $P \fsepi Q$ when every composition of $\nu$
 with a resource satisfying $P$ satisfies $Q$, and similarly for the two
-temporal implications. In the repair the same is required of every future
-of $\nu$, so that an implication which holds now cannot be falsified by a
-flush.
+temporal implications. In the repair the same is required of every future of $\nu$, so that an
+implication which holds now cannot be falsified by a flush. This applies
+at every implication in an assertion, nested ones included. It does not
+follow that a repaired assertion has fewer models than the original one,
+because the antecedent of an implication is reinterpreted too.
 
 \FloatBarrier
 \section{The dissertation's assertion laws}
@@ -466,8 +476,8 @@ For a flag cell $l$, a processor $i$ and a scratch register $x$:
 \mathit{release}_i(l) \;=\;\;
  & \clock_i;\ \cstore{l}{0}_i;\ \cunlock_i
 \end{align*}
-The loop exits with $x = 0$, the value read from a flag that was clear and
-is now set. For locks $l_1,\dots,l_n$ with invariants $I_1,\dots,I_n$, the
+Under the invariant below the flag is always $0$ or $1$, so the loop exits
+with $x = 0$, the value read from a flag that was clear and is now set. For locks $l_1,\dots,l_n$ with invariants $I_1,\dots,I_n$, the
 global invariant is
 \[
   J \;=\; \bigl((l_1 \fcell 0 \fsep I_1) \disj l_1 \fcell 1\bigr) \fsep
@@ -481,7 +491,8 @@ given $x \notin \fv{J}$.
 There is one named lock $l$, a flag cell $m$ that says whether the mailbox
 is full, and message cells $a_1,\dots,a_K$ that are to receive the values
 $v_1,\dots,v_K$. Write $A(\vec{w})$ for
-$a_1 \fcell w_1 \fsep \cdots \fsep a_K \fcell w_K$. The lock's invariant is
+$a_1 \fcell w_1 \fsep \cdots \fsep a_K \fcell w_K$, which is $\femp$ when
+$K = 0$. The lock's invariant is
 \[
   I_l \;=\; m \fcell 0 \;\disj\; (m \fcell 1 \fsep A(\vec{v})),
 \]

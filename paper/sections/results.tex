@@ -34,7 +34,7 @@ modes, so a client never discharges a mode condition.
 The original \rn{share} is unsound next to the transferring \rn{lock}: a
 command that ends with the lock held has the invariant in its own hands,
 and \rn{share} would count it twice
-(\rocq{owned_printed_share_lock_counterexample}). It is sound when every
+(\rocq{owned_original_share_lock_counterexample}). It is sound when every
 model of $P$ and of $Q$ is lock-free: then $\mtruespec{J}{m}{P}{c}{Q}$
 implies $\mtruespec{\femp}{m}{J \fsep P}{c}{J \fsep Q}$, in either mode
 (\rocq{owned_share_valid}, \rocq{owned_share_overlap_valid}). The condition

@@ -37,10 +37,11 @@ safety predicate can repair that.
 
 \paragraph{The cause is general.}
 An unrestricted temporal frame rule, a right unit for temporal conjunction,
-the rule of consequence, and any command that gives away ownership of a
-cell cannot coexist (Section~\ref{sec:trilemma}). The observation is
-independent of the memory model. It applies to any logic that combines a
-non-cancellative sequential conjunction with ownership transfer.
+the rule of consequence, and a command that gives away ownership of a
+cell cannot coexist once some history that held before the transfer is
+false after it (Section~\ref{sec:trilemma}). The observation is
+independent of the memory model, and a sequential conjunction in which
+later values override earlier ones supplies such histories.
 
 \paragraph{A repaired calculus is sound.}
 The repair replaces the invariant rule by lock and unlock rules that
@@ -56,14 +57,15 @@ The machine, the assertion language and its interpretation of atoms, the
 unit laws for $\femp$, overlapping temporal history, the temporal and
 spatial frame rules, the concurrency rule, and the printed load and store
 axioms are all retained. So is the dissertation's assertion algebra,
-with one family of exceptions: every printed law that rebrackets or
-exchanges through strong temporal conjunction fails, and with it the strong
-temporal frame rule (Appendix~\ref{app:statements}).
+with one family of exceptions: the printed laws that rebracket or exchange
+through strong temporal conjunction fail, and with them the strong temporal
+frame rule. The exchange laws between spatial and temporal conjunction also
+fail or are vacuous (Appendix~\ref{app:statements}).
 
 \paragraph{Assertions have a proof system.}
 A calculus of 47 rules for entailment between assertions is proved sound
-(Section~\ref{sec:assertion-rules}). It is not complete, and was never
-going to be, but it is enough: the larger derivations below use no semantic
+(Section~\ref{sec:assertion-rules}). Its completeness is not established and was not
+a goal, but it is enough: the larger derivations below use no semantic
 entailment at all.
 
 \paragraph{The logic can be used.}

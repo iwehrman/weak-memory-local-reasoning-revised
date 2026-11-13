@@ -121,8 +121,9 @@ $P \fsseq Q \sentails P \fsep Q$ and $P \fsseq Q \sentails P \fseq Q$
   & proved & \\
 Small exchange, $\fsseq$ outermost & refuted
   & under either reading of its premise \\
-Small exchange between $\fsep$ and $\fseq$ & vacuous
-  & its premise forces an empty processor set \\
+Small exchange between $\fsep$ and $\fseq$ & refuted or vacuous
+  & refuted for the premise as displayed; read as an inclusion of
+    connectives, the premise forces an empty processor set \\
 Full exchange for $\fsep$ and $\fsseq$ & refuted & \\
 \bottomrule
 \end{tabularx}
@@ -130,10 +131,11 @@ Full exchange for $\fsep$ and $\fsseq$ & refuted & \\
 \label{tab:algebra}
 \end{table}
 
-The pattern is simple to state. Every law that rebrackets or exchanges
-through $\fsseq$ fails, for the reason \rn{frame-stm} fails: the two
-conjuncts of $P \fsseq Q$ choose their splits independently. Everything
-else survives, two laws with a side condition. The unit laws needed the
+The pattern is simple to state. The laws that rebracket or exchange
+through $\fsseq$ fail, for the reason \rn{frame-stm} fails: the two
+conjuncts of $P \fsseq Q$ choose their splits independently. No exchange
+law between different conjunctions is usable. The remaining laws survive,
+two of them with a side condition. The unit laws needed the
 most care, since composing with an empty resource can add completeness
 marks, and the proof must show that no assertion, however many implications
 it contains, can tell.

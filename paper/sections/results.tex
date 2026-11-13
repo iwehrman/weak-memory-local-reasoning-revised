@@ -37,9 +37,9 @@ must be semantic; a postcondition that merely omits the token syntactically
 can still hide it under $\bexpt$.
 
 For a specification from $\femp$ to $\femp$ there is a sharper statement
-(\rocq{owned_emp_derivation_restores}): every completed execution ends with
-the lock free and the final memory is exactly an invariant pool together
-with whatever the environment's frame has become.
+(\rocq{owned_emp_derivation_restores}): if the external frame is lock-free to begin with, every completed execution
+ends with the lock free, and the final memory is exactly an invariant pool
+together with a flushed descendant of that frame.
 
 These are partial-correctness results. They say nothing of termination,
 fairness or deadlock, and an execution stopped inside a critical section

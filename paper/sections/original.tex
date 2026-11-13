@@ -81,8 +81,9 @@ and are interpreted over a stack and a generalized memory. The atoms are:
   \item $\flock{i}$: empty heap and buffers, with
         $K = \setprocessors \setminus \set{i}$.
   \item $e \fwrite{i} e'$ (``leads to''): either a single \emph{pending}
-        write $(e,e')$ in $B(i)$ and nothing else, or a single
-        \emph{flushed} heap cell $e \mapsto e'$ with $i \in \Gamma$.
+        write $(e,e')$ in $B(i)$ with an empty heap and
+        $K \subseteq \set{i}$, or a single \emph{flushed} heap cell
+        $e \mapsto e'$ with empty buffers, $K = \nil$ and $i \in \Gamma$.
 \end{itemize}
 $P \fsep Q$ and $P \fseq Q$ hold of $\nu$ when $\nu$ is a spatial,
 respectively temporal, combination of a model of $P$ and a model of $Q$.

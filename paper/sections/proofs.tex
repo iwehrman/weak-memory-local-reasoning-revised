@@ -26,7 +26,8 @@ $R$ describes the older state of $x$. The load axiom wants the loaded write
 to be spatially separate from the rest, and an old cell cannot be separated
 spatially from a newer write to the same address. The temporal frame rule
 is what resolves this. The newest write alone satisfies the axiom's
-precondition, with $\femp$ for $P$; the older history is a temporal frame:
+precondition, with $\femp$ for $P$; the older history is a
+temporal frame, provided $r$ is free in none of $J$, $R$, $x$, $i$, $v$:
 \[
 \inferrule*[right=frame-tm]
   {\mspec{J}{\modeov}{x \fwrite{i} v}{\cload{r}{x}_i}
@@ -95,9 +96,9 @@ first keeps the item and the second donates it.
 The example is not vacuous. From a memory with the lock free, $f = 1$,
 $x = 7$ and processor $2$'s write pending, there is a complete 24-step
 execution in which that write is pending in every state
-(\rocq{owned_container_foreign_pending_throughout}), and by adequacy every
-execution from that memory is safe and, if it completes, restores the
-invariant.
+(\rocq{owned_container_foreign_pending_throughout}), (\rocq{owned_container_trace}), and every execution from that memory is
+safe and, if it completes, restores the invariant
+(\rocq{owned_container_completed_restores}).
 
 A second version replaces each $\cassume{}$ by a loop that releases the
 lock and retries when the flag is wrong (\rocq{owned_retrying_container_derived}).
@@ -111,7 +112,9 @@ entailments that are not identities. Most are rearrangements, a few are the
 laws about barriers and histories used above, and the hardest is at the
 second acquisition. All sixteen are derived in the assertion proof system
 of Section~\ref{sec:assertion-rules}, and none of its 47 rules had to be
-added to for the purpose.
+added to for the purpose. The same is true of the two examples that follow.
+The retrying version of the container has not been migrated and still
+discharges some entailments semantically.
 
 \subsection{The dissertation's example}
 \label{sec:own-example-repaired}
@@ -156,7 +159,7 @@ $(l \fcell 0 \fsep I_l) \disj l \fcell 1$. Acquiring it is a loop: take the
 global lock, read the flag, set it if it was clear, release the global
 lock, and retry otherwise. For any finite family of such locks, with $J$
 the spatial product of their representations, the following are derived
-rules, a scratch register aside (\rocq{named_lock_acquire_family}, \rocq{named_lock_release_family}):
+rules, given a scratch register that does not occur in $J$ (\rocq{named_lock_acquire_family}, \rocq{named_lock_release_family}):
 \[
   \mspec{J}{\modedj}{\femp}{\mathit{acquire}(l)}{I_l}
   \qquad\qquad
@@ -170,12 +173,14 @@ lock. Between a named acquire and its release the global lock is free.
 
 The client is a mailbox guarded by a named lock. A producer writes a
 message of $K$ cells with ordinary stores and no fence, takes the named
-lock, marks the mailbox full, and releases; the release is where its
-buffered writes are required to drain. A consumer retries until the mailbox
+lock, marks the mailbox full, and releases. No fence is needed because the
+machine will not let it take the global lock, inside the named acquire,
+until its buffered writes have drained. A consumer retries until the mailbox
 is full, takes the cells out, and reads them privately. The derived
 specification says that the consumer ends up owning cells that hold the
 values the producer wrote. It holds for every $K$, including zero
 (\rocq{mailbox_parallel_derived}), and by adequacy for every execution from
-an actual initial memory in which a third processor's write is pending
-(\rocq{mailbox_all_runs}). A checked 95-step execution of the two-cell
+an actual initial memory, with the flags, the message cells and one further
+address all distinct, in which a third processor's write to that address is
+pending (\rocq{mailbox_all_runs}). A checked 95-step execution of the two-cell
 instance leaves that write pending to the end.

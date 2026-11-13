@@ -10,9 +10,13 @@ completeness set. The printed predicate read every local state at
 $\Gamma = \setprocessors$, which is why it could not distinguish a barrier
 the thread had earned from one it had not. A mark $i \in \Gamma$ now means
 what the dissertation said informally: nothing of processor $i$'s is
-pending before this resource. A flush of the resource's own oldest write by
-$i$ earns the mark, as do $\cfence_i$, $\clock_i$ and $\cunlock_i$, whose
-guards require the whole of buffer $i$ to be empty. Nothing else does.
+pending before this resource. A program step may add a mark
+only for its own processor, and only if it is $\cfence_i$, $\clock_i$ or
+$\cunlock_i$, whose guards require the whole of buffer $i$ to be empty.
+Separately, the futures of a resource, under which safety is closed,
+include flushes of its own writes and growth of its marks; those concern
+temporal composition within the resource and do not certify that a buffer
+of the machine has drained.
 
 \paragraph{Environments.}
 The rest of the machine is described by a \emph{pool} $\mu_J$, holding the
@@ -82,6 +86,6 @@ before the local ones, so there is one way to subtract the frame
 (\rocq{ordered_residual_unique}). Every machine flush belongs to exactly
 the frame or the local resource. And an invariant from the guarded
 fragment (Section~\ref{sec:calculus}) is buffer-free and holds of a memory
-regardless of which processors are marked complete
+under any nonempty set of completeness marks
 (\rocq{invariant_fragment_remark}), which is what allows the pool to be
 read at full completeness and handed over with the acquirer's mark alone.

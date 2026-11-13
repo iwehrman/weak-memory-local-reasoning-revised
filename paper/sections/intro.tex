@@ -28,8 +28,8 @@ This report returns to those three items, fourteen years later, with a
 mechanization in the Rocq prover. Its findings are as follows.
 
 \paragraph{The soundness theorem does not hold as stated.}
-Several auxiliary claims are false, and each has a local repair
-(Section~\ref{sec:local-errors}). More seriously, the rules themselves are
+Several auxiliary claims are false, but each can be fixed without
+changing the design (Section~\ref{sec:local-errors}). More seriously, the rules themselves are
 inconsistent with any adequate semantics: from \rn{skip}, \rn{cons},
 \rn{inv} and \rn{frame-tm} alone one can derive that a $\cskip$ changes the
 contents of a memory cell (Section~\ref{sec:inconsistent}). No choice of

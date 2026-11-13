@@ -88,7 +88,7 @@ acquisition.} $H(x,9)$ is overlapping history, possibly still buffered.
 \rn{frame-tm} places it before the acquired state, and the barrier that
 \rn{lock} delivers then drains it, leaving $x \fcell 9$.
 
-\emph{Releases use entailment, not framing.} The two \rn{unlock} premises
+\emph{Releases are justified by entailment.} The two \rn{unlock} premises
 are $(H(f,0) \fsep X) \fseq \fbar{1} \sentails J \fsep X$ and
 $(H(f,1) \fsep x \fcell 9) \fseq \fbar{1} \sentails J \fsep \femp$. The
 first keeps the item and the second donates it.

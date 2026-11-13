@@ -4,8 +4,7 @@
 The problems are presented from the smallest to the most serious,
 which is also the order in which the mechanization found them. Each is a
 theorem checked by Rocq, and the theorem's name is given so that the
-statement can be inspected. All of them are stated against a transcription of the original definitions,
-not against any repaired version.
+statement can be inspected. All of them are stated against a transcription of the original definitions.
 
 \subsection{Errors that can be fixed in place}
 \label{sec:local-errors}
@@ -81,7 +80,7 @@ The derivations below use the dissertation's own points-to, $x \fpointsto
 v$, and are checked against its own interpretation of assertions.
 
 \paragraph{History can be invented.}
-A model is a memory, not a record of how the memory came about. So a
+A model is a memory and records nothing of how that memory came about. So a
 current cell is also a model of any stale value followed by that cell:
 \begin{equation}
   \label{eq:invent}
@@ -210,7 +209,7 @@ correct, using an invariant that mentions two registers and the derived
 rule \rn{atomic}. That proof does not carry over to the repaired calculus:
 \rn{atomic} and \rn{share} in their original forms, and
 auxiliary-variable elimination, are not available, and the concurrency rule now forbids either thread from
-modifying a variable free in the invariant. This shows that the proof does
-not port, not that its conclusion is false.
+modifying a variable free in the invariant. The proof does not carry
+over, although its conclusion is still true.
 Section~\ref{sec:own-example-repaired} derives the same program from a
 different invariant and recovers the original conclusion.

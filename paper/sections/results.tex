@@ -26,7 +26,7 @@ Adequacy instantiates the external frame as empty, which satisfies both
 modes, so a client never discharges a mode condition.
 
 \paragraph{Share.}
-The printed \rn{share} is unsound next to the transferring \rn{lock}: a
+The original \rn{share} is unsound next to the transferring \rn{lock}: a
 command that ends with the lock held has the invariant in its own hands,
 and \rn{share} would count it twice
 (\rocq{owned_printed_share_lock_counterexample}). It is sound when every

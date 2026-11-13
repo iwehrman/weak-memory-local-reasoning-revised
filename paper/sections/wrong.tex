@@ -6,13 +6,13 @@ which is also the order in which the mechanization found them. Each is a
 theorem checked by Rocq, and the theorem's name is given so that the
 statement can be inspected. The derivations of
 Section~\ref{sec:inconsistent} are checked against a transcription of the
-printed definitions themselves. Two entries of Table~\ref{tab:local} are
+original definitions themselves. Two entries of Table~\ref{tab:local} are
 checked against an intermediate version, as noted there.
 
 \subsection{Local errors with local repairs}
 \label{sec:local-errors}
 
-Table~\ref{tab:local} lists six printed claims that are false as stated.
+Table~\ref{tab:local} lists six original claims that are false as stated.
 None is deep, and each has a repair that leaves the design intact.
 
 
@@ -21,7 +21,7 @@ None is deep, and each has a repair that leaves the design intact.
 \small
 \begin{tabularx}{\textwidth}{@{}p{0.27\textwidth}X p{0.23\textwidth}@{}}
 \toprule
-Printed claim & Counterexample & Repair \\
+Original claim & Counterexample & Repair \\
 \midrule
 \rn{assign} is sound for every invariant
   & With $J$ the assertion $x = 0$, the axiom derives
@@ -56,17 +56,17 @@ Conjecture~1
   & See Section~\ref{sec:changes}. \\
 \bottomrule
 \end{tabularx}
-\caption{Printed claims that fail, each with a checked counterexample.
+\caption{Original claims that fail, each with a checked counterexample.
 $^\dagger$These two theorems are stated for an intermediate interpretation:
-the first keeps the printed implications but uses the repaired temporal
+the first keeps the original implications but uses the repaired temporal
 composition, and the second uses an earlier repaired safety predicate. The
-arguments apply to the printed definitions; the checked statements are not
+arguments apply to the original definitions; the checked statements are not
 literally about them.}
 \label{tab:local}
 \end{table}
 
 Two remarks. The repaired compatibility relation is stronger than the
-printed one, so it rejects some compositions the dissertation admits. Those
+original one, so it rejects some compositions the dissertation admits. Those
 are states in which a blocked processor has a pending write to a cell that
 someone else owns. I believe they arise only under the ``daring'' rules
 that the dissertation proposed and did not adopt, but that is not proved,
@@ -74,14 +74,14 @@ and the soundness proof does not depend on it. And the repaired implications are
 the ordinary Kripke reading of implication over the flushing preorder; the
 three adjunctions between conjunctions and implications still hold.
 
-The failure of \rn{unlock} points at something larger. The printed safety
+The failure of \rn{unlock} points at something larger. The original safety
 predicate asks for the invariant only while the lock is free. Once a
 thread holds the lock, the predicate has forgotten that $J$ held at the
 moment of acquisition, so neither \rn{unlock} nor \rn{inv} can be justified
 from it. That alone would call for a different predicate. The next
 subsection shows that it calls for different rules.
 
-\subsection{The printed rules are inconsistent}
+\subsection{The original rules are inconsistent}
 \label{sec:inconsistent}
 
 The derivations below use the dissertation's own points-to, $x \fpointsto
@@ -101,7 +101,7 @@ This is the non-cancellativity that the dissertation notes in passing.
 
 \paragraph{A $\cskip$ that changes memory.}
 Let $J$ be $\femp \disj x \fpointsto 7$. The following is a derivation in
-the printed calculus.
+the original calculus.
 \begin{enumerate}[nosep]
   \item $\spec{\femp}{J \fsep x \fpointsto 7 \fsep \flock{i}}{\cskip_i}
         {J \fsep \femp \fsep \flock{i}}$,
@@ -153,7 +153,7 @@ Applying \rn{frame-stm} to step~2 yields a postcondition that the unchanged
 state cannot satisfy. (\rocq{printed_strong_frame_counterexample}; this
 derivation uses \rn{inv} and \rn{frame-stm} but not \rn{frame-tm}.)
 
-All three conclusions are also invalid for the printed safety predicate,
+All three conclusions are also invalid for the original safety predicate,
 but that is the lesser point. They are false under the
 dissertation's informal reading of a specification, and under any semantics
 for which a true specification describes what the program does.
@@ -215,7 +215,7 @@ thread that acquires the lock. A thread can vouch only for its own buffer.
 Section~4.1 of the dissertation proves a small message-passing program
 correct, using an invariant that mentions two registers and the derived
 rule \rn{atomic}. That proof does not carry over to the repaired calculus:
-\rn{atomic} and \rn{share} in their printed forms, and
+\rn{atomic} and \rn{share} in their original forms, and
 auxiliary-variable elimination, are not available, and the concurrency rule now forbids either thread from
 modifying a variable free in the invariant. This shows that the proof does
 not port, not that its conclusion is false.

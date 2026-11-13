@@ -6,7 +6,7 @@ command is safe.
 
 \paragraph{Resources.}
 A thread's local state is a generalized memory $\nu$ with its \emph{actual}
-completeness set. The printed predicate read every local state at
+completeness set. The original predicate read every local state at
 $\Gamma = \setprocessors$, which is why it could not distinguish a barrier
 the thread had earned from one it had not. A mark $i \in \Gamma$ now means
 what the dissertation said informally: nothing of processor $i$'s is
@@ -58,10 +58,10 @@ A specification is valid in mode $m$, written $\mtruespec{J}{m}{P}{c}{Q}$,
 when $s,\nu \sentails P$ implies safety at every $n$. Overlap-mode validity
 implies disjoint-mode validity.
 
-Four features distinguish this from the printed predicate.
+Four features distinguish this from the original predicate.
 \begin{itemize}[nosep]
   \item \emph{The frame is fixed within a step and arbitrary between
-        steps.} The printed predicate let the frame take silent steps of
+        steps.} The original predicate let the frame take silent steps of
         its own choosing during a program step. That permits a local
         residual to claim a pending write that belonged to the frame, and
         the frame lemma fails (\rocq{overlap_frame_shape_counterexample}).

@@ -1,8 +1,8 @@
 \section{What changed}
 \label{sec:changes}
 
-Table~\ref{tab:changes} lists every difference between the printed calculus
-and the one proved sound. Each is marked as an \kerr{} (the printed
+Table~\ref{tab:changes} lists every difference between the original calculus
+and the one proved sound. Each is marked as an \kerr{} (the original
 statement is false, with a checked counterexample), as \kforced{} by an
 error elsewhere, or as a \kchoice{} among sound alternatives.
 
@@ -10,7 +10,7 @@ error elsewhere, or as a \kchoice{} among sound alternatives.
 \small
 \begin{tabularx}{\textwidth}{@{}p{0.33\textwidth}Xl@{}}
 \toprule
-Printed & Repaired & Kind \\
+Original & Repaired & Kind \\
 \midrule
 \rn{assign}, \rn{load}, \rn{ex}, \rn{conc} say nothing of $\fv{J}$
   & The assigned, loaded or bound variable, and every variable a parallel
@@ -40,14 +40,14 @@ Any set of processors
   & At least two active processors & \kforced \\
 \bottomrule
 \end{tabularx}
-\caption{Differences between the printed and the repaired calculus.}
+\caption{Differences between the original and the repaired calculus.}
 \label{tab:changes}
 \end{table}
 
 Three of these need a word of explanation.
 
 \paragraph{Transferring lock rules.}
-Section~\ref{sec:local-errors} observed that the printed predicate forgets
+Section~\ref{sec:local-errors} observed that the original predicate forgets
 the invariant at acquisition. The standard cure, from concurrent separation
 logic, is to move ownership with the lock: acquiring gives the thread the
 cells of $J$, and releasing requires it to give back cells satisfying $J$.
@@ -60,7 +60,7 @@ been enough.
 A thread that acquires the lock can vouch for its own buffer, which the
 machine required to be empty, and for no one else's. So the cells it
 receives carry its completeness mark only. The
-printed points-to demands every processor's mark, which one acquisition
+original points-to demands every processor's mark, which one acquisition
 cannot supply, so a general \rn{lock} rule cannot promise it. The repaired calculus uses
 \[
   e \fcell e' \eqdef \exists x \st (e \fwrite{x} e' \fseq \fbar{x}),
@@ -72,7 +72,7 @@ have models in which the write to location $1$ is still buffered. Those
 models are reachable, stable states of the machine. Because a model does
 not record who wrote a flushed cell, any marked processor may be credited,
 and two further axioms let any processor load from or store to such a
-cell. The printed points-to remains expressible and keeps its meaning.
+cell. The original points-to remains expressible and keeps its meaning.
 
 \paragraph{Two processors.}
 The lock is represented only by the set of blocked processors. With a

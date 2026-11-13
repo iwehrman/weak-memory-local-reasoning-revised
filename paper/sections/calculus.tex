@@ -44,8 +44,8 @@ has the complete system.
   {\mspec{J}{m}{\exists x \st P}{c}{Q}}
 \end{mathpar}
 \caption{Rules of the repaired calculus that differ from
-Figure~\ref{fig:printed}. \rn{load} is the printed axiom with
-$x \notin \fv{J,e,i,e',P}$, and \rn{conc} is the printed rule at a common
+Figure~\ref{fig:printed}. \rn{load} is the original axiom with
+$x \notin \fv{J,e,i,e',P}$, and \rn{conc} is the original rule at a common
 mode with $\mod{c_k} \cap \fv{J} = \nil$ added.}
 \label{fig:repaired}
 \end{figure}
@@ -105,7 +105,7 @@ assumed. No completeness is claimed.
 \paragraph{What became of the derived rules.}
 The dissertation lists a dozen derived and alternative rules. In the
 repaired calculus \rn{load-p} is derived exactly as displayed, with the
-printed points-to; \rn{fence-g} is derived as displayed; \rn{lock-g},
+original points-to; \rn{fence-g} is derived as displayed; \rn{lock-g},
 \rn{lock-b} and the \rn{locked} and \rn{atomic} wrappers are derived in a
 form that carries the transferred invariant; and the unlock variants are
 derived for the empty invariant, the general case being \rn{unlock} itself.

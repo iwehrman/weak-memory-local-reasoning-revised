@@ -27,7 +27,7 @@ were ``mostly straightforward inductions.''
 This report returns to those three items, fourteen years later, with a
 mechanization in the Rocq prover. Its findings are as follows.
 
-\paragraph{The soundness theorem does not hold as printed.}
+\paragraph{The soundness theorem does not hold as stated.}
 Several auxiliary claims are false, and each has a local repair
 (Section~\ref{sec:local-errors}). More seriously, the rules themselves are
 inconsistent with any adequate semantics: from \rn{skip}, \rn{cons},
@@ -55,9 +55,9 @@ kernel and use no axioms.
 \paragraph{Most of the design survives.}
 The machine, the assertion language and its interpretation of atoms, the
 unit laws for $\femp$, overlapping temporal history, the temporal and
-spatial frame rules, the concurrency rule, and the printed load and store
+spatial frame rules, the concurrency rule, and the original load and store
 axioms are all retained. So is the dissertation's assertion algebra,
-with one family of exceptions: the printed laws that rebracket or exchange
+with one family of exceptions: the original laws that rebracket or exchange
 through strong temporal conjunction fail, and with them the strong temporal
 frame rule. The exchange laws between spatial and temporal conjunction also
 fail or are vacuous (Appendix~\ref{app:statements}).

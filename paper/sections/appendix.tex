@@ -142,8 +142,134 @@ marks, and the proof must show that no assertion, however many implications
 it contains, can tell.
 
 \FloatBarrier
+\section{A selection of the assertion rules}
+\label{app:assertion-rules}
+
+Figure~\ref{fig:assertion-rules} shows the rules of $P \vdash_a Q$ that are
+particular to this logic. The rules omitted are the usual ones for $\conj$,
+$\disj$, the quantifiers, substitution and equality, and the distribution
+of $\fsep$ and $\fseq$ over $\disj$ and $\exists$. In the figure $\fgen$
+stands for either $\fsep$ or $\fseq$, the same one throughout a rule, and
+$P \dashv\vdash_a Q$ abbreviates the two rules $P \vdash_a Q$ and
+$Q \vdash_a P$.
+
+\begin{figure}[!ht]
+\small
+\begin{mathpar}
+\femp \fgen P \dashv\vdash_a P \dashv\vdash_a P \fgen \femp
+\and
+(P \fgen Q) \fgen R \dashv\vdash_a P \fgen (Q \fgen R)
+\and
+P \fsep Q \vdash_a Q \fsep P
+\and
+\inferrule{P \vdash_a P' \\ Q \vdash_a Q'}{P \fgen Q \vdash_a P' \fgen Q'}
+\and
+(b \conj P) \fgen Q \dashv\vdash_a b \conj (P \fgen Q)
+\and
+\inferrule{P \fsep Q \vdash_a R}{Q \vdash_a P \fsepi R}
+\and
+\inferrule{P \fseq Q \vdash_a R}{Q \vdash_a P \fseqli R}
+\and
+\inferrule{Q \fseq P \vdash_a R}{Q \vdash_a R \fseqri P}
+\\
+\fbar{e} \vdash_a \femp
+\and
+\fbar{e} \fgen \fbar{e} \dashv\vdash_a \fbar{e}
+\and
+P \fseq \fbar{e} \vdash_a P \fsep \fbar{e}
+\and
+(P \fgen Q) \fseq \fbar{e} \dashv\vdash_a
+  (P \fseq \fbar{e}) \fgen (Q \fseq \fbar{e})
+\\
+P \fseq \flock{e} \dashv\vdash_a P \fsep \flock{e}
+\and
+\flock{e} \fseq P \dashv\vdash_a \flock{e} \fsep P
+\and
+\inferrule{k \text{ active} \\ k \neq i \\ k \neq j}
+  {\flock{i} \fsep \flock{j} \vdash_a \bexpf}
+\\
+e \fwrite{f} e' \fsep e \fwrite{f'} e'' \vdash_a \bexpf
+\and
+(e \fwrite{f} e' \fseq e \fwrite{f} e'') \fseq \fbar{f}
+  \dashv\vdash_a e \fwrite{f} e'' \fseq \fbar{f}
+\and
+\inferrule{f \text{ denotes an active processor}}
+  {e \fpointsto e' \vdash_a e \fwrite{f} e'}
+\\
+e \neq f \conj (e \fcell e' \fseq f \fcell f') \dashv\vdash_a
+e \neq f \conj (e \fcell e' \fsep f \fcell f')
+\and
+e \fcell e' \fseq e \fcell e'' \vdash_a e \fcell e''
+\end{mathpar}
+\caption{Assertion rules particular to this logic, from the 47 of
+\rocq{assertion_derivation}. Each implication rule is invertible; only the
+introduction direction is shown.}
+\label{fig:assertion-rules}
+\end{figure}
+
+A few of these do most of the work in the derivations of
+Section~\ref{sec:proofs}. The barrier rules say that a barrier is an empty
+resource that can be duplicated, and that draining a composite drains each
+part. The lock rules say that a lock assertion carries no history, so its
+temporal and spatial compositions agree. The collapse rule for writes says
+that once a processor's buffer has drained, only its last write to an
+address is visible. The two cell rules are what make cells behave like
+ordinary heap cells: cells at different addresses can be reordered freely,
+and a later cell at the same address overwrites an earlier one.
+
+\FloatBarrier
 \section{The dissertation's derived rules}
 \label{app:derived}
+
+The dissertation's derived rules are conveniences built from the primitive
+ones. Figure~\ref{fig:derived} states them as they are derived in the
+repaired calculus, and Table~\ref{tab:derived} records how each differs
+from its original display. \rn{load-p} and \rn{store-p} are the load and
+store axioms for the all-processor points-to $e \fpointsto e'$, so that a
+thread can use a cell without naming the processor that wrote it. The
+\rn{-g} rules run forwards from an arbitrary precondition $P$ and append
+the command's effect to it. The \rn{-b} rules run backwards from an
+arbitrary postcondition $Q$, and their precondition says that $Q$ will hold
+once the command's effect is appended. \rn{locked} gives a specification to
+a body run between acquiring and releasing the lock.
+
+\begin{figure}[!ht]
+\small
+\begin{mathpar}
+\inferrule[load-p]{x \notin \fv{J,e,e',P}}
+  {\spec{J}{e \fpointsto e' \fsseq P}{\cload{x}{e}_i}
+        {(e \fpointsto e' \fsseq P) \conj x = e'}}
+\and
+\inferrule[store-p]{ }
+  {\spec{J}{e \fpointsto e'' \fsseq P}{\cstore{e}{e'}_i}
+        {(e \fpointsto e'' \fsseq P) \fseq e \fwrite{i} e'}}
+\and
+\inferrule[fence-g]{ }{\spec{J}{P}{\cfence_i}{P \fseq \fbar{i}}}
+\and
+\inferrule[fence-b]{ }{\spec{J}{Q \fseqri \fbar{i}}{\cfence_i}{Q}}
+\and
+\inferrule[lock-g]{ }
+  {\spec{J}{P}{\clock_i}{P \fseq ((\flock{i} \fsep J) \fseq \fbar{i})}}
+\and
+\inferrule[lock-b]{ }
+  {\spec{J}{Q \fseqri ((\flock{i} \fsep J) \fseq \fbar{i})}{\clock_i}{Q}}
+\and
+\inferrule[unlock-g]{ }
+  {\spec{\femp}{P \fsep \flock{i}}{\cunlock_i}{P \fseq \fbar{i}}}
+\and
+\inferrule[unlock-b]{ }
+  {\spec{\femp}{(Q \fseqri \fbar{i}) \fsep \flock{i}}{\cunlock_i}{Q}}
+\and
+\inferrule[locked]
+  {\spec{J}{P \fseq ((\flock{i} \fsep J) \fseq \fbar{i})}{c}
+        {\flock{i} \fsep A} \\
+   A \fseq \fbar{i} \sentails J \fsep Q}
+  {\spec{J}{P}{\cseq{\clock_i}{\cseq{c}{\cunlock_i}}}{Q}}
+\end{mathpar}
+\caption{The dissertation's derived rules in the form derived in the
+repaired calculus. In the lock rules the processor is a constant.}
+\label{fig:derived}
+\end{figure}
 
 \begin{table}[!ht]
 \small

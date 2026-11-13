@@ -29,12 +29,13 @@
 My 2012 dissertation proposed a program logic for local reasoning about
 concurrent programs on an x86-like, total-store-order memory model. It left
 two components unfinished: the soundness proof, and a proof system for
-assertions. This report returns to both with a mechanization in Rocq. The
+assertions. Out of curiosity, this report returns to both with a mechanization in
+Rocq. The
 soundness theorem does not hold as stated: four of the original rules derive
 false specifications. A repaired calculus is sound, with operational
 adequacy, and keeps the assertion language, the unit law for $\femp$, the
-temporal frame rule and the original load and store axioms. This
-informal note is written for a reader who knew the dissertation but has forgotten its
+temporal frame rule and the original load and store axioms. It
+is written for a reader who knew the dissertation but has forgotten its
 details: it recalls the original model and rules, then explains what was
 wrong, what had to change and why, and what the repaired logic can prove.
 \end{abstract}

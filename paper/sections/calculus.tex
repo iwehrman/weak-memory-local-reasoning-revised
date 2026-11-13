@@ -1,54 +1,66 @@
 \section{The repaired calculus}
 \label{sec:calculus}
 
-The judgment is $\mspec{J}{m}{P}{c}{Q}$, where $m$ is $\modeov$ or
-$\modedj$. It has 21 rules. The rules \rn{skip}, \rn{assume}, \rn{assert},
-\rn{fence}, \rn{store}, \rn{seq}, \rn{cons}, \rn{disj}, \rn{choice},
-\rn{loop} and \rn{frame-sp} are those of Figure~\ref{fig:printed} at either
-mode. Figure~\ref{fig:repaired} shows the rest; Appendix~\ref{app:rules}
-has the complete system.
+The judgment is again $\spec{J}{P}{c}{Q}$. The rules \rn{skip},
+\rn{assume}, \rn{assert}, \rn{fence}, \rn{store}, \rn{seq}, \rn{cons},
+\rn{disj}, \rn{choice}, \rn{loop} and \rn{frame-sp} are those of
+Figure~\ref{fig:printed}. Figure~\ref{fig:repaired} shows the rest.
 
 \begin{figure}[!ht]
 \small
 \begin{mathpar}
 \inferrule[lock]{ }
-  {\mspec{J}{m}{\femp}{\clock_i}{(\flock{i} \fsep J) \fseq \fbar{i}}}
+  {\spec{J}{\femp}{\clock_i}{(\flock{i} \fsep J) \fseq \fbar{i}}}
 \and
 \inferrule[unlock]
   {A \fseq \fbar{i} \sentails J \fsep B}
-  {\mspec{J}{\modedj}{\flock{i} \fsep A}{\cunlock_i}{B}}
+  {\spec{J}{\flock{i} \fsep A}{\cunlock_i}{B}}
 \and
 \inferrule[frame-tm]
-  {\mspec{J}{\modeov}{P}{c}{Q} \\ \mod{c} \cap \fv{R} = \nil}
-  {\mspec{J}{\modeov}{R \fseq P}{c}{R \fseq Q}}
-\and
-\inferrule[weaken]
-  {\mspec{J}{\modeov}{P}{c}{Q}}
-  {\mspec{J}{\modedj}{P}{c}{Q}}
+  {\spec{J}{P}{c}{Q} \\ \mod{c} \cap \fv{R} = \nil \\
+   c \text{ contains no } \cunlock}
+  {\spec{J}{R \fseq P}{c}{R \fseq Q}}
 \and
 \inferrule[load-any]
   {x \notin \fv{J,e,e',P}}
-  {\mspec{J}{m}{e \fcell e' \fsseq P}{\cload{x}{e}_i}
+  {\spec{J}{e \fcell e' \fsseq P}{\cload{x}{e}_i}
          {(e \fcell e' \fsseq P) \conj x = e'}}
 \and
 \inferrule[store-any]{ }
-  {\mspec{J}{m}{e \fcell e'' \fsseq P}{\cstore{e}{e'}_i}
+  {\spec{J}{e \fcell e'' \fsseq P}{\cstore{e}{e'}_i}
          {(e \fcell e'' \fsseq P) \fseq e \fwrite{i} e'}}
 \and
 \inferrule[assign]
   {x \notin \fv{J}}
-  {\mspec{J}{m}{P\subst{e}{x}}{\cassign{x}{e}_i}{P}}
+  {\spec{J}{P\subst{e}{x}}{\cassign{x}{e}_i}{P}}
 \and
 \inferrule[ex]
-  {\mspec{J}{m}{P}{c}{Q} \\ x \notin \fv{J,c,Q}}
-  {\mspec{J}{m}{\exists x \st P}{c}{Q}}
+  {\spec{J}{P}{c}{Q} \\ x \notin \fv{J,c,Q}}
+  {\spec{J}{\exists x \st P}{c}{Q}}
 \end{mathpar}
 \caption{Rules of the repaired calculus that differ from
 Figure~\ref{fig:printed}. \rn{load} is the original axiom with
-$x \notin \fv{J,e,i,e',P}$, and \rn{conc} is the original rule at a common
-mode with $\mod{c_k} \cap \fv{J} = \nil$ added.}
+$x \notin \fv{J,e,i,e',P}$, and \rn{conc} is the original rule with
+$\mod{c_k} \cap \fv{J} = \nil$ added.}
 \label{fig:repaired}
 \end{figure}
+
+\paragraph{The temporal frame rule.}
+\rn{frame-tm} is the dissertation's rule with one more side condition: the
+command must not contain $\cunlock$, anywhere. The reason is the semantic
+one of Section~\ref{sec:model}. What the rules derive for a command that never releases is
+valid in overlap mode, where overlapping history is tolerated; a release
+is valid only in disjoint mode. The mechanized judgment carries the mode as an
+index and has 21 rules, among them a temporal frame rule for overlap mode
+and a rule weakening overlap to disjoint (Appendix~\ref{app:rules}). The
+judgment displayed here is its disjoint mode, and the displayed
+\rn{frame-tm} is derived in it: a derivation for a command without
+$\cunlock$ can be replayed in overlap mode, framed, and weakened
+(\rocq{owned_derive_temporal_frame_unlock_free}). The side condition is
+exact for the calculus, in that a specification has an overlap-mode
+derivation if and only if its command contains no $\cunlock$. It is also
+needed: \rn{frame-tm} applied to a valid specification of a release can
+yield an invalid one (\rocq{owned_disjoint_temporal_frame_counterexample}).
 
 \paragraph{Lock and unlock.}
 \rn{lock} delivers the invariant together with the acquirer's barrier.
@@ -66,14 +78,11 @@ The soundness theorem requires $J$ to come from the fragment
 \]
 A pure formula may appear only alongside a heap formula. A bare $\bexpt$
 is not buffer-free: it holds of a memory with pending writes, and an
-invariant containing it could swallow them at release.
-
-\paragraph{Modes in practice.}
-A specification for a command that never releases can be derived in overlap
-mode and framed temporally. Once a release is sequenced in, the whole is in
-disjoint mode and can only be framed spatially. Overlap-mode pieces are
-weakened before sequencing. At top level the distinction disappears
-(Section~\ref{sec:results}).
+invariant containing it could swallow them at release. Some restriction is
+necessary: with the original $x \fpointsto 7$ as invariant, \rn{lock}
+derives a specification that is false, because one acquisition cannot
+supply every processor's mark
+(\rocq{owned_soundness_without_fragment_refuted}).
 
 \subsection{A proof system for assertions}
 \label{sec:assertion-rules}

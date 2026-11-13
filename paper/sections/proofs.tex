@@ -7,9 +7,9 @@ checked by Rocq.
 
 \subsection{A store, with and without a fence}
 
-For any invariant and either mode,
+For any invariant,
 \[
-  \mspec{J}{m}{x \fcell u}{\cseq{\cstore{x}{v}_i}{\cfence_i}}{x \fcell v}
+  \spec{J}{x \fcell u}{\cseq{\cstore{x}{v}_i}{\cfence_i}}{x \fcell v}
 \]
 is derivable (\rocq{owned_derive_store_fence_cell}): \rn{store-any} gives
 $x \fcell u \fseq x \fwrite{i} v$, \rn{frame-tm} carries that history
@@ -30,9 +30,9 @@ precondition, with $\femp$ for $P$; the older history is a
 temporal frame, provided $r$ is free in none of $J$, $R$, $x$, $i$, $v$:
 \[
 \inferrule*[right=frame-tm]
-  {\mspec{J}{\modeov}{x \fwrite{i} v}{\cload{r}{x}_i}
+  {\spec{J}{x \fwrite{i} v}{\cload{r}{x}_i}
          {x \fwrite{i} v \conj r = v}}
-  {\mspec{J}{\modeov}{R \fseq x \fwrite{i} v}{\cload{r}{x}_i}
+  {\spec{J}{R \fseq x \fwrite{i} v}{\cload{r}{x}_i}
          {R \fseq (x \fwrite{i} v \conj r = v)}}
 \]
 (\rocq{owned_derive_load_after_history}). Store-to-load forwarding, the
@@ -58,7 +58,7 @@ returns it:
 \end{align*}
 Meanwhile processor $2$ has an unrelated write $R = y \fwrite{2} 17$
 buffered. The derived specification is
-$\mspec{J}{\modedj}{R}{c}{R}$ (\rocq{owned_container_derived}). Writing
+$\spec{J}{R}{c}{R}$ (\rocq{owned_container_derived}). Writing
 $H(a,v)$ for $(\exists u \st a \fcell u) \fseq a \fwrite{1} v$, the proof
 passes through these assertions, each with $R$ as a spatial frame:
 \begin{center}\small
@@ -161,10 +161,10 @@ lock, and retry otherwise. For any finite family of such locks, with $J$
 the spatial product of their representations, the following are derived
 rules, given a scratch register that does not occur in $J$ (\rocq{named_lock_acquire_family}, \rocq{named_lock_release_family}):
 \[
-  \mspec{J}{\modedj}{\femp}{\mathit{acquire}(l)}{I_l}
+  \spec{J}{\femp}{\mathit{acquire}(l)}{I_l}
   \qquad\qquad
   \inferrule{I_l \fsep I_l \vdash_a \bexpf}
-            {\mspec{J}{\modedj}{I_l}{\mathit{release}(l)}{\femp}}
+            {\spec{J}{I_l}{\mathit{release}(l)}{\femp}}
 \]
 The premise on release says that $I_l$ cannot be held twice, which is how a
 thread holding $I_l$ knows the flag is set. This is the lock rule of

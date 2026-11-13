@@ -45,8 +45,7 @@ later values override earlier ones supplies such histories.
 
 \paragraph{A repaired calculus is sound.}
 The repair replaces the invariant rule by lock and unlock rules that
-transfer the invariant, restricts the temporal frame rule to specifications
-that tolerate overlapping history, and adjusts four side conditions
+transfer the invariant, restricts the temporal frame rule to commands that do not release the lock, and adjusts four side conditions
 (Section~\ref{sec:changes}). The repaired calculus is proved sound by
 induction on derivations, with an adequacy theorem for the dissertation's
 machine (Section~\ref{sec:results}). The proofs are checked by the Rocq

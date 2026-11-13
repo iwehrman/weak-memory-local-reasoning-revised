@@ -1,19 +1,19 @@
 \section{The mechanization}
 \label{sec:mechanization}
 
-The development is about 30,000 lines of Rocq in 193 files, using only the
+The development is about 30,000 lines of Rocq in 196 files, using only the
 standard library. It declares no axioms and admits no proofs. An audit file
-prints the assumptions of 1,284 named results, and the build checks the
+prints the assumptions of 1,316 named results, and the build checks the
 compiled proof objects independently. The proofs need neither
 extensionality nor choice nor a finite set of processors. The
 development also keeps, as a record, the repairs that were tried and set
 aside.
 
 The transcription of the original definitions is kept separate from every
-repair, so that the derivations of Section~\ref{sec:inconsistent} are
-theorems about the dissertation's own definitions and not about an
+repair, so that every claim in Section~\ref{sec:wrong} is a
+theorem about the dissertation's own definitions and not about an
 approximation of them. Every Rocq name in this report refers to commit
-\texttt{99b4052} of the development.
+\texttt{2b53266} of the development.
 
 The work was done with AI assistance, in a loop that turned out to matter.
 Two models, Claude Fable and ChatGPT Astra, took part: one developed the

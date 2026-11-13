@@ -3,17 +3,21 @@
 
 \begin{theorem}[Soundness, \rocq{owned_calculus_sound}]
 Let $J$ be in the invariant fragment and let there be two distinct active
-processors. If $\mspec{J}{m}{P}{c}{Q}$ is derivable then
-$\mtruespec{J}{m}{P}{c}{Q}$.
+processors. If $\spec{J}{P}{c}{Q}$ is derivable then
+$\mtruespec{J}{\modedj}{P}{c}{Q}$, and if $c$ contains no $\cunlock$ then
+also $\mtruespec{J}{\modeov}{P}{c}{Q}$.
 \end{theorem}
 
-The proof is by induction on the derivation, one semantic lemma per rule.
+The proof is by induction on the mode-indexed derivation, one semantic
+lemma per rule. Both hypotheses are needed: dropping either admits a
+derivation of an invalid specification (Sections~\ref{sec:changes}
+and~\ref{sec:calculus}).
 No rule has a premise about safety or validity. \rn{cons} and \rn{unlock}
 have entailments as premises, which may be discharged semantically or in
 the proof system of Section~\ref{sec:assertion-rules}.
 
 \begin{theorem}[Adequacy, \rocq{owned_derivation_adequacy}]
-Under the same hypotheses, let $\mspec{J}{m}{P}{c}{Q}$ be derivable. Take a
+Under the same hypotheses, let $\spec{J}{P}{c}{Q}$ be derivable. Take a
 machine memory with the lock free that splits spatially into a pool
 satisfying $J$ and a resource satisfying $P$. Then no finite execution of
 $c$ from that memory aborts. If an execution terminates, its final memory

@@ -23,8 +23,7 @@ pointwise implications
   & \rn{inv} is removed; \rn{lock} hands over $J$ and \rn{unlock} takes it
     back & \kerr \\
 \rn{frame-tm} for every specification
-  & \rn{frame-tm} only for specifications valid in \emph{overlap mode},
-    which excludes \rn{unlock} & \kerr \\
+  & \rn{frame-tm} only for commands that contain no $\cunlock$ & \kerr \\
 \rn{frame-stm}
   & Omitted. Sound for one common split of the frame, unsound for
     $(R \fsep P) \conj (R \fseq P)$ & \kerr \\
@@ -33,7 +32,7 @@ pointwise implications
     postcondition are lock-free & \kforced \\
 $e \fpointsto e'$ with every processor complete
   & $e \fcell e'$, complete for some processor; load and store rules for
-    it & \kchoice \\
+    it & \kforced \\
 Any assertion as invariant
   & Invariants from a guarded, buffer-free fragment & \kchoice \\
 Any set of processors
@@ -79,7 +78,9 @@ The lock is represented only by the set of blocked processors. With a
 single processor there is no one to block: a held lock is indistinguishable
 from a free one, $\flock{i}$ is equivalent to $\femp$, and
 $\cseq{\clock_i}{\clock_i}$ runs to completion. A rule that hands over the
-invariant at acquisition would then hand it over twice. The assumption is
+invariant at acquisition would then hand it over twice. On one processor the calculus derives a false
+specification of $\cseq{\clock_i}{\clock_i}$
+(\rocq{owned_soundness_without_two_processors_refuted}). The assumption is
 not about finiteness, and the second processor need not execute anything.
 
 \paragraph{Roads not taken.}

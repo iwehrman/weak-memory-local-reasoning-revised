@@ -4,10 +4,8 @@
 The problems are presented from the most local to the most structural,
 which is also the order in which the mechanization found them. Each is a
 theorem checked by Rocq, and the theorem's name is given so that the
-statement can be inspected. The derivations of
-Section~\ref{sec:inconsistent} are checked against a transcription of the
-original definitions themselves. Two entries of Table~\ref{tab:local} are
-checked against an intermediate version, as noted there.
+statement can be inspected. All of them are stated against a transcription of the original definitions,
+not against any repaired version.
 
 \subsection{Local errors with local repairs}
 \label{sec:local-errors}
@@ -44,7 +42,7 @@ Spatiotemporal separation is associative
 Assertions are closed under flushing (Prop.~9)
   & $\bexpf \fseqri \fbar{1}$ holds vacuously while processor $1$ has a
     pending write, and fails once the write flushes.
-    \rocq{pointwise_temporal_wand_not_flush_closed}$^\dagger$
+    \rocq{original_flushing_closure_false}
   & Implications quantify over all futures of the current memory. \\[2pt]
 Conjecture~1
   & A cell duplicated across $\shash$ with equal values is not a spatial
@@ -52,25 +50,18 @@ Conjecture~1
   & Not needed by the final proof. \\[2pt]
 \rn{unlock} is sound for every invariant
   & With $J = \bexpf$ and the lock held, $\cunlock_i$ is enabled and
-    nothing restores $J$. \rocq{arbitrary_invariant_unlock_invalid}$^\dagger$
+    nothing restores $J$. \rocq{original_arbitrary_invariant_unlock_invalid}
   & See Section~\ref{sec:changes}. \\
 \bottomrule
 \end{tabularx}
-\caption{Original claims that fail, each with a checked counterexample.
-$^\dagger$These two theorems are stated for an intermediate interpretation:
-the first keeps the original implications but uses the repaired temporal
-composition, and the second uses an earlier repaired safety predicate. The
-arguments apply to the original definitions; the checked statements are not
-literally about them.}
+\caption{Original claims that fail, each with a checked counterexample.}
 \label{tab:local}
 \end{table}
 
 Two remarks. The repaired compatibility relation is stronger than the
 original one, so it rejects some compositions the dissertation admits. Those
 are states in which a blocked processor has a pending write to a cell that
-someone else owns. I believe they arise only under the ``daring'' rules
-that the dissertation proposed and did not adopt, but that is not proved,
-and the soundness proof does not depend on it. And the repaired implications are
+someone else owns. And the repaired implications are
 the ordinary Kripke reading of implication over the flushing preorder; the
 three adjunctions between conjunctions and implications still hold.
 
@@ -78,7 +69,8 @@ The failure of \rn{unlock} points at something larger. The original safety
 predicate asks for the invariant only while the lock is free. Once a
 thread holds the lock, the predicate has forgotten that $J$ held at the
 moment of acquisition, so neither \rn{unlock} nor \rn{inv} can be justified
-from it. That alone would call for a different predicate. The next
+from it; \rn{inv} on its own takes a true specification to a false one
+(\rocq{original_inv_alone_counterexample}). That alone would call for a different predicate. The next
 subsection shows that it calls for different rules.
 
 \subsection{The original rules are inconsistent}

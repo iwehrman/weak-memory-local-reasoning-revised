@@ -9,7 +9,8 @@ $\mtruespec{J}{m}{P}{c}{Q}$.
 
 The proof is by induction on the derivation, one semantic lemma per rule.
 No rule has a premise about safety or validity. \rn{cons} and \rn{unlock}
-have semantic entailments as premises. \pending{assertion proof system}
+have entailments as premises, which may be discharged semantically or in
+the proof system of Section~\ref{sec:assertion-rules}.
 
 \begin{theorem}[Adequacy, \rocq{owned_derivation_adequacy}]
 Under the same hypotheses, let $\mspec{J}{m}{P}{c}{Q}$ be derivable. Take a
@@ -22,12 +23,18 @@ pool is empty.
 \end{theorem}
 
 Adequacy instantiates the external frame as empty, which satisfies both
-modes, so a client never discharges a mode condition. This theorem does the
-work that \rn{share} did in the dissertation: it turns a specification
-under $J$ into a statement about the whole memory. It also covers the case
-that makes \rn{share} unsound next to the transferring \rn{lock}: a command
-that ends with the lock held has the invariant in its own hands, and
-\rn{share} would count it twice (\rocq{owned_printed_share_lock_counterexample}).
+modes, so a client never discharges a mode condition.
+
+\paragraph{Share.}
+The printed \rn{share} is unsound next to the transferring \rn{lock}: a
+command that ends with the lock held has the invariant in its own hands,
+and \rn{share} would count it twice
+(\rocq{owned_printed_share_lock_counterexample}). It is sound when every
+model of $P$ and of $Q$ is lock-free: then $\mtruespec{J}{m}{P}{c}{Q}$
+implies $\mtruespec{\femp}{m}{J \fsep P}{c}{J \fsep Q}$, in either mode
+(\rocq{owned_share_valid}, \rocq{owned_share_overlap_valid}). The condition
+must be semantic; a postcondition that merely omits the token syntactically
+can still hide it under $\bexpt$.
 
 For a specification from $\femp$ to $\femp$ there is a sharper statement
 (\rocq{owned_emp_derivation_restores}): every completed execution ends with
@@ -38,11 +45,6 @@ These are partial-correctness results. They say nothing of termination,
 fairness or deadlock, and an execution stopped inside a critical section
 need not satisfy the invariant.
 
-\paragraph{What the semantic rules need.}
-The standing hypotheses are used unevenly, and less than one might expect.
-The frame rules, the concurrency rule and the heap axioms need neither two
-processors nor, except for \rn{frame-tm}, the fragment. The concurrency
-rule is proved for both modes and for nested parallel composition
-(\rocq{owned_parallel_valid}); when one thread finishes, its postcondition
-is carried through the rest of the other thread's execution by the spatial
-frame rule.
+The standing hypotheses are used less than one might expect. The frame
+rules, the concurrency rule and the heap axioms need neither two processors
+nor, except for \rn{frame-tm}, the fragment.

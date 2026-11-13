@@ -59,15 +59,21 @@ axioms are all retained. So is the dissertation's assertion algebra,
 with one family of exceptions: every printed law that rebrackets or
 exchanges through strong temporal conjunction fails, and with it the strong
 temporal frame rule (Appendix~\ref{app:statements}).
-\pending{algebra table in the appendix}
+
+\paragraph{Assertions have a proof system.}
+A calculus of 47 rules for entailment between assertions is proved sound
+(Section~\ref{sec:assertion-rules}). It is not complete, and was never
+going to be, but it is enough: the larger derivations below use no semantic
+entailment at all.
 
 \paragraph{The logic can be used.}
 Section~\ref{sec:proofs} derives a shared container in which a thread
 acquires the lock, removes a cell, releases the lock, writes the cell
 privately, and later returns it, while another processor's write stays
-buffered throughout.
-\pending{the Section 4.1 example; the larger derivation; the assertion
-proof system}
+buffered throughout. It re-derives the dissertation's own message-passing
+example. And it builds named locks on top of the single global lock, as
+derived rules, and uses one to pass a message of any length from a producer
+to a consumer.
 
 \medskip
 The report assumes a reader who knows the dissertation and has forgotten

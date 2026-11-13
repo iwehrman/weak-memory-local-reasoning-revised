@@ -1,12 +1,13 @@
 \section{The mechanization}
 \label{sec:mechanization}
 
-The development is about 25,000 lines of Rocq in 148 files, using only the
+The development is about 30,000 lines of Rocq in 193 files, using only the
 standard library. It declares no axioms and admits no proofs. An audit file
-prints the assumptions of every principal result, 947 at the time of
-writing, and the build checks the compiled proof objects independently.
-The proofs need neither extensionality nor choice nor a finite set of
-processors. \pending{final figures}
+prints the assumptions of 1,284 named results, and the build checks the
+compiled proof objects independently. The proofs need neither
+extensionality nor choice nor a finite set of processors. The
+development also keeps, as a record, the repairs that were tried and set
+aside.
 
 The transcription of the printed definitions is kept separate from every
 repair, so that each claim in Section~\ref{sec:wrong} is a theorem about

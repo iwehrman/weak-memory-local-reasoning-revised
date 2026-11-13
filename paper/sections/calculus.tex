@@ -75,6 +75,33 @@ disjoint mode and can only be framed spatially. Overlap-mode pieces are
 weakened before sequencing. At top level the distinction disappears
 (Section~\ref{sec:results}).
 
+\subsection{A proof system for assertions}
+\label{sec:assertion-rules}
+
+The dissertation left entailment between assertions semantic. The judgment
+$P \vdash_a Q$ has 47 rules, none of which refers to satisfaction:
+\begin{itemize}[nosep]
+  \item the usual rules for $\conj$, $\disj$, $\exists$, $\forall$,
+        substitution and equality, and a rule admitting a valid implication
+        between boolean expressions;
+  \item for $\fsep$ and $\fseq$: units, associativity, monotonicity,
+        distribution over $\disj$ and $\exists$, movement of a pure
+        conjunct in and out, and commutativity of $\fsep$;
+  \item the three adjunctions for the implications;
+  \item for barriers, locks and writes, the surviving laws of
+        Appendix~\ref{app:statements};
+  \item two laws for cells: cells at distinct addresses compose spatially
+        exactly when they compose temporally, and
+        $e \fcell u \fseq e \fcell v \vdash_a e \fcell v$.
+\end{itemize}
+Strong temporal conjunction has no rules of its own. It is an abbreviation,
+and what is true of it follows from the rules for $\conj$, $\fsep$ and
+$\fseq$. The system is sound (\rocq{assertion_derivation_sound}) for all
+assertions and all processor domains. Exclusivity of cells, collapse of a
+drained history onto its last write, and hiding of a cell's value are
+derived in it, with the bound-variable renaming done by proof and not
+assumed. No completeness is claimed.
+
 \paragraph{What became of the derived rules.}
 The dissertation lists a dozen derived and alternative rules. In the
 repaired calculus \rn{load-p} is derived exactly as displayed, with the

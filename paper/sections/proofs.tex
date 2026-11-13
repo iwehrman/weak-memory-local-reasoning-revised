@@ -1,7 +1,7 @@
 \section{How proofs proceed}
 \label{sec:proofs}
 
-The dissertation gave few examples. This section gives three, in increasing
+The dissertation gave few examples. This section gives five, in increasing
 size. All are derivations in the calculus of Section~\ref{sec:calculus},
 checked by Rocq.
 
@@ -107,8 +107,75 @@ cannot.
 
 \paragraph{The cost.}
 The container's derivation applies \rn{cons} ten times and needs sixteen
-entailments that are not identities, proved here semantically. Most are
-rearrangements, a few are the laws about barriers and histories used
-above, and one, at the second acquisition, takes fifty lines.
-\pending{the same derivation with syntactic entailments; the Section 4.1
-example; named locks and a producer/consumer client}
+entailments that are not identities. Most are rearrangements, a few are the
+laws about barriers and histories used above, and the hardest is at the
+second acquisition. All sixteen are derived in the assertion proof system
+of Section~\ref{sec:assertion-rules}, and none of its 47 rules had to be
+added to for the purpose.
+
+\subsection{The dissertation's example}
+\label{sec:own-example-repaired}
+
+The message-passing program of the dissertation's Section~4.1 is
+\[
+  \cseq{\clock_1}{\cseq{\cstore{d}{1}_1}{\cunlock_1}}
+  \;\oppar\;
+  \cseq{\clock_2}{\cseq{\cload{x}{d}_2}{\cseq{\cunlock_2}
+     {\cifthen{x = 1}{(\cseq{\cstore{d}{2}_2}{\cfence_2})}}}}
+\]
+and its claim is that from $d \fpointsto 0$ every terminating execution
+ends with $d \fpointsto x + 1$. The original proof tracked progress in two
+registers mentioned by the invariant. The repaired calculus forbids that,
+and uses ownership instead. Give the sender a token cell $t$ and the
+receiver a token cell $r$, neither ever read or written, and take
+\[
+  J \;=\; d \fcell 0 \;\disj\; (d \fcell 1 \fsep t \fcell 0) \;\disj\;
+          (t \fcell 0 \fsep r \fcell 0).
+\]
+A sender still holding $t$ can only find the first disjunct when it
+acquires the lock, so its store is safe; it donates $t$ with the updated
+cell. A receiver holding $r$ cannot find the third. If it reads $1$ it
+keeps $d$ and donates $r$, and then writes to $d$ with no lock. The
+derivation uses no auxiliary code and no semantic entailment.
+
+The tokens are then removed from the conclusion. An execution from the
+original one-cell heap lifts to one with two extra untouched cells, and the
+machine never changes the set of allocated addresses, which rules out the
+one remaining disjunct in the $x = 0$ case. The result is a theorem about
+the original program and the original heap
+(\rocq{message_passing_all_runs}): no execution aborts, and every
+terminating one ends with $x \in \set{0,1}$ and exactly the heap
+$d \mapsto x + 1$, which gives the dissertation's
+$d \fpointsto x + 1$ (\rocq{message_passing_points_to}).
+
+\subsection{Named locks and a mailbox}
+
+The machine has one lock. Programs want many. A named lock is a flag cell
+$l$ with an invariant $I_l$, represented in the global invariant by
+$(l \fcell 0 \fsep I_l) \disj l \fcell 1$. Acquiring it is a loop: take the
+global lock, read the flag, set it if it was clear, release the global
+lock, and retry otherwise. For any finite family of such locks, with $J$
+the spatial product of their representations, the following are derived
+rules, a scratch register aside (\rocq{named_lock_acquire_family}, \rocq{named_lock_release_family}):
+\[
+  \mspec{J}{\modedj}{\femp}{\mathit{acquire}(l)}{I_l}
+  \qquad\qquad
+  \inferrule{I_l \fsep I_l \vdash_a \bexpf}
+            {\mspec{J}{\modedj}{I_l}{\mathit{release}(l)}{\femp}}
+\]
+The premise on release says that $I_l$ cannot be held twice, which is how a
+thread holding $I_l$ knows the flag is set. This is the lock rule of
+concurrent separation logic, recovered inside a logic with a single global
+lock. Between a named acquire and its release the global lock is free.
+
+The client is a mailbox guarded by a named lock. A producer writes a
+message of $K$ cells with ordinary stores and no fence, takes the named
+lock, marks the mailbox full, and releases; the release is where its
+buffered writes are required to drain. A consumer retries until the mailbox
+is full, takes the cells out, and reads them privately. The derived
+specification says that the consumer ends up owning cells that hold the
+values the producer wrote. It holds for every $K$, including zero
+(\rocq{mailbox_parallel_derived}), and by adequacy for every execution from
+an actual initial memory in which a third processor's write is pending
+(\rocq{mailbox_all_runs}). A checked 95-step execution of the two-cell
+instance leaves that write pending to the end.

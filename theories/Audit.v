@@ -34,6 +34,20 @@ From WMLR Require Import RetiredHeaps RetiredSafety RetiredTransfer RetiredRules
 From WMLR Require Import OwnedExists OwnedCalculus OwnedDerivedRules OwnedContainerDerivation OwnedRetryContainer OwnedExecution OwnedRetryTrace.
 From WMLR Require Import AssertionResourceEquivalence AssertionUnits OwnedBufferedLoad OwnedBufferedLoadExamples.
 From WMLR Require Import AssertionAlgebra AssertionAlgebraCounterexamples.
+From WMLR Require Import OriginalLocalCounterexamples OwnedModeElimination.
+
+Print Assumptions original_impossible_future_before.
+Print Assumptions original_wand_after_barrier_composition.
+Print Assumptions original_impossible_future_after.
+Print Assumptions original_wand_flush.
+Print Assumptions original_pointwise_temporal_wand_not_flush_closed.
+Print Assumptions original_flushing_closure_false.
+Print Assumptions original_arbitrary_invariant_unlock_invalid.
+Print Assumptions owned_derivation_unlock_free_overlap.
+Print Assumptions owned_derivation_overlap_unlock_free.
+Print Assumptions owned_overlap_derivable_iff_unlock_free.
+Print Assumptions owned_derive_temporal_frame_unlock_free.
+Print Assumptions owned_temporal_frame_unlock_free_valid.
 
 (** Compiling this file reports the assumptions of the main proved facts. *)
 

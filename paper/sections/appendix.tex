@@ -146,9 +146,11 @@ it contains, can tell.
 \label{app:assertion-rules}
 
 Figure~\ref{fig:assertion-rules} shows the rules of $P \vdash_a Q$ that are
-particular to this logic. The rules omitted are the usual ones for $\conj$,
-$\disj$, the quantifiers, substitution and equality, and the distribution
-of $\fsep$ and $\fseq$ over $\disj$ and $\exists$. In the figure $\fgen$
+particular to this logic. The figure omits the usual structural and logical rules, substitution and
+equality, a rule admitting valid implications between boolean expressions
+and a case split on a boolean, the distribution of $\fsep$ and $\fseq$
+over $\disj$ and $\exists$, and the mirror image of the rule for pure
+conjuncts. In the figure $\fgen$
 stands for either $\fsep$ or $\fseq$, the same one throughout a rule, and
 $P \dashv\vdash_a Q$ abbreviates the two rules $P \vdash_a Q$ and
 $Q \vdash_a P$.
@@ -193,7 +195,7 @@ e \fwrite{f} e' \fsep e \fwrite{f'} e'' \vdash_a \bexpf
 (e \fwrite{f} e' \fseq e \fwrite{f} e'') \fseq \fbar{f}
   \dashv\vdash_a e \fwrite{f} e'' \fseq \fbar{f}
 \and
-\inferrule{f \text{ denotes an active processor}}
+\inferrule{f \text{ denotes an active processor in every stack}}
   {e \fpointsto e' \vdash_a e \fwrite{f} e'}
 \\
 e \neq f \conj (e \fcell e' \fseq f \fcell f') \dashv\vdash_a
@@ -212,8 +214,8 @@ Section~\ref{sec:proofs}. The barrier rules say that a barrier is an empty
 resource that can be duplicated, and that draining a composite drains each
 part. The lock rules say that a lock assertion carries no history, so its
 temporal and spatial compositions agree. The collapse rule for writes says
-that once a processor's buffer has drained, only its last write to an
-address is visible. The two cell rules are what make cells behave like
+that once a processor's writes in a history have drained, only its last
+write to an address is visible. The two cell rules are what make cells behave like
 ordinary heap cells: cells at different addresses can be reordered freely,
 and a later cell at the same address overwrites an earlier one.
 
@@ -221,8 +223,8 @@ and a later cell at the same address overwrites an earlier one.
 \section{The dissertation's derived rules}
 \label{app:derived}
 
-The dissertation's derived rules are conveniences built from the primitive
-ones. Figure~\ref{fig:derived} states them as they are derived in the
+Most of the dissertation's derived rules are conveniences built from the
+primitive ones. Figure~\ref{fig:derived} states them as they are derived in the
 repaired calculus, and Table~\ref{tab:derived} records how each differs
 from its original display. \rn{load-p} and \rn{store-p} are the load and
 store axioms for the all-processor points-to $e \fpointsto e'$, so that a
@@ -277,7 +279,8 @@ repaired calculus. In the lock rules the processor is a constant.}
 \toprule
 Original rule & In the repaired calculus \\
 \midrule
-\rn{load-p} & Derived as displayed, with the original points-to. \\
+\rn{load-p} & Derived with the original triple and the original
+  points-to; the freshness of $x$ is made explicit. \\
 \rn{store-p} & The display has a load command and a strong temporal
   suffix, which no memory satisfies; with a store command and a temporal
   suffix, as in \rn{store}, it is derived. \\

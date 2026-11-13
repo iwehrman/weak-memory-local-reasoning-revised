@@ -114,19 +114,22 @@ Appendix~\ref{app:assertion-rules} displays the rules that are particular
 to this logic.
 
 \paragraph{What became of the derived rules.}
-The dissertation also lists a dozen derived and alternative rules, which
-are conveniences built from the primitive ones. \rn{load-p} and
+The dissertation also lists a dozen derived and alternative rules. Most
+are conveniences built from the primitive ones, and a few are proposals
+for stronger axioms. \rn{load-p} and
 \rn{store-p} are the load and store axioms restated for the all-processor
 points-to $e \fpointsto e'$. The rules whose names end in \rn{-g}, such as
 \rn{fence-g} and \rn{lock-g}, take an arbitrary precondition $P$ and append
 the command's effect to it; for example, \rn{fence-g} is
 $\spec{J}{P}{\cfence_i}{P \fseq \fbar{i}}$. Those ending in \rn{-b} are the
-backward forms, which start from an arbitrary postcondition. \rn{locked}
-and \rn{atomic} give a specification to a body run between acquiring and
-releasing the lock.
+backward forms, which start from an arbitrary postcondition. \rn{locked} and \rn{atomic} give a specification to a body run between
+acquiring and releasing the lock; \rn{atomic}, proposed as a stronger
+axiom, lets the body rely on the barrier that the release supplies when it
+restores the invariant.
 
-In the repaired calculus \rn{load-p} and \rn{fence-g} are derived exactly
-as the dissertation displays them. \rn{lock-g}, \rn{lock-b} and the
+In the repaired calculus \rn{fence-g} is derived exactly as the
+dissertation displays it, and \rn{load-p} keeps its original form with the
+freshness of the loaded variable made explicit. \rn{lock-g}, \rn{lock-b} and the
 \rn{locked} wrapper are derived in a form that carries the transferred
 invariant. The unlock variants are derived for the empty invariant, the
 general case being \rn{unlock} itself. The ``daring'' rules for unlocked

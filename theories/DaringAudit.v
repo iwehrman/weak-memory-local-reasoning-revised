@@ -1,0 +1,29 @@
+From WMLR Require Import DaringExtension DaringCounterexamples DaringCandidate.
+
+(** Stage 1 proved declarations only. The Stage 2 rule propositions are
+    deliberately not counted as established theorems. *)
+Print Assumptions DaringExtension.daring_load_embeds_owned.
+Print Assumptions DaringCounterexamples.daring_cell_closed.
+Print Assumptions DaringCounterexamples.daring_cell_domain.
+Print Assumptions DaringCounterexamples.daring_history_domain.
+Print Assumptions DaringCounterexamples.daring_held_domain.
+Print Assumptions DaringCounterexamples.daring_duplicate_false.
+Print Assumptions DaringCounterexamples.daring_load_false_pre.
+Print Assumptions DaringCounterexamples.daring_acquire_store_derivation.
+Print Assumptions DaringCounterexamples.daring_load_extended_bad_derivation.
+Print Assumptions DaringCounterexamples.daring_pool_models.
+Print Assumptions DaringCounterexamples.daring_load_extended_trace.
+Print Assumptions DaringCounterexamples.daring_load_extension_breaks_adequacy.
+Print Assumptions DaringCounterexamples.daring_load_honest_premise_derivation.
+Print Assumptions DaringCounterexamples.daring_load_held_environment.
+Print Assumptions DaringCounterexamples.daring_load_held_step.
+Print Assumptions DaringCounterexamples.daring_load_honest_conclusion_invalid.
+Print Assumptions DaringCounterexamples.daring_load_honest_counterexample.
+Print Assumptions DaringCounterexamples.daring_swap_pre.
+Print Assumptions DaringCounterexamples.daring_store_honest_premise_derivation.
+Print Assumptions DaringCounterexamples.daring_pair_spatial.
+Print Assumptions DaringCounterexamples.daring_store_free_environment.
+Print Assumptions DaringCounterexamples.daring_store_free_step.
+Print Assumptions DaringCounterexamples.daring_store_no_successor.
+Print Assumptions DaringCounterexamples.daring_store_honest_conclusion_invalid.
+Print Assumptions DaringCounterexamples.daring_store_honest_counterexample.

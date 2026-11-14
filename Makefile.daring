@@ -1,0 +1,11 @@
+# Standalone overlay: the request permits new files only.
+# This runs the unchanged baseline check before checking the new modules.
+.PHONY: check check-daring
+check: check-daring
+check-daring:
+	$(MAKE) -f Makefile check
+	rocq compile -Q theories WMLR theories/DaringExtension.v
+	rocq compile -Q theories WMLR theories/DaringCounterexamples.v
+	rocq compile -Q theories WMLR theories/DaringCandidate.v
+	rocq compile -Q theories WMLR theories/DaringAudit.v
+	rocq check -silent -Q theories WMLR WMLR.DaringAudit

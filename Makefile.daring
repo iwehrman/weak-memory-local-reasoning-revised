@@ -1,11 +1,14 @@
-# Standalone overlay: the request permits new files only.
-# This runs the unchanged baseline check before checking the new modules.
-.PHONY: check check-daring
+# Stage 1 is now in the main build. Candidate definitions stay separate.
+.PHONY: check check-daring check-withdrawn
 check: check-daring
 check-daring:
 	$(MAKE) -f Makefile check
-	rocq compile -Q theories WMLR theories/DaringExtension.v
-	rocq compile -Q theories WMLR theories/DaringCounterexamples.v
+	rocq compile -Q theories WMLR theories/BufferedPoolCandidate.v
+	rocq check -silent -Q theories WMLR WMLR.BufferedPoolCandidate
+
+# Retain a way to inspect the withdrawn first candidate without including
+# it in the default build or counting its propositions as proved rules.
+check-withdrawn:
+	$(MAKE) -f Makefile check
 	rocq compile -Q theories WMLR theories/DaringCandidate.v
-	rocq compile -Q theories WMLR theories/DaringAudit.v
-	rocq check -silent -Q theories WMLR WMLR.DaringAudit
+	rocq check -silent -Q theories WMLR WMLR.DaringCandidate

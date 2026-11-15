@@ -30,18 +30,21 @@ instance whose premise is valid and whose conclusion is invalid
 \rocq{daring_store_honest_counterexample}). Two features of the repaired
 model are responsible. A thread that holds the lock also holds the
 invariant's cells, so $J \fsep P$ can be false of a state the thread is
-really in. And between lock operations the invariant's cells are fixed and
-free of buffered writes, so a store without the lock can neither take the
-cell it writes to nor leave its write there.
+really in. And an ordinary step leaves the invariant's cells fixed, so
+after a store without the lock the invariant still holds the cell and
+cannot take in the new write, while the thread cannot hold a write to a
+cell it does not own.
 
 \paragraph{A restricted form.}
 A second judgment, $\bspec{J}{P}{c}{Q}$, is defined for commands that
 contain neither $\clock$ nor $\cunlock$. It differs from the first in
 three ways.
 \begin{itemize}[nosep]
-  \item The invariant's resource may hold buffered writes, and $J$ may
-    describe them with a history $e \fcell u \fseq e \fwrite{i} v$. A
-    daring store places its write in the invariant. The dissertation noted
+  \item The invariant's resource may hold buffered writes. The invariant
+    fragment of Section~\ref{sec:calculus} gains one form, a cell followed
+    by a write to it, $e \fcell u \fseq e \fwrite{i} v$, and is otherwise
+    unchanged. An unlocked store may leave its write in the invariant, as
+    the proof below does. The dissertation noted
     that \rn{daring-store} requires this, and preferred invariants that
     describe the heap alone.
   \item Any primitive step may move cells between the invariant and the
@@ -57,17 +60,21 @@ The rule for access is
     {\bspec{J}{P}{a}{Q}}
 \]
 for a single store, load, fence, assignment, $\cassume{}$ or
-$\cassert{}$. Its premise is a statement about one machine step. From every
+$\cassert{}$. The angle brackets are not a specification under $\femp$.
+They state a property of one machine step. From every stack and every
 unlocked memory that splits into a model of $J$ and a model of $P$, the
-step does not abort, and every result splits into a model of $J$ and a
-model of $Q$. The invariant's part is read at full completeness, and the
-thread's part gains no completeness mark except its own at a fence. No
-condition is needed for the flushes that happen between steps, because
-assertions are closed under flushing.
+step does not abort. Every result splits into a model of $J$ and a model
+of $Q$ on the resulting stack, with no new addresses. The invariant's part
+is read at full completeness, and the thread's part gains no completeness
+mark except its own at a fence. The premise says nothing about the flushes
+that happen between steps. The soundness proof assigns each such flush to
+the invariant, the thread or the frame, and uses the fact that assertions
+are closed under flushing.
 
 With \rn{atomic} the judgment has sixteen rules: the structural rules, the
 spatial frame rule, the concurrency rule, and axioms for cells the thread
-owns outright. It is sound and adequate for the machine
+owns outright. For invariants in the extended fragment it is sound and
+adequate for the machine
 (\rocq{buffered_calculus_sound}, \rocq{buffered_derivation_adequacy}), with
 no assumption on the number of processors.
 
@@ -77,7 +84,7 @@ $r_1 = r_2 = 0$ (\rocq{buffered_dekker_derived};
 Appendix~\ref{app:dekker} gives the invariant). Erasing the proof's token
 cells, as for message passing, gives a theorem about the machine alone
 (\rocq{dekker_fenced_all_runs}): from the heap $f_1 = f_2 = 0$ with empty
-buffers, no execution aborts and no terminating execution ends with
+buffers and the lock free, no execution aborts and no terminating execution ends with
 $r_1 = 0$ and $r_2 = 0$. Without the fences such an execution exists
 (\rocq{dekker_unfenced_zero_zero}).
 
@@ -85,11 +92,14 @@ $r_1 = 0$ and $r_2 = 0$. Without the fences such an execution exists
 This is the dissertation's simplified program, without the retry loop of
 the full algorithm. The two
 judgments are separate: a program cannot yet take the lock in one place and
-use \rn{atomic} in another, and it is not known how to combine them. And a
-thread needs a completeness mark before it can take a cell out of the
-invariant, since a cell cannot be owned without one. A thread that starts
-from $\femp$ may have none
-(\rocq{buffered_emp_load_withdrawal_premise_invalid}). Starting each
-thread with $\fbar{i}$, which costs nothing when the program begins,
-supplies one (\rocq{buffered_barrier_parallel_initial_adequacy},
-\rocq{buffered_marked_cell_withdrawal}).
+use \rn{atomic} in another, and it is not known how to combine them.
+
+A load or store cannot move a cell from the invariant to a thread that
+has no completeness mark. Owning a cell requires a mark, and these steps
+earn none (\rocq{buffered_unmarked_ordinary_no_heap}). A thread that
+starts from $\femp$ may have no mark
+(\rocq{buffered_emp_load_withdrawal_premise_invalid}). Two threads that
+start with nothing can each be given $\fbar{i}$ instead, without changing
+the machine state (\rocq{buffered_barrier_parallel_initial_adequacy}).
+That supplies the mark. The premise of \rn{atomic} must still show that
+the cell is there to take.

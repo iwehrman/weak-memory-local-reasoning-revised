@@ -577,7 +577,7 @@ accordingly. By the concurrency rule the final state is the spatial
 conjunction of the two postconditions, and $w \fsep w$ is false, so
 $r_1 = r_2 = 0$ is excluded.
 
-Each of the six premises is proved by enumerating the 24 shapes a memory
-satisfying $J$ can have (\rocq{buffered_dekker_store0_premise} and its
-five companions).
+An unlocked memory satisfying $J$ has one of 24 shapes, and each of the six
+premises is proved by a checked computation over all of them
+(\rocq{buffered_dekker_store0_premise} and its five companions).
 

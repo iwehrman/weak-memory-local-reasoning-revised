@@ -68,3 +68,29 @@ opinion is enough. I want to know whether to describe that as open or as
 blocked.
 
 Check in after items 1 to 4.
+
+## Addendum: the withdrawal limitation
+
+Ian asked how the limitation proved in `BufferedPoolLimitations.v` could be
+lifted. Two candidates, in order. Add these after items 1 to 4; they do
+not block them.
+
+5. **Start the thread with a barrier.** The limitation is about a thread
+   with no mark, and `emp` is just the usual way to have none. Test
+   whether a precondition `bar_i` is enough:
+   - the atomic premise `{bar_1} r := [x]_1 {bar_1 * x ↣ 0}` (or the
+     nearest true form) with `J = emp ∨ x ↣ 0`, the instance that fails
+     for `emp`;
+   - adequacy from an initial state with empty buffers, where each thread
+     is given its own barrier at no cost;
+   - CONC with `bar_1 * bar_2` split between two threads.
+
+   If all three hold, the limitation becomes a remark about how to write
+   preconditions, and no rule changes. Small theorems are enough.
+
+6. **Only if 5 fails: let a withdrawal earn a mark.** Loosen
+   `buffered_mark_budget` so that a thread receiving a heap cell from the
+   pool may gain a mark for a processor on which its private resource has
+   no pending write. Statement and bounded search first, against FRAME-SP
+   and CONC reconstruction in particular. No general proof without a
+   check-in; this would reopen the soundness proofs.

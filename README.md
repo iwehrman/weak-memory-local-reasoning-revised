@@ -28,6 +28,12 @@ dissertation but has forgotten the details.
   transfer ownership of the invariant.
 - **Adequacy.** A derivable specification guarantees that no execution of
   the machine aborts, and that the postcondition holds on termination.
+- **Unlocked access.** The dissertation's "daring" rules for touching
+  shared state without the lock are unsound for the repaired calculus. A
+  second calculus of 16 rules, for programs that take no lock, has a sound
+  replacement. It proves the dissertation's opening example, a fenced
+  simplification of Dekker's algorithm: no execution ends with both
+  threads having read 0, and without the fences one does.
 - **A proof system for assertions.** 47 rules, proved sound. Completeness
   is not claimed.
 - **Worked examples**, all derived in the calculus: a store followed by a
@@ -50,7 +56,7 @@ make check
 
 `make` compiles everything listed in `_CoqProject`. `make check` also runs
 the independent kernel checker over [`theories/Audit.v`](theories/Audit.v),
-which prints the assumptions of 1,341 theorems. Every one is reported as
+which prints the assumptions of 1,483 theorems. Every one is reported as
 closed under the global context: there are no axioms and no admitted
 proofs.
 
@@ -65,7 +71,7 @@ tectonic paper/weak-memory-local-reasoning-revised.tex
 | Path | Contents |
 | --- | --- |
 | [`paper/`](paper) | The report, in LaTeX, with a built PDF. |
-| [`theories/`](theories) | The Rocq development: 198 files, about 30,000 lines. |
+| [`theories/`](theories) | The Rocq development: 218 files, about 34,000 lines. |
 | [`notes/`](notes) | Design notes. [`current-calculus.md`](notes/current-calculus.md) compares the repaired calculus with the dissertation rule by rule, and [`paper-theorem-index.md`](notes/paper-theorem-index.md) maps the report's claims to theorems. |
 | [`review/`](review) | The working record: checkpoint reports, review requests and responses, kept as written. |
 | [`scripts/`](scripts) | Bounded searches that were used to look for counterexamples before attempting general proofs. |
@@ -82,6 +88,9 @@ Some entry points into `theories/`:
 | Why the side conditions are needed | [`OwnedNecessity.v`](theories/OwnedNecessity.v) |
 | The shared container | [`OwnedContainerDerivation.v`](theories/OwnedContainerDerivation.v) |
 | The dissertation's message-passing example | [`MessagePassingDerivation.v`](theories/MessagePassingDerivation.v), [`MessagePassingAdequacy.v`](theories/MessagePassingAdequacy.v) |
+| Unsoundness of the original daring rules | [`DaringCounterexamples.v`](theories/DaringCounterexamples.v) |
+| The lock-free calculus, soundness and adequacy | [`BufferedPoolCandidate.v`](theories/BufferedPoolCandidate.v), [`BufferedPoolCalculus.v`](theories/BufferedPoolCalculus.v) |
+| Fenced Dekker | [`BufferedDekkerDerivation.v`](theories/BufferedDekkerDerivation.v), [`BufferedDekkerAdequacy.v`](theories/BufferedDekkerAdequacy.v) |
 | Named locks and the mailbox | [`NamedLockRules.v`](theories/NamedLockRules.v), [`MailboxDerivation.v`](theories/MailboxDerivation.v), [`MailboxAdequacy.v`](theories/MailboxAdequacy.v) |
 
 ## Scope
@@ -89,11 +98,8 @@ Some entry points into `theories/`:
 The development covers Chapter 4 of the dissertation, the concurrent
 logic. Not covered:
 
-- unlocked access to shared state, and so algorithms such as Dekker's.
-  The dissertation's basic "daring" rules for this are shown to be unsound
-  for the repaired calculus
-  ([`DaringCounterexamples.v`](theories/DaringCounterexamples.v)), and no
-  sound replacement is proved;
+- mixing locked and unlocked access to shared state in one program: the
+  two calculi are separate;
 - the strong temporal frame rule, which is unsound as stated and is
   omitted;
 - allocation, recursive predicates, permissions and the other extensions

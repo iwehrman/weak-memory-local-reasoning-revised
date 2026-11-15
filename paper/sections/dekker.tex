@@ -1,0 +1,95 @@
+\section{Unlocked access}
+\label{sec:daring}
+
+The dissertation opens with a simplification of Dekker's algorithm, which
+a fence after each store makes correct on this machine:
+\[
+  \cseq{\cstore{f_1}{1}_1}{\cseq{\cfence_1}{\cload{r_1}{f_2}_1}}
+  \;\oppar\;
+  \cseq{\cstore{f_2}{1}_2}{\cseq{\cfence_2}{\cload{r_2}{f_1}_2}}
+\]
+From $f_1 = f_2 = 0$ the two registers should never both end at $0$. Each
+thread reads a flag that the other writes, and neither takes the lock. The
+calculus of Section~\ref{sec:calculus} cannot express this, because there
+a thread may touch a cell only if it owns it or holds the lock.
+
+\paragraph{The original rules.}
+The dissertation's basic ``daring'' rules were meant for this case. They
+let a thread load from or store to the invariant's cells without the lock,
+provided that the single command, specified with $J$ in hand, gives $J$
+back:
+\[
+  \inferrule{\spec{\femp}{J \fsep P}{a}{J \fsep Q}}{\spec{J}{P}{a}{Q}}
+\]
+The dissertation expected their soundness to be hard to show and left them
+as future work. For the repaired calculus they are unsound. Adding the load rule lets
+one derive a false specification
+(\rocq{daring_load_extension_breaks_adequacy}), and each rule has an
+instance whose premise is valid and whose conclusion is invalid
+(\rocq{daring_load_honest_counterexample},
+\rocq{daring_store_honest_counterexample}). Two features of the repaired
+model are responsible. A thread that holds the lock also holds the
+invariant's cells, so $J \fsep P$ can be false of a state the thread is
+really in. And between lock operations the invariant's cells are fixed and
+free of buffered writes, so a store without the lock can neither take the
+cell it writes to nor leave its write there.
+
+\paragraph{A restricted form.}
+A second judgment, $\bspec{J}{P}{c}{Q}$, is defined for commands that
+contain neither $\clock$ nor $\cunlock$. It differs from the first in
+three ways.
+\begin{itemize}[nosep]
+  \item The invariant's resource may hold buffered writes, and $J$ may
+    describe them with a history $e \fcell u \fseq e \fwrite{i} v$. A
+    daring store places its write in the invariant. The dissertation noted
+    that \rn{daring-store} requires this, and preferred invariants that
+    describe the heap alone.
+  \item Any primitive step may move cells between the invariant and the
+    thread, where the first judgment allows this only at $\clock$ and
+    $\cunlock$.
+  \item Frames are disjoint from the thread's resource, and there is no
+    temporal frame rule.
+\end{itemize}
+The rule for access is
+\[
+  \inferrule*[right=atomic]
+    {\langle J \fsep P \rangle\; a\; \langle J \fsep Q \rangle}
+    {\bspec{J}{P}{a}{Q}}
+\]
+for a single store, load, fence, assignment, $\cassume{}$ or
+$\cassert{}$. Its premise is a statement about one machine step. From every
+unlocked memory that splits into a model of $J$ and a model of $P$, the
+step does not abort, and every result splits into a model of $J$ and a
+model of $Q$. The invariant's part is read at full completeness, and the
+thread's part gains no completeness mark except its own at a fence. No
+condition is needed for the flushes that happen between steps, because
+assertions are closed under flushing.
+
+With \rn{atomic} the judgment has sixteen rules: the structural rules, the
+spatial frame rule, the concurrency rule, and axioms for cells the thread
+owns outright. It is sound and adequate for the machine
+(\rocq{buffered_calculus_sound}, \rocq{buffered_derivation_adequacy}), with
+no assumption on the number of processors.
+
+\paragraph{The result.}
+The program above is derivable with a postcondition that excludes
+$r_1 = r_2 = 0$ (\rocq{buffered_dekker_derived};
+Appendix~\ref{app:dekker} gives the invariant). Erasing the proof's token
+cells, as for message passing, gives a theorem about the machine alone
+(\rocq{dekker_fenced_all_runs}): from the heap $f_1 = f_2 = 0$ with empty
+buffers, no execution aborts and no terminating execution ends with
+$r_1 = 0$ and $r_2 = 0$. Without the fences such an execution exists
+(\rocq{dekker_unfenced_zero_zero}).
+
+\paragraph{Limits.}
+This is the dissertation's simplified program, without the retry loop of
+the full algorithm. The two
+judgments are separate: a program cannot yet take the lock in one place and
+use \rn{atomic} in another, and it is not known how to combine them. And a
+thread needs a completeness mark before it can take a cell out of the
+invariant, since a cell cannot be owned without one. A thread that starts
+from $\femp$ may have none
+(\rocq{buffered_emp_load_withdrawal_premise_invalid}). Starting each
+thread with $\fbar{i}$, which costs nothing when the program begins,
+supplies one (\rocq{buffered_barrier_parallel_initial_adequacy},
+\rocq{buffered_marked_cell_withdrawal}).

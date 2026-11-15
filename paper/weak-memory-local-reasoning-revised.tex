@@ -37,7 +37,10 @@ original design: the assertion language, the unit law for $\femp$, the
 temporal frame rule, and the original load and store axioms. This report
 recalls the original model and rules for a reader who knew the dissertation
 but has forgotten its details. It then explains what was wrong, what had to
-change and why, and what the repaired logic can prove.
+change and why, and what the repaired logic can prove. A second, smaller
+calculus replaces the dissertation's rules for access to shared state
+without the lock, and proves the dissertation's opening example, a fenced
+simplification of Dekker's algorithm.
 \end{abstract}
 
 \input{sections/intro}
@@ -48,6 +51,7 @@ change and why, and what the repaired logic can prove.
 \input{sections/calculus}
 \input{sections/results}
 \input{sections/proofs}
+\input{sections/dekker}
 \input{sections/mechanization}
 \input{sections/related}
 \input{sections/open}

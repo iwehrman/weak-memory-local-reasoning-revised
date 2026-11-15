@@ -2,27 +2,20 @@
 \label{sec:open}
 
 \paragraph{Unlocked access to shared state.}
-The dissertation opens with Dekker's algorithm, made correct on this
-machine by a fence after each store. Each thread reads a flag that the
-other writes, with no lock. The calculus cannot express that: a thread may
-touch a cell only if it owns it or holds the lock. The dissertation's basic ``daring'' rules were meant for this. They would let a
-thread load from or store to the invariant's cells without the lock,
-provided that the single command, specified with $J$ in hand, gives $J$
-back. The dissertation doubted their soundness and left them as future
-work. For the repaired calculus the doubt was justified. Adding the load
-rule lets one derive a false specification
-(\rocq{daring_load_extension_breaks_adequacy}), and each rule has an
-instance whose premise is valid and whose conclusion is invalid
-(\rocq{daring_load_honest_counterexample},
-\rocq{daring_store_honest_counterexample}). The store rule fails even
-while the lock is free. A sound rule for unlocked access, and with it a
-proof of Dekker's algorithm, is still missing.
+Section~\ref{sec:daring} gives a sound rule for lock-free commands, in a
+judgment of its own. Combining that judgment with the lock calculus is
+open. The two disagree about the invariant's cells: one keeps them free of
+buffered writes and fixed between lock operations, and the other does
+neither. Dekker's algorithm with its retry loop has not been attempted,
+nor has the dissertation's second daring store rule, which restores $J$
+only once the write has flushed and which the dissertation itself thought
+unsound.
 
 \paragraph{Realistic locks.}
 The one lock is global and blocks every other processor. Programmer-level
 locks can be encoded as flag cells under the invariant, as the container
 does, but each release must itself take the global lock. A spinlock
-released by a bare store is another instance of unlocked access.
+released by a bare store needs both judgments at once.
 
 \paragraph{A strong temporal connective.}
 The frame property holds for a single split that is both spatial and

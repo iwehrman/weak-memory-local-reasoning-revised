@@ -416,8 +416,8 @@ Strengthened \rn{lock}, \rn{unlock} & Subsumed: \rn{lock} already delivers
   $\cfence$ it is derived. \\
 \rn{locked}, \rn{atomic} & Derived as a wrapper whose body is proved under
   the same $J$. Importing a body proved under $\femp$ is not recovered. \\
-Daring load and store & Unsound for the repaired calculus
-  (Section~\ref{sec:open}). \\
+Daring load and store & Unsound for the repaired calculus. A restricted
+  form is sound in a separate judgment (Section~\ref{sec:daring}). \\
 \bottomrule
 \end{tabularx}
 \caption{Status of the rules in the dissertation's ``Derived and
@@ -524,3 +524,60 @@ The derived specifications are
 cells, all zero, and ends with nothing: it has put them in the mailbox. The
 consumer starts with nothing and ends owning the message cells with the
 producer's values.
+
+\section{The proof of Section~\ref{sec:daring}}
+\label{app:dekker}
+
+The proof uses eleven token cells, none ever read or written by the
+program: a prize $w$, and for each thread $k$ the cells $a_k$, $b_k$,
+$q_k$, $t_k$ and $p_k$. Below, a token's name stands for the cell
+assertion $a_k \fcell 0$, and $\bar{k}$ is the other thread. For each flag
+the invariant has three stages,
+\begin{align*}
+ G_k \;=\;\; & (b_k \fsep q_k \fsep f_k \fcell 0)
+     && \text{not yet stored} \\
+ \disj\; & (a_k \fsep q_k \fsep (f_k \fcell 0 \fseq f_k \fwrite{k} 1))
+     && \text{stored, perhaps still buffered} \\
+ \disj\; & (a_k \fsep t_k \fsep f_k \fcell 1)
+     && \text{fenced}
+\end{align*}
+and with $F_k$ for the third of these,
+\[
+  J \;=\; (w \fsep G_1 \fsep G_2) \;\disj\; (p_1 \fsep F_1 \fsep G_2)
+     \;\disj\; (p_2 \fsep F_2 \fsep G_1).
+\]
+The first disjunct says nobody has taken the prize. The others say thread
+$k$ has taken it, leaving $p_k$ in its place, and had fenced first. Thread
+$k$ starts with $a_k \fsep t_k \fsep p_k$. Each step is one use of
+\rn{atomic}, and the tokens the thread holds determine which disjuncts it
+can find:
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Step & Thread $k$ holds afterwards & Exchange with the invariant \\
+\midrule
+$\cstore{f_k}{1}_k$ & $b_k \fsep t_k \fsep p_k$ &
+  gives $a_k$, takes $b_k$; the write joins $G_k$ \\
+$\cfence_k$ & $b_k \fsep q_k \fsep p_k$ &
+  gives $t_k$, takes $q_k$; the history has drained \\
+$\cload{r_k}{f_{\bar{k}}}_k$ &
+  $(r_k = 1 \conj b_k \fsep q_k \fsep p_k) \disj
+   (r_k = 0 \conj b_k \fsep q_k \fsep w)$ &
+  on reading $0$, gives $p_k$ and takes $w$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+At the load, a thread still holding $p_k$ cannot find its own winning
+disjunct. If the other thread has won, its flag is $1$ and the load reads
+$1$. Otherwise the prize is still there, and a thread that reads $0$ takes
+it. The second stage of $G_{\bar{k}}$ is where the race is: the load may
+find the other thread's write still buffered, and reads $0$ or $1$
+accordingly. By the concurrency rule the final state is the spatial
+conjunction of the two postconditions, and $w \fsep w$ is false, so
+$r_1 = r_2 = 0$ is excluded.
+
+Each of the six premises is proved by enumerating the 24 shapes a memory
+satisfying $J$ can have (\rocq{buffered_dekker_store0_premise} and its
+five companions).
+

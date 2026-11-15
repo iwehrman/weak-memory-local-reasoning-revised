@@ -77,6 +77,13 @@ example. And it builds named locks on top of the single global lock, as
 derived rules, and uses one to pass a message of any length from a producer
 to a consumer.
 
+\paragraph{Unlocked access has a sound rule.}
+The dissertation's rules for touching shared state without the lock are
+unsound for the repaired calculus. Section~\ref{sec:daring} gives a
+restricted form, in a separate judgment for programs that take no lock, and
+uses it to prove the fenced simplification of Dekker's algorithm with
+which the dissertation opens.
+
 \medskip
 This report is for a reader who knew the original dissertation but has
 forgotten its details. Section~\ref{sec:original} recalls the original model and

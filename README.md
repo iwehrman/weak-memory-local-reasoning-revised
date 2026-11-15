@@ -50,7 +50,7 @@ make check
 
 `make` compiles everything listed in `_CoqProject`. `make check` also runs
 the independent kernel checker over [`theories/Audit.v`](theories/Audit.v),
-which prints the assumptions of 1,316 theorems. Every one is reported as
+which prints the assumptions of 1,341 theorems. Every one is reported as
 closed under the global context: there are no axioms and no admitted
 proofs.
 
@@ -65,7 +65,7 @@ tectonic paper/weak-memory-local-reasoning-revised.tex
 | Path | Contents |
 | --- | --- |
 | [`paper/`](paper) | The report, in LaTeX, with a built PDF. |
-| [`theories/`](theories) | The Rocq development: 196 files, about 30,000 lines. |
+| [`theories/`](theories) | The Rocq development: 198 files, about 30,000 lines. |
 | [`notes/`](notes) | Design notes. [`current-calculus.md`](notes/current-calculus.md) compares the repaired calculus with the dissertation rule by rule, and [`paper-theorem-index.md`](notes/paper-theorem-index.md) maps the report's claims to theorems. |
 | [`review/`](review) | The working record: checkpoint reports, review requests and responses, kept as written. |
 | [`scripts/`](scripts) | Bounded searches that were used to look for counterexamples before attempting general proofs. |
@@ -89,8 +89,11 @@ Some entry points into `theories/`:
 The development covers Chapter 4 of the dissertation, the concurrent
 logic. Not covered:
 
-- unlocked access to shared state (the dissertation's "daring" rules, and
-  so algorithms such as Dekker's);
+- unlocked access to shared state, and so algorithms such as Dekker's.
+  The dissertation's basic "daring" rules for this are shown to be unsound
+  for the repaired calculus
+  ([`DaringCounterexamples.v`](theories/DaringCounterexamples.v)), and no
+  sound replacement is proved;
 - the strong temporal frame rule, which is unsound as stated and is
   omitted;
 - allocation, recursive predicates, permissions and the other extensions

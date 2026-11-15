@@ -9,7 +9,14 @@ touch a cell only if it owns it or holds the lock. The dissertation's basic ``da
 thread load from or store to the invariant's cells without the lock,
 provided that the single command, specified with $J$ in hand, gives $J$
 back. The dissertation doubted their soundness and left them as future
-work; they still are.
+work. For the repaired calculus the doubt was justified. Adding the load
+rule lets one derive a false specification
+(\rocq{daring_load_extension_breaks_adequacy}), and each rule has an
+instance whose premise is valid and whose conclusion is invalid
+(\rocq{daring_load_honest_counterexample},
+\rocq{daring_store_honest_counterexample}). The store rule fails even
+while the lock is free. A sound rule for unlocked access, and with it a
+proof of Dekker's algorithm, is still missing.
 
 \paragraph{Realistic locks.}
 The one lock is global and blocks every other processor. Programmer-level

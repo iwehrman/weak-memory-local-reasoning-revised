@@ -416,7 +416,8 @@ Strengthened \rn{lock}, \rn{unlock} & Subsumed: \rn{lock} already delivers
   $\cfence$ it is derived. \\
 \rn{locked}, \rn{atomic} & Derived as a wrapper whose body is proved under
   the same $J$. Importing a body proved under $\femp$ is not recovered. \\
-Daring load and store & Not available (Section~\ref{sec:open}). \\
+Daring load and store & Unsound for the repaired calculus
+  (Section~\ref{sec:open}). \\
 \bottomrule
 \end{tabularx}
 \caption{Status of the rules in the dissertation's ``Derived and

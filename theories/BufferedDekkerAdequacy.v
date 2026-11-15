@@ -2,7 +2,8 @@ From Stdlib Require Import List ZArith.
 From WMLR Require Import Expressions Languages Machine BufferRelations Separation OperationalSemantics
   ExecutionExamples Assertions AssertionSemantics PersistentAssertions Safety TemporalSafety
   InvariantFragment CellFamilies HeapExtension HeapExtensionFootprint DekkerSyntax
-  BufferedPoolCandidate BufferedPoolAdequacy BufferedDekkerResources BufferedDekkerVerification BufferedDekkerProof.
+  BufferedPoolCandidate BufferedPoolCalculus BufferedDekkerResources BufferedDekkerVerification BufferedDekkerProof
+  BufferedDekkerDerivation.
 Import ListNotations.
 
 Definition dekker_pool_image := BD.only_image BDP.invariant.
@@ -25,7 +26,7 @@ Proof.
   assert (Hsp : memory_spatial (BD.mem dekker_pool_image)
     (resource_memory BufferedDekker.active (BD.full dekker_private_image)) dekker_augmented).
   { apply BD.join_spatial; reflexivity. }
-  destruct (buffered_valid_adequacy _ _ _ _ _ buffered_dekker_invariant_fragment buffered_dekker_valid
+  destruct (buffered_derivation_adequacy _ _ buffered_dekker_invariant_fragment _ _ _ buffered_dekker_derived
     n s _ last t final _ _ HP HJ Hsp ltac:(intros i H; exact H) Hrun) as [Hsafe Hdone].
   split; [exact Hsafe |]. intros HT.
   destruct (Hdone HT) as (local & pool & Hsep & Hfree & Hinv & Hpost).

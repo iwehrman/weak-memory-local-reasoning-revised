@@ -5,8 +5,8 @@ From WMLR Require Import Expressions Languages Machine BufferRelations Separatio
   InvariantFragment OwnedSafety AssertionSubstitution.
 Import ListNotations.
 
-(** Second daring candidate: STATEMENTS ONLY. No rule or adequacy theorem
-    in this file is proved. The accepted Owned development is unchanged.
+(** Approved buffered-pool definitions and rule statements. The corresponding
+    proofs and inductive calculus are in BufferedPool*.v. The Owned development is unchanged.
     Pools remain spatially separate and may own pending writes. *)
 Inductive buffered_invariant_fragment : A.assertion -> Prop :=
 | BufferedEmp : buffered_invariant_fragment A.Emp

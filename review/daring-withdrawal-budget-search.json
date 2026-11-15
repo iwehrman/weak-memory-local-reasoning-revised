@@ -1,0 +1,340 @@
+{
+  "property": "fixed spatial frame reconstruction for proposed withdrawal budget",
+  "bounds": {
+    "processors": [
+      1,
+      2
+    ],
+    "addresses": [
+      1,
+      2
+    ],
+    "values": [
+      0,
+      1
+    ],
+    "local_cells_before": 0,
+    "received_cells": 1,
+    "max_frame_pending_writes": 1
+  },
+  "results": {
+    "before": {
+      "cases": 1600,
+      "failures": 128
+    },
+    "after": {
+      "cases": 1600,
+      "failures": 128
+    },
+    "both": {
+      "cases": 1600,
+      "failures": 128
+    }
+  },
+  "witnesses": {
+    "before": {
+      "old": {
+        "heap": [],
+        "writes": [],
+        "marks": []
+      },
+      "pool": {
+        "heap": [
+          [
+            1,
+            0
+          ]
+        ],
+        "writes": [],
+        "marks": [
+          1,
+          2
+        ]
+      },
+      "new": {
+        "heap": [
+          [
+            1,
+            0
+          ]
+        ],
+        "writes": [],
+        "marks": [
+          1
+        ]
+      },
+      "pool_new": {
+        "heap": [],
+        "writes": [],
+        "marks": [
+          1,
+          2
+        ]
+      },
+      "frame": {
+        "heap": [
+          [
+            2,
+            0
+          ]
+        ],
+        "writes": [
+          [
+            1,
+            2,
+            0
+          ]
+        ],
+        "marks": [
+          2
+        ]
+      },
+      "combined_before": {
+        "heap": [
+          [
+            2,
+            0
+          ]
+        ],
+        "writes": [
+          [
+            1,
+            2,
+            0
+          ]
+        ],
+        "marks": [
+          2
+        ]
+      },
+      "combined_after": {
+        "heap": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "writes": [
+          [
+            1,
+            2,
+            0
+          ]
+        ],
+        "marks": [
+          1,
+          2
+        ]
+      },
+      "requested_mark": 1,
+      "whole_memory_unchanged": true
+    },
+    "after": {
+      "old": {
+        "heap": [],
+        "writes": [],
+        "marks": []
+      },
+      "pool": {
+        "heap": [
+          [
+            1,
+            0
+          ]
+        ],
+        "writes": [],
+        "marks": [
+          1,
+          2
+        ]
+      },
+      "new": {
+        "heap": [
+          [
+            1,
+            0
+          ]
+        ],
+        "writes": [],
+        "marks": [
+          1
+        ]
+      },
+      "pool_new": {
+        "heap": [],
+        "writes": [],
+        "marks": [
+          1,
+          2
+        ]
+      },
+      "frame": {
+        "heap": [
+          [
+            2,
+            0
+          ]
+        ],
+        "writes": [
+          [
+            1,
+            2,
+            0
+          ]
+        ],
+        "marks": [
+          2
+        ]
+      },
+      "combined_before": {
+        "heap": [
+          [
+            2,
+            0
+          ]
+        ],
+        "writes": [
+          [
+            1,
+            2,
+            0
+          ]
+        ],
+        "marks": [
+          2
+        ]
+      },
+      "combined_after": {
+        "heap": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "writes": [
+          [
+            1,
+            2,
+            0
+          ]
+        ],
+        "marks": [
+          1,
+          2
+        ]
+      },
+      "requested_mark": 1,
+      "whole_memory_unchanged": true
+    },
+    "both": {
+      "old": {
+        "heap": [],
+        "writes": [],
+        "marks": []
+      },
+      "pool": {
+        "heap": [
+          [
+            1,
+            0
+          ]
+        ],
+        "writes": [],
+        "marks": [
+          1,
+          2
+        ]
+      },
+      "new": {
+        "heap": [
+          [
+            1,
+            0
+          ]
+        ],
+        "writes": [],
+        "marks": [
+          1
+        ]
+      },
+      "pool_new": {
+        "heap": [],
+        "writes": [],
+        "marks": [
+          1,
+          2
+        ]
+      },
+      "frame": {
+        "heap": [
+          [
+            2,
+            0
+          ]
+        ],
+        "writes": [
+          [
+            1,
+            2,
+            0
+          ]
+        ],
+        "marks": [
+          2
+        ]
+      },
+      "combined_before": {
+        "heap": [
+          [
+            2,
+            0
+          ]
+        ],
+        "writes": [
+          [
+            1,
+            2,
+            0
+          ]
+        ],
+        "marks": [
+          2
+        ]
+      },
+      "combined_after": {
+        "heap": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "writes": [
+          [
+            1,
+            2,
+            0
+          ]
+        ],
+        "marks": [
+          1,
+          2
+        ]
+      },
+      "requested_mark": 1,
+      "whole_memory_unchanged": true
+    }
+  },
+  "conclusion": "All three proposed readings fail update reconstruction; approved definitions unchanged."
+}

@@ -280,15 +280,37 @@ are classified in the [design diagnosis](../review/paper-priority-1-design.md).
 | Complete transfer and failed retry | `mailbox_parallel_trace`, `mailbox_failed_iteration_retries`, [MailboxTrace.v](../theories/MailboxTrace.v) | 95-step two-cell successful run and 41-step failed iteration. |
 | Unrelated write remains pending in witnesses | `mailbox_foreign_pending_throughout`, `mailbox_trace_contents`, same file | Includes internal physical lock/store/flush states; all-run theorem permits the foreign write to flush. |
 
+## Separate buffered-pool calculus and fenced store buffering
+
+This is a separate judgment for lock-free commands, disjoint external frames,
+and a shared invariant that may own pending writes. It is a restricted
+replacement for basic daring access; the original daring rules remain refuted.
+It does not embed the lock calculus or establish the full retrying Dekker algorithm.
+
+| Result | Declaration and source | Scope |
+| --- | --- | --- |
+| Atomic shared access | `buffered_atomic_valid`, [BufferedPoolRules.v](../theories/BufferedPoolRules.v) | Semantic frameless primitive premise with the original local mark budget; buffered invariant fragment. |
+| Structural and private primitive rules | `buffered_disjunction_valid`, `buffered_choice_valid`, `buffered_loop_valid`, `buffered_exists_valid`, [BufferedPoolStructural.v](../theories/BufferedPoolStructural.v); `buffered_assignment_valid`, `buffered_assume_valid`, `buffered_assert_valid`, `buffered_private_load_valid`, `buffered_private_store_valid`, `buffered_private_fence_valid`, [BufferedPoolPrimitives.v](../theories/BufferedPoolPrimitives.v) | The approved statements, with their existing freshness conditions; no definition change. |
+| Spatial framing and concurrency | `buffered_spatial_frame_valid`, [BufferedPoolFraming.v](../theories/BufferedPoolFraming.v); `buffered_parallel_valid`, [BufferedPoolParallel.v](../theories/BufferedPoolParallel.v) | Disjoint frames; usual variable interference conditions, including invariant preservation. |
+| Inductive calculus and soundness | `buffered_derivation`, `buffered_calculus_sound`, `buffered_derivation_adequacy`, [BufferedPoolCalculus.v](../theories/BufferedPoolCalculus.v) | Sixteen constructors; semantic atomic premise and entailments; fragment hypothesis once at soundness/adequacy. No finiteness or two-processor assumption. |
+| Fenced store-buffering derivation | `buffered_dekker_thread0_derived`, `buffered_dekker_thread1_derived`, `buffered_dekker_derived`, [BufferedDekkerDerivation.v](../theories/BufferedDekkerDerivation.v) | Six checked atomic certificates, sequence and parallel constructors. |
+| Original-machine all-execution theorem | `dekker_fenced_all_runs`, [BufferedDekkerAdequacy.v](../theories/BufferedDekkerAdequacy.v) | On the original two-cell initial memory; no abort and no terminal 00 outcome. Ghost cells are introduced and erased inside the proof, which now uses derivation adequacy. |
+| Unfenced and terminating witnesses | `dekker_unfenced_zero_zero`, `dekker_fenced_terminates`, same file | Unfenced 00 run and complete fenced 01 run. |
+| Exact limits of full marks and withdrawal | `buffered_full_mark_drained_history`, `buffered_full_pool_drained_history`, `buffered_empty_ordinary_cannot_own_cell`, `buffered_emp_load_withdrawal_premise_invalid`, [BufferedPoolLimitations.v](../theories/BufferedPoolLimitations.v) | A drained fully marked history is exactly its current cell; an ordinary step cannot give an unmarked private resource a heap cell. |
+| Initial barriers and withdrawal tests | `buffered_initial_barriers_split`, `buffered_barrier_parallel_initial_adequacy`, `buffered_barrier_load_withdrawal_premise_invalid`, `buffered_guarded_barrier_withdrawal_valid`, `buffered_guarded_barrier_withdrawal_enabled`, [BufferedPoolBarriers.v](../theories/BufferedPoolBarriers.v) | Initial per-thread barriers cost no machine state. The literal optional-cell withdrawal is invalid; a guarded single-thread allocation protocol is valid without changing the mark budget. |
+
+All these files are included in the main `make check`; the former buffered
+build overlay and withdrawn drained-pool candidate have been removed.
+
 ## Mechanization figures and outstanding work
 
-At this batch, `make check` passes with **1,284 audited declarations closed**,
-no axioms and no admitted proofs, using Rocq 9.3.0. There are **193 theory
-files and 30,052 physical lines** listed in `_CoqProject`, including comments,
+At this batch, `make check` passes with **1,483 audited declarations closed**,
+no axioms and no admitted proofs, using Rocq 9.3.0. There are **218 theory
+files and 33,687 physical lines** listed in `_CoqProject`, including comments,
 blank lines, the audit commands, original transcriptions and superseded
 experiments. This is the entire checked development, not a claim that the
-active soundness proof alone is that large. The nine new mailbox/helper files have 956 physical lines and
-75 newly audited declarations.
+active soundness proof alone is that large. The buffered-pool rules, calculus,
+Dekker derivation and barrier tests are included in this single build and audit.
 Declaration totals count
 `Print Assumptions` entries, not every generated inductive eliminator.
 
@@ -308,9 +330,9 @@ proved in both modes, completing the requested queue. The separate retrying
 container's remaining semantic entailments have not been reconstructed in this batch.
 Independent review of these offline batches is pending. No new constructor
 was added for SHARE; its placement in the paper is a review decision.
-Fenced Dekker lacks a shared-access rule; see the scope paragraph in the
-[batch report](../review/paper-independent-batch.md). No completeness or
-automation claim is made for the sound assertion system.
+The fenced store-buffering result and its separate shared-access calculus are
+now proved as listed above. No completeness or automation claim is made for
+the sound assertion system.
 
 The historical `RepairedSafety`, `PersistentCalculus`, `OwnershipCalculus`,
 `PrivateCalculus`, `RegionalCalculus`, `SeparatedCalculus` and `Retired*`

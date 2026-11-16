@@ -55,13 +55,11 @@ index and has 21 rules, among them a temporal frame rule for overlap mode
 and a rule weakening overlap to disjoint (Appendix~\ref{app:rules}). The
 judgment displayed here is its disjoint mode, and the displayed
 \rn{frame-tm} is derived in it: a derivation for a command without
-$\cunlock$ can be replayed in overlap mode, framed, and weakened
-(\rocq{owned_derive_temporal_frame_unlock_free}). The side condition is exact for the calculus: among the derivable
+$\cunlock$ can be replayed in overlap mode, framed, and weakened. The side condition is exact for the calculus: among the derivable
 specifications, those with an overlap-mode derivation are the ones whose
-command contains no $\cunlock$
-(\rocq{owned_overlap_derivable_iff_unlock_free}). It is also
+command contains no $\cunlock$. It is also
 needed: \rn{frame-tm} applied to a valid specification of a release can
-yield an invalid one (\rocq{owned_disjoint_temporal_frame_counterexample}).
+yield an invalid one.
 
 \paragraph{Lock and unlock.}
 \rn{lock} delivers the invariant together with the acquirer's barrier.
@@ -82,8 +80,7 @@ is not buffer-free: it holds of a memory with pending writes, and an
 invariant containing it could swallow them at release. Some restriction is
 necessary: with the original $x \fpointsto 7$ as invariant, \rn{lock}
 derives a specification that is false, because one acquisition cannot
-supply every processor's mark
-(\rocq{owned_soundness_without_fragment_refuted}).
+supply every processor's mark.
 
 \subsection{A proof system for assertions}
 \label{sec:assertion-rules}
@@ -110,8 +107,8 @@ $\fseq$. The system is sound (\rocq{assertion_derivation_sound}) for all
 assertions and all processor domains. Exclusivity of cells, collapse of a
 drained history onto its last write, and hiding of a cell's value are
 derived in it, and the bound-variable renaming they need is itself proved. No completeness is claimed.
-Appendix~\ref{app:assertion-rules} displays the rules that are particular
-to this logic.
+The same appendix displays the rules that have no counterpart among the
+dissertation's laws.
 
 \paragraph{What became of the derived rules.}
 The dissertation also lists a dozen derived and alternative rules. Most

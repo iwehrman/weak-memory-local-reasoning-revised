@@ -12,11 +12,11 @@ For any invariant,
 \[
   \spec{J}{x \fcell u}{\cseq{\cstore{x}{v}_i}{\cfence_i}}{x \fcell v}
 \]
-is derivable (\rocq{owned_derive_store_fence_cell}): \rn{store-any} gives
+is derivable: \rn{store-any} gives
 $x \fcell u \fseq x \fwrite{i} v$, \rn{frame-tm} carries that history
 across $\cfence_i$, and a drained history collapses to its last write. This
 is the store rule of ordinary separation logic. The same specification
-without the fence is \emph{invalid} (\rocq{owned_plain_store_cell_invalid}):
+without the fence is \emph{invalid}:
 the store may terminate with its write still buffered, and a cell assertion
 has no buffered writes. The logic is the difference between these two.
 
@@ -36,7 +36,7 @@ temporal frame, provided $r$ is free in none of $J$, $R$, $x$, $i$, $v$:
   {\spec{J}{R \fseq x \fwrite{i} v}{\cload{r}{x}_i}
          {R \fseq (x \fwrite{i} v \conj r = v)}}
 \]
-(\rocq{owned_derive_load_after_history}). Store-to-load forwarding, the
+Store-to-load forwarding, the
 behaviour most characteristic of the machine, is thus an instance of the
 rule that most distinguishes the logic, and the reason it was worth
 keeping.
@@ -59,7 +59,7 @@ returns it:
 \end{align*}
 Meanwhile processor $2$ has an unrelated write $R = y \fwrite{2} 17$
 buffered. The derived specification is
-$\spec{J}{R}{c}{R}$ (\rocq{owned_container_derived}). Writing
+$\spec{J}{R}{c}{R}$. Writing
 $H(a,v)$ for $(\exists u \st a \fcell u) \fseq a \fwrite{1} v$, the proof
 passes through these assertions, each with $R$ as a spatial frame:
 \begin{center}\small
@@ -96,13 +96,11 @@ first keeps the item and the second donates it.
 
 The example is not vacuous. From a memory with the lock free, $f = 1$,
 $x = 7$ and processor $2$'s write pending, there is a complete 24-step
-execution in which that write is pending in every state
-(\rocq{owned_container_foreign_pending_throughout}), (\rocq{owned_container_trace}), and every execution from that memory is
-safe and, if it completes, restores the invariant
-(\rocq{owned_container_completed_restores}).
+execution in which that write is pending in every state, and every execution from that memory is
+safe and, if it completes, restores the invariant.
 
 A second version replaces each $\cassume{}$ by a loop that releases the
-lock and retries when the flag is wrong (\rocq{owned_retrying_container_derived}).
+lock and retries when the flag is wrong.
 Its return loop has a branch for ``the container is already full'', and
 that branch is derived from $\bexpf$: the thread holds $x$, so the pool
 cannot.
@@ -150,7 +148,7 @@ the original program and the original heap
 (\rocq{message_passing_all_runs}): no execution aborts, and every
 terminating one ends with $x \in \set{0,1}$ and exactly the heap
 $d \mapsto x + 1$, which gives the dissertation's
-$d \fpointsto x + 1$ (\rocq{message_passing_points_to}).
+$d \fpointsto x + 1$.
 
 \subsection{Named locks and a mailbox}
 
@@ -160,7 +158,7 @@ $(l \fcell 0 \fsep I_l) \disj l \fcell 1$. Acquiring it is a loop: take the
 global lock, read the flag, set it if it was clear, release the global
 lock, and retry otherwise. For any finite family of such locks, with $J$
 the spatial product of their representations, the following are derived
-rules, given a scratch register that does not occur in $J$ (\rocq{named_lock_acquire_family}, \rocq{named_lock_release_family}):
+rules, given a scratch register that does not occur in $J$:
 \[
   \spec{J}{\femp}{\mathit{acquire}(l)}{I_l}
   \qquad\qquad
@@ -179,8 +177,7 @@ machine will not let it take the global lock, inside the named acquire,
 until its buffered writes have drained. A consumer retries until the mailbox
 is full, takes the cells out, and reads them privately. The derived
 specification says that the consumer ends up owning cells that hold the
-values the producer wrote. It holds for every $K$, including zero
-(\rocq{mailbox_parallel_derived}), and by adequacy for every execution from
+values the producer wrote. It holds for every $K$, including zero, and by adequacy for every execution from
 an actual initial memory, with the flags, the message cells and one further
 address all distinct, in which a third processor's write to that address is
 pending (\rocq{mailbox_all_runs}). A checked 95-step execution of the two-cell

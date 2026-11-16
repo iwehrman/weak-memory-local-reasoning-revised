@@ -79,8 +79,7 @@ single processor there is no one to block: a held lock is indistinguishable
 from a free one, $\flock{i}$ is equivalent to $\femp$, and
 $\cseq{\clock_i}{\clock_i}$ runs to completion. A rule that hands over the
 invariant at acquisition would then hand it over twice. On one processor the calculus derives a false
-specification of $\cseq{\clock_i}{\clock_i}$
-(\rocq{owned_soundness_without_two_processors_refuted}). The assumption is
+specification of $\cseq{\clock_i}{\clock_i}$. The assumption is
 not about finiteness, and the second processor need not execute anything.
 
 \paragraph{Roads not taken.}

@@ -1,87 +1,36 @@
-\section{The repaired calculus in full}
-\label{app:rules}
+\section{The definitions that changed}
+\label{app:definitions}
 
-Figure~\ref{fig:full} gives the mechanized calculus, whose judgment
-$\mspec{J}{m}{P}{c}{Q}$ carries a mode $m$, either $\modeov$ or $\modedj$.
-The judgment of Section~\ref{sec:calculus} is its disjoint mode.
+Three definitions of the dissertation's model were replaced
+(Table~\ref{tab:local}). The first two admit fewer compositions than the originals, and the third
+adds a requirement to each implication.
 
-\begin{figure}[!ht]
-\small
-\begin{mathpar}
-\inferrule[skip]{ }{\mspec{J}{m}{P}{\cskip_i}{P}}
-\and
-\inferrule[assume]{ }{\mspec{J}{m}{\neg b \disj P}{\cassume{b}_i}{P}}
-\and
-\inferrule[assert]{ }{\mspec{J}{m}{b \conj P}{\cassert{b}_i}{P}}
-\and
-\inferrule[assign]{x \notin \fv{J}}
-  {\mspec{J}{m}{P\subst{e}{x}}{\cassign{x}{e}_i}{P}}
-\and
-\inferrule[fence]{ }{\mspec{J}{m}{\femp}{\cfence_i}{\fbar{i}}}
-\and
-\inferrule[lock]{ }
-  {\mspec{J}{m}{\femp}{\clock_i}{(\flock{i} \fsep J) \fseq \fbar{i}}}
-\and
-\inferrule[unlock]{A \fseq \fbar{i} \sentails J \fsep B}
-  {\mspec{J}{\modedj}{\flock{i} \fsep A}{\cunlock_i}{B}}
-\and
-\inferrule[load]{x \notin \fv{J,e,i,e',P}}
-  {\mspec{J}{m}{e \fwrite{i} e' \fsseq P}{\cload{x}{e}_i}
-         {(e \fwrite{i} e' \fsseq P) \conj x = e'}}
-\and
-\inferrule[store]{ }
-  {\mspec{J}{m}{e \fwrite{i} e'' \fsseq P}{\cstore{e}{e'}_i}
-         {(e \fwrite{i} e'' \fsseq P) \fseq e \fwrite{i} e'}}
-\and
-\inferrule[load-any]{x \notin \fv{J,e,e',P}}
-  {\mspec{J}{m}{e \fcell e' \fsseq P}{\cload{x}{e}_i}
-         {(e \fcell e' \fsseq P) \conj x = e'}}
-\and
-\inferrule[store-any]{ }
-  {\mspec{J}{m}{e \fcell e'' \fsseq P}{\cstore{e}{e'}_i}
-         {(e \fcell e'' \fsseq P) \fseq e \fwrite{i} e'}}
-\and
-\inferrule[frame-sp]
-  {\mspec{J}{m}{P}{c}{Q} \\ \mod{c} \cap \fv{R} = \nil}
-  {\mspec{J}{m}{R \fsep P}{c}{R \fsep Q}}
-\and
-\inferrule[frame-tm]
-  {\mspec{J}{\modeov}{P}{c}{Q} \\ \mod{c} \cap \fv{R} = \nil}
-  {\mspec{J}{\modeov}{R \fseq P}{c}{R \fseq Q}}
-\and
-\inferrule[weaken]{\mspec{J}{\modeov}{P}{c}{Q}}{\mspec{J}{\modedj}{P}{c}{Q}}
-\and
-\inferrule[cons]
-  {P \sentails P' \\ \mspec{J}{m}{P'}{c}{Q'} \\ Q' \sentails Q}
-  {\mspec{J}{m}{P}{c}{Q}}
-\and
-\inferrule[seq]
-  {\mspec{J}{m}{P}{c}{R} \\ \mspec{J}{m}{R}{c'}{Q}}
-  {\mspec{J}{m}{P}{\cseq{c}{c'}}{Q}}
-\and
-\inferrule[choice]
-  {\mspec{J}{m}{P}{c}{Q} \\ \mspec{J}{m}{P}{c'}{Q}}
-  {\mspec{J}{m}{P}{\cchoice{c}{c'}}{Q}}
-\and
-\inferrule[loop]{\mspec{J}{m}{P}{c}{P}}{\mspec{J}{m}{P}{\cloop{c}}{P}}
-\and
-\inferrule[disj]
-  {\mspec{J}{m}{P}{c}{Q} \\ \mspec{J}{m}{P'}{c}{Q}}
-  {\mspec{J}{m}{P \disj P'}{c}{Q}}
-\and
-\inferrule[ex]
-  {\mspec{J}{m}{P}{c}{Q} \\ x \notin \fv{J,c,Q}}
-  {\mspec{J}{m}{\exists x \st P}{c}{Q}}
-\and
-\inferrule[conc]
-  {\mspec{J}{m}{P_k}{c_k}{Q_k} \\
-   \mod{c_{1-k}} \cap \fv{J,P_k,c_k,Q_k} = \nil \quad (k = 0,1)}
-  {\mspec{J}{m}{P_0 \fsep P_1}{\cpar{c_0}{c_1}}{Q_0 \fsep Q_1}}
-\end{mathpar}
-\caption{The 21 rules of the repaired calculus (\rocq{owned_derivation}).
-In \rn{lock} and \rn{unlock} the processor is a constant.}
-\label{fig:full}
-\end{figure}
+\paragraph{Buffer overriding.}
+Originally, $b \override b'$ is the set of interleavings of the buffers $b$
+and $b'$ in which the most recent write to each address is the one that
+$b'$ overriding $b$ would give. That constrains only the last write to each
+address. In the repair, an interleaving is built from the oldest write
+onwards, and a write to address $\ell$ may be taken from the later buffer
+$b'$ only when no write to $\ell$ remains in $b$. All of $b$'s writes to an address therefore
+precede all of $b'$'s.
+
+\paragraph{Temporal compatibility.}
+Originally, $\mu_0$ may precede $\mu_1$ when three conditions hold. Their
+blocked sets are disjoint. For each active processor $i$ \emph{unblocked
+in both}, buffer $i$ of $\mu_0$ writes to no address in the heap of
+$\mu_1$. For each pair of distinct active processors $i$ and $j$
+\emph{unblocked in both}, buffer $i$ of $\mu_0$ and buffer $j$ of $\mu_1$
+write to disjoint sets of addresses. The repair drops ``unblocked in
+both'' from the second and third conditions.
+
+\paragraph{Implications.}
+Originally, $\nu$ satisfies $P \fsepi Q$ when every composition of $\nu$
+with a resource satisfying $P$ satisfies $Q$, and similarly for the two
+temporal implications. In the repair the same is required of every future of $\nu$, so that an
+implication which holds now cannot be falsified by a flush. This applies
+at every implication in an assertion, nested ones included. It does not
+follow that a repaired assertion has fewer models than the original one,
+because the antecedent of an implication is reinterpreted too.
 
 \FloatBarrier
 \section{The safety predicate in full}
@@ -161,92 +110,66 @@ mode $m$ when, for every future $\nu_1 \modrefines \nu$:
 $\mtruespec{J}{m}{P}{c}{Q}$ holds when $s,\nu \sentails P$ implies
 $\safe{n}{c,s,\nu,J,Q}$ in mode $m$ for every $n$. Flushes by the machine are not program steps. When $J$ is in the
 invariant fragment the pool has no buffered writes, so each flush belongs
-either to the local resource or to the frame
-(\rocq{pooled_resource_flush_attribution}). A local flush is covered by
+either to the local resource or to the frame. A local flush is covered by
 the quantification over futures. A flush of the frame is covered by
 choosing the environment again, since the definition quantifies over all
 of them.
 
-\section{The repaired definitions}
-\label{app:definitions}
-
-Three definitions of the dissertation's model were replaced
-(Table~\ref{tab:local}). The first two admit fewer compositions than the originals, and the third
-adds a requirement to each implication.
-
-\paragraph{Buffer overriding.}
-Originally, $b \override b'$ is the set of interleavings of the buffers $b$
-and $b'$ in which the most recent write to each address is the one that
-$b'$ overriding $b$ would give. That constrains only the last write to each
-address. In the repair, an interleaving is built from the oldest write
-onwards, and a write to address $\ell$ may be taken from the later buffer
-$b'$ only when no write to $\ell$ remains in $b$
-(\rocq{ordered_overrides}). All of $b$'s writes to an address therefore
-precede all of $b'$'s.
-
-\paragraph{Temporal compatibility.}
-Originally, $\mu_0$ may precede $\mu_1$ when three conditions hold. Their
-blocked sets are disjoint. For each active processor $i$ \emph{unblocked
-in both}, buffer $i$ of $\mu_0$ writes to no address in the heap of
-$\mu_1$. For each pair of distinct active processors $i$ and $j$
-\emph{unblocked in both}, buffer $i$ of $\mu_0$ and buffer $j$ of $\mu_1$
-write to disjoint sets of addresses. The repair drops ``unblocked in
-both'' from the second and third conditions (\rocq{stable_compatible}).
-
-\paragraph{Implications.}
-Originally, $\nu$ satisfies $P \fsepi Q$ when every composition of $\nu$
-with a resource satisfying $P$ satisfies $Q$, and similarly for the two
-temporal implications. In the repair the same is required of every future of $\nu$, so that an
-implication which holds now cannot be falsified by a flush. This applies
-at every implication in an assertion, nested ones included. It does not
-follow that a repaired assertion has fewer models than the original one,
-because the antecedent of an implication is reinterpreted too.
-
 \FloatBarrier
-\section{The dissertation's assertion laws}
+\section{Assertion laws, original and repaired}
 \label{app:statements}
+\label{app:assertion-rules}
 
 The dissertation states its laws for assertions in two figures, one of
 equivalences and one of entailments (Figures~4.5 and~4.6).
 Table~\ref{tab:algebra} classifies every one of them in the final
-interpretation. A proved law holds for all
-assertions, implications included, and all processor domains. Each refuted
-law is also refuted in the dissertation's original interpretation.
+interpretation. A proved law holds for all assertions, implications
+included, and all processor domains. Each refuted law is also refuted in
+the dissertation's original interpretation. The last column marks the laws
+that the proof system $P \vdash_a Q$ of Section~\ref{sec:calculus} has as
+rules, for $\fsep$ and $\fseq$, with the lock law in the form given in
+its note.
 
 \begin{table}[!ht]
 \small
-\begin{tabularx}{\textwidth}{@{}p{0.42\textwidth}lX@{}}
+\begin{tabularx}{\textwidth}{@{}p{0.40\textwidth}lXc@{}}
 \toprule
-Law ($\bullet$ ranges over $\fsep$, $\fseq$, $\fsseq$) & Status & Note \\
+Law ($\bullet$ ranges over $\fsep$, $\fseq$, $\fsseq$) & Status & Note
+  & $\vdash_a$ \\
 \midrule
-$P \fgen \femp \sequiv P \sequiv \femp \fgen P$ & proved & all three \\
+$P \fgen \femp \sequiv P \sequiv \femp \fgen P$ & proved & all three
+  & \checkmark \\
 $(P \fgen Q) \fgen R \sequiv P \fgen (Q \fgen R)$
-  & proved for $\fsep$, $\fseq$ & refuted for $\fsseq$, both directions \\
-$P \fsep Q \sequiv Q \fsep P$ & proved & \\
+  & proved for $\fsep$, $\fseq$ & refuted for $\fsseq$, both directions
+  & \checkmark \\
+$P \fsep Q \sequiv Q \fsep P$ & proved & & \checkmark \\
 $P \fgen \flock{e} \sequiv \flock{e} \fgen P$ & proved
-  & indeed $P \fseq \flock{e} \sequiv P \fsep \flock{e}$ \\
+  & indeed $P \fseq \flock{e} \sequiv P \fsep \flock{e}$ & \checkmark \\
 $\flock{e} \fgen \flock{f} \sequiv \bexpf$ & qualified
-  & needs a processor blocked by both \\
-$\fbar{e} \fgen \fbar{e} \sequiv \fbar{e}$ & proved & \\
-$(P \fgen Q) \fseq \fbar{e} \sequiv
- (P \fseq \fbar{e}) \fgen (Q \fseq \fbar{e})$ & proved & all three \\
-$P \fsseq \fbar{e} \sequiv P \fseq \fbar{e}$ & proved & \\
-$\flock{e} \fseq \fbar{e} \sequiv \flock{e} \fsep \fbar{e}$ & proved & \\
-$e \fwrite{e'} e'' \fsep e \fwrite{f'} f'' \sequiv \bexpf$ & proved & \\
+  & needs a processor blocked by both & \checkmark \\
+$\fbar{e} \fgen \fbar{e} \sequiv \fbar{e}$ & proved & & \checkmark \\
+$(P \fgen Q) \fseq \fbar{e}$\newline
+\hspace*{1em}$\sequiv (P \fseq \fbar{e}) \fgen (Q \fseq \fbar{e})$ & proved & all three
+  & \checkmark \\
+$P \fsseq \fbar{e} \sequiv P \fseq \fbar{e}$ & proved & & \\
+$\flock{e} \fseq \fbar{e} \sequiv \flock{e} \fsep \fbar{e}$ & proved & & \\
+$e \fwrite{e'} e'' \fsep e \fwrite{f'} f'' \sequiv \bexpf$ & proved &
+  & \checkmark \\
 $e \fwrite{i} e' \fseq e \fwrite{i} f \fseq \fbar{i} \sequiv
- e \fwrite{i} f \fseq \fbar{i}$ & proved & \\
+ e \fwrite{i} f \fseq \fbar{i}$ & proved & & \checkmark \\
 \midrule
-$\fbar{e} \sentails \femp$; monotonicity of $\fgen$ & proved & \\
+$\fbar{e} \sentails \femp$; monotonicity of $\fgen$ & proved &
+  & \checkmark \\
 $e \fpointsto f \sentails e \fwrite{e'} f$ & qualified
-  & $e'$ must denote an active processor \\
+  & $e'$ must denote an active processor & \checkmark \\
 $P \fsseq Q \sentails P \fsep Q$ and $P \fsseq Q \sentails P \fseq Q$
-  & proved & \\
+  & proved & & \\
 Small exchange, $\fsseq$ outermost & refuted
-  & under either reading of its premise \\
+  & under either reading of its premise & \\
 Small exchange between $\fsep$ and $\fseq$ & refuted or vacuous
   & refuted for the premise as displayed; read as an inclusion of
-    connectives, the premise forces an empty processor set \\
-Full exchange for $\fsep$ and $\fsseq$ & refuted & \\
+    connectives, the premise forces an empty processor set & \\
+Full exchange for $\fsep$ and $\fsseq$ & refuted & & \\
 \bottomrule
 \end{tabularx}
 \caption{The original assertion laws, classified.}
@@ -262,75 +185,41 @@ most care, since composing with an empty resource can add completeness
 marks, and the proof must show that no assertion, however many implications
 it contains, can tell.
 
-\FloatBarrier
-\section{A selection of the assertion rules}
-\label{app:assertion-rules}
-
-Figure~\ref{fig:assertion-rules} shows the rules of $P \vdash_a Q$ that are
-particular to this logic. The figure omits the usual structural and logical rules, substitution and
-equality, a rule admitting valid implications between boolean expressions
-and a case split on a boolean, the distribution of $\fsep$ and $\fseq$
-over $\disj$ and $\exists$, and the mirror image of the rule for pure
-conjuncts. In the figure $\fgen$
-stands for either $\fsep$ or $\fseq$, the same one throughout a rule, and
-$P \dashv\vdash_a Q$ abbreviates the two rules $P \vdash_a Q$ and
-$Q \vdash_a P$.
+The proof system has 47 rules (\rocq{assertion_derivation}). Besides the
+laws marked in the table it has the usual structural and logical rules,
+substitution and equality, a rule admitting valid implications between
+boolean expressions and a case split on a boolean, the distribution of
+$\fsep$ and $\fseq$ over $\disj$ and $\exists$, and the rules of
+Figure~\ref{fig:assertion-rules}, which have no counterpart among the
+dissertation's laws. In the figure $\fgen$ stands for either $\fsep$ or
+$\fseq$, and $P \dashv\vdash_a Q$ abbreviates the two rules
+$P \vdash_a Q$ and $Q \vdash_a P$.
 
 \begin{figure}[!ht]
 \small
 \begin{mathpar}
-\femp \fgen P \dashv\vdash_a P \dashv\vdash_a P \fgen \femp
-\and
-(P \fgen Q) \fgen R \dashv\vdash_a P \fgen (Q \fgen R)
-\and
-P \fsep Q \vdash_a Q \fsep P
-\and
-\inferrule{P \vdash_a P' \\ Q \vdash_a Q'}{P \fgen Q \vdash_a P' \fgen Q'}
-\and
 (b \conj P) \fgen Q \dashv\vdash_a b \conj (P \fgen Q)
 \and
+P \fseq \fbar{e} \vdash_a P \fsep \fbar{e}
+\\
 \inferrule{P \fsep Q \vdash_a R}{Q \vdash_a P \fsepi R}
 \and
 \inferrule{P \fseq Q \vdash_a R}{Q \vdash_a P \fseqli R}
 \and
 \inferrule{Q \fseq P \vdash_a R}{Q \vdash_a R \fseqri P}
 \\
-\fbar{e} \vdash_a \femp
-\and
-\fbar{e} \fgen \fbar{e} \dashv\vdash_a \fbar{e}
-\and
-P \fseq \fbar{e} \vdash_a P \fsep \fbar{e}
-\and
-(P \fgen Q) \fseq \fbar{e} \dashv\vdash_a
-  (P \fseq \fbar{e}) \fgen (Q \fseq \fbar{e})
-\\
-P \fseq \flock{e} \dashv\vdash_a P \fsep \flock{e}
-\and
-\flock{e} \fseq P \dashv\vdash_a \flock{e} \fsep P
-\and
-\inferrule{k \text{ active} \\ k \neq i \\ k \neq j}
-  {\flock{i} \fsep \flock{j} \vdash_a \bexpf}
-\\
-e \fwrite{f} e' \fsep e \fwrite{f'} e'' \vdash_a \bexpf
-\and
-(e \fwrite{f} e' \fseq e \fwrite{f} e'') \fseq \fbar{f}
-  \dashv\vdash_a e \fwrite{f} e'' \fseq \fbar{f}
-\and
-\inferrule{f \text{ denotes an active processor in every stack}}
-  {e \fpointsto e' \vdash_a e \fwrite{f} e'}
-\\
 e \neq f \conj (e \fcell e' \fseq f \fcell f') \dashv\vdash_a
 e \neq f \conj (e \fcell e' \fsep f \fcell f')
 \and
 e \fcell e' \fseq e \fcell e'' \vdash_a e \fcell e''
 \end{mathpar}
-\caption{Assertion rules particular to this logic, from the 47 of
-\rocq{assertion_derivation}. Each implication rule is invertible; only the
-introduction direction is shown.}
+\caption{Assertion rules with no counterpart among the dissertation's
+laws. The rule for pure conjuncts has a mirror image, and each implication
+rule is invertible; only the introduction direction is shown.}
 \label{fig:assertion-rules}
 \end{figure}
 
-A few of these do most of the work in the derivations of
+A few rules do most of the work in the derivations of
 Section~\ref{sec:proofs}. The barrier rules say that a barrier is an empty
 resource that can be duplicated, and that draining a composite drains each
 part. The lock rules say that a lock assertion carries no history, so its
@@ -341,6 +230,91 @@ ordinary heap cells: cells at different addresses can be reordered freely,
 and a later cell at the same address overwrites an earlier one.
 
 \FloatBarrier
+\section{The repaired calculus in full}
+\label{app:rules}
+
+Figure~\ref{fig:full} gives the mechanized calculus, whose judgment
+$\mspec{J}{m}{P}{c}{Q}$ carries a mode $m$, either $\modeov$ or $\modedj$.
+The judgment of Section~\ref{sec:calculus} is its disjoint mode.
+
+\begin{figure}[!htp]
+\small
+\begin{mathpar}
+\inferrule[skip]{ }{\mspec{J}{m}{P}{\cskip_i}{P}}
+\and
+\inferrule[assume]{ }{\mspec{J}{m}{\neg b \disj P}{\cassume{b}_i}{P}}
+\and
+\inferrule[assert]{ }{\mspec{J}{m}{b \conj P}{\cassert{b}_i}{P}}
+\and
+\inferrule[assign]{x \notin \fv{J}}
+  {\mspec{J}{m}{P\subst{e}{x}}{\cassign{x}{e}_i}{P}}
+\and
+\inferrule[fence]{ }{\mspec{J}{m}{\femp}{\cfence_i}{\fbar{i}}}
+\and
+\inferrule[lock]{ }
+  {\mspec{J}{m}{\femp}{\clock_i}{(\flock{i} \fsep J) \fseq \fbar{i}}}
+\and
+\inferrule[unlock]{A \fseq \fbar{i} \sentails J \fsep B}
+  {\mspec{J}{\modedj}{\flock{i} \fsep A}{\cunlock_i}{B}}
+\and
+\inferrule[load]{x \notin \fv{J,e,i,e',P}}
+  {\mspec{J}{m}{e \fwrite{i} e' \fsseq P}{\cload{x}{e}_i}
+         {(e \fwrite{i} e' \fsseq P) \conj x = e'}}
+\and
+\inferrule[store]{ }
+  {\mspec{J}{m}{e \fwrite{i} e'' \fsseq P}{\cstore{e}{e'}_i}
+         {(e \fwrite{i} e'' \fsseq P) \fseq e \fwrite{i} e'}}
+\and
+\inferrule[load-any]{x \notin \fv{J,e,e',P}}
+  {\mspec{J}{m}{e \fcell e' \fsseq P}{\cload{x}{e}_i}
+         {(e \fcell e' \fsseq P) \conj x = e'}}
+\and
+\inferrule[store-any]{ }
+  {\mspec{J}{m}{e \fcell e'' \fsseq P}{\cstore{e}{e'}_i}
+         {(e \fcell e'' \fsseq P) \fseq e \fwrite{i} e'}}
+\and
+\inferrule[frame-sp]
+  {\mspec{J}{m}{P}{c}{Q} \\ \mod{c} \cap \fv{R} = \nil}
+  {\mspec{J}{m}{R \fsep P}{c}{R \fsep Q}}
+\and
+\inferrule[frame-tm]
+  {\mspec{J}{\modeov}{P}{c}{Q} \\ \mod{c} \cap \fv{R} = \nil}
+  {\mspec{J}{\modeov}{R \fseq P}{c}{R \fseq Q}}
+\and
+\inferrule[weaken]{\mspec{J}{\modeov}{P}{c}{Q}}{\mspec{J}{\modedj}{P}{c}{Q}}
+\and
+\inferrule[cons]
+  {P \sentails P' \\ \mspec{J}{m}{P'}{c}{Q'} \\ Q' \sentails Q}
+  {\mspec{J}{m}{P}{c}{Q}}
+\and
+\inferrule[seq]
+  {\mspec{J}{m}{P}{c}{R} \\ \mspec{J}{m}{R}{c'}{Q}}
+  {\mspec{J}{m}{P}{\cseq{c}{c'}}{Q}}
+\and
+\inferrule[choice]
+  {\mspec{J}{m}{P}{c}{Q} \\ \mspec{J}{m}{P}{c'}{Q}}
+  {\mspec{J}{m}{P}{\cchoice{c}{c'}}{Q}}
+\and
+\inferrule[loop]{\mspec{J}{m}{P}{c}{P}}{\mspec{J}{m}{P}{\cloop{c}}{P}}
+\and
+\inferrule[disj]
+  {\mspec{J}{m}{P}{c}{Q} \\ \mspec{J}{m}{P'}{c}{Q}}
+  {\mspec{J}{m}{P \disj P'}{c}{Q}}
+\and
+\inferrule[ex]
+  {\mspec{J}{m}{P}{c}{Q} \\ x \notin \fv{J,c,Q}}
+  {\mspec{J}{m}{\exists x \st P}{c}{Q}}
+\and
+\inferrule[conc]
+  {\mspec{J}{m}{P_k}{c_k}{Q_k} \\
+   \mod{c_{1-k}} \cap \fv{J,P_k,c_k,Q_k} = \nil \quad (k = 0,1)}
+  {\mspec{J}{m}{P_0 \fsep P_1}{\cpar{c_0}{c_1}}{Q_0 \fsep Q_1}}
+\end{mathpar}
+\caption{The 21 rules of the repaired calculus (\rocq{owned_derivation}).
+In \rn{lock} and \rn{unlock} the processor is a constant.}
+\label{fig:full}
+\end{figure}
+
 \section{The dissertation's derived rules}
 \label{app:derived}
 
@@ -446,8 +420,7 @@ Section~\ref{sec:proofs}, taking the item is
 and $\mathit{put}$ is the same with the test $r = 0$ and the store
 $\cstore{f}{1}_1$. The program is
 $\mathit{take};\ \cstore{x}{9}_1;\ \mathit{put}$, and the derived
-specification is $\spec{J}{R}{c}{R}$ with $R = y \fwrite{2} 17$
-(\rocq{owned_retrying_container_derived}).
+specification is $\spec{J}{R}{c}{R}$ with $R = y \fwrite{2} 17$.
 
 \paragraph{Message passing.}
 With $J$ as in Section~\ref{sec:own-example-repaired}, the two threads and
@@ -461,8 +434,7 @@ their composition have the specifications
     \mathit{receiver}}
     {(r \fcell 0 \conj x = 0) \disj (d \fcell 2 \conj x = 1)}
 \end{align*}
-(\rocq{mp_sender_derived}, \rocq{mp_receiver_derived},
-\rocq{mp_parallel_derived}). The sender gives up its token. The receiver
+The sender gives up its token. The receiver
 ends either still holding its token, having read $0$, or owning the data
 cell with the value $2$, having read $1$.
 
@@ -519,12 +491,12 @@ The derived specifications are
  & \spec{J}{A(\vec{0})}{\mathit{producer} \oppar \mathit{consumer}}
         {A(\vec{v})}
 \end{align*}
-(\rocq{mailbox_producer_derived}, \rocq{mailbox_consumer_derived},
-\rocq{mailbox_parallel_derived}). The producer starts with the message
+The producer starts with the message
 cells, all zero, and ends with nothing: it has put them in the mailbox. The
 consumer starts with nothing and ends owning the message cells with the
 producer's values.
 
+\FloatBarrier
 \section{The proof of Section~\ref{sec:daring}}
 \label{app:dekker}
 
@@ -578,6 +550,4 @@ conjunction of the two postconditions, and $w \fsep w$ is false, so
 $r_1 = r_2 = 0$ is excluded.
 
 An unlocked memory satisfying $J$ has one of 24 shapes, and each of the six
-premises is proved by a checked computation over all of them
-(\rocq{buffered_dekker_store0_premise} and its five companions).
-
+premises is proved by a checked computation over all of them.

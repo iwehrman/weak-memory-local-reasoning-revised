@@ -10,7 +10,7 @@ also $\mtruespec{J}{\modeov}{P}{c}{Q}$.
 
 The proof is by induction on the mode-indexed derivation, one semantic
 lemma per rule; the overlap-mode half first replays the derivation in
-overlap mode (\rocq{owned_derivation_unlock_free_overlap}). Both hypotheses are needed: dropping either admits a
+overlap mode. Both hypotheses are needed: dropping either admits a
 derivation of an invalid specification (Sections~\ref{sec:changes}
 and~\ref{sec:calculus}).
 No rule has a premise about safety or validity. \rn{cons} and \rn{unlock}
@@ -33,16 +33,13 @@ modes, so a client never discharges a mode condition.
 \paragraph{Share.}
 The original \rn{share} is unsound next to the transferring \rn{lock}: a
 command that ends with the lock held has the invariant in its own hands,
-and \rn{share} would count it twice
-(\rocq{owned_original_share_lock_counterexample}). It is sound when every
+and \rn{share} would count it twice. It is sound when every
 model of $P$ and of $Q$ is lock-free: then $\mtruespec{J}{m}{P}{c}{Q}$
-implies $\mtruespec{\femp}{m}{J \fsep P}{c}{J \fsep Q}$, in either mode
-(\rocq{owned_share_valid}, \rocq{owned_share_overlap_valid}). The condition
+implies $\mtruespec{\femp}{m}{J \fsep P}{c}{J \fsep Q}$, in either mode. The condition
 must be semantic; a postcondition that merely omits the token syntactically
 can still hide it under $\bexpt$.
 
-For a specification from $\femp$ to $\femp$ there is a sharper statement
-(\rocq{owned_emp_derivation_restores}): if the external frame is lock-free to begin with, every completed execution
+For a specification from $\femp$ to $\femp$ there is a sharper statement: if the external frame is lock-free to begin with, every completed execution
 ends with the lock free, and the final memory is exactly an invariant pool
 together with a flushed descendant of that frame.
 

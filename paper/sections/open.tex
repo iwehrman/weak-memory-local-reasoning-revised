@@ -1,33 +1,27 @@
 \section{What remains open}
 \label{sec:open}
 
-\paragraph{Unlocked access to shared state.}
-Section~\ref{sec:daring} gives a sound rule for lock-free commands, in a
-judgment of its own. Combining that judgment with the lock calculus is
-open. The two disagree about the invariant's cells: one keeps them free of
-buffered writes and fixed between lock operations, and the other does
-neither. Dekker's algorithm with its retry loop has not been attempted,
-nor has the dissertation's second daring store rule, which restores $J$
-only once the write has flushed and which the dissertation itself thought
+\paragraph{Combining locked and unlocked access.}
+The judgment of Section~\ref{sec:daring} and the lock calculus are
+separate. They disagree about the invariant's cells: the lock calculus
+keeps them free of buffered writes and fixed between lock operations, and
+the other judgment does neither. A logic with both would reach programs
+that neither reaches now. The one lock is global and blocks every other
+processor, and a named lock built on it must take it at each release. A
+spinlock released by a bare store needs locked and unlocked access at
+once. Dekker's algorithm with its retry loop has not been attempted, nor
+has the dissertation's second daring store rule, which restores $J$ only
+once the write has flushed and which the dissertation itself thought
 unsound.
-
-\paragraph{Realistic locks.}
-The one lock is global and blocks every other processor. Programmer-level
-locks can be encoded as flag cells under the invariant, as the container
-does, but each release must itself take the global lock. A spinlock
-released by a bare store needs both judgments at once.
 
 \paragraph{A strong temporal connective.}
 The frame property holds for a single split that is both spatial and
-temporal (\rocq{owned_safe_common_frame}). Making that a connective of the
-assertion language, in place of the conjunction of two, would restore
-\rn{frame-stm}. Whether its other laws would then hold is not known.
+temporal. Making that a connective of the assertion language, in place of
+the conjunction of two, would restore \rn{frame-stm}. Whether its other
+laws would then hold is not known.
 
-\paragraph{Assertions.}
-The proof system for assertions is sound and was sufficient for every
-derivation attempted. Nothing is known about what it cannot prove, and
-nothing is automated.
-
-\paragraph{The rest of the dissertation.}
-Allocation, recursive predicates, permissions and the other topics of
-Chapter~5 are untouched, as is the sequential logic of Chapter~3.
+\paragraph{The rest.}
+The completeness of the proof system for assertions has not been studied,
+and nothing is automated. Allocation, recursive predicates, permissions
+and the other topics of Chapter~5 are untouched, as is the sequential
+logic of Chapter~3.

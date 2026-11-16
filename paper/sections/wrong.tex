@@ -25,34 +25,30 @@ Original claim & Counterexample & Repair \\
   & With $J$ the assertion $x = 0$, the axiom derives
     $\spec{J}{\bexpt}{\cassign{x}{1}_1}{\bexpt}$, and the assignment
     falsifies $J$ with the lock free.
-    \rocq{original_assignment_invalid}
   & Require $x \notin \fv{J}$. \\[2pt]
 Buffer overriding is associative (Prop.~2)
   & Three one-element buffers writing $1$, $2$, $3$ to one address: the
     list $[2,1,3]$ is in $a \override (b \override c)$ but not in
     $(a \override b) \override c$.
-    \rocq{original_buffer_override_not_associative}
   & A write from the later buffer may be taken only after the earlier
     buffer's writes to that address. \\[2pt]
 Spatiotemporal separation is associative
   & Compatibility ignores blocked processors, so whether two memories
     compose can depend on a third that supplies the blocking fact.
-    \rocq{original_spatiotemporal_not_associative}
   & Check conflicts whether or not the processor is blocked. \\[2pt]
 Assertions are closed under flushing (Prop.~9)
   & $\bexpf \fseqri \fbar{1}$ holds vacuously while processor $1$ has a
     pending write, and fails once the write flushes.
-    \rocq{original_flushing_closure_false}
   & Implications quantify over all futures of the current memory. \\[2pt]
 Conjecture~1: after a step, a spatiotemporal split of a spatially
 split memory is spatial, if its first part is a flushed descendant of the
 original first part
   & A cell duplicated across $\shash$ with equal values is not a spatial
-    split. \rocq{original_conjecture1_false}
+    split.
   & Not needed by the final proof. \\[2pt]
 \rn{unlock} is sound for every invariant
   & With $J = \bexpf$ and the lock held, $\cunlock_i$ is enabled and
-    nothing restores $J$. \rocq{original_arbitrary_invariant_unlock_invalid}
+    nothing restores $J$.
   & See Section~\ref{sec:changes}. \\
 \bottomrule
 \end{tabularx}
@@ -72,8 +68,7 @@ The failure of \rn{unlock} points at something larger. The original safety
 predicate asks for the invariant only while the lock is free. Once a
 thread holds the lock, the predicate has forgotten that $J$ held at the
 moment of acquisition, so neither \rn{unlock} nor \rn{inv} can be justified
-from it; \rn{inv} on its own takes a true specification to a false one
-(\rocq{original_inv_alone_counterexample}). That alone would call for a different predicate. The next
+from it; \rn{inv} on its own takes a true specification to a false one. That alone would call for a different predicate. The next
 subsection shows that it calls for different rules.
 
 \subsection{The original rules are inconsistent}

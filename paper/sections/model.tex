@@ -65,12 +65,11 @@ Four features distinguish this from the original predicate.
         steps.} The original predicate let the frame take silent steps of
         its own choosing during a program step. That permits a local
         residual to claim a pending write that belonged to the frame, and
-        the frame lemma fails (\rocq{overlap_frame_shape_counterexample}).
+        the frame lemma fails.
         Re-quantifying the frame at every step is what lets another
         thread, including one holding the lock, act in between.
   \item \emph{Flushes are handled by closure.} A silent step is attributed
-        to the frame or to the local resource with the other fixed
-        (\rocq{pooled_resource_flush_attribution}), and safety is closed
+        to the frame or to the local resource with the other fixed, and safety is closed
         under futures of the local resource by its outermost quantifier.
   \item \emph{The mark budget.} Without it, a proof could choose a
         successor that claims another processor's barrier.
@@ -83,10 +82,8 @@ Four features distinguish this from the original predicate.
 \paragraph{Three lemmas carry the proofs.}
 With the frame fixed, the local residual's buffers are determined by the
 machine's: ordered overriding places the frame's writes to an address
-before the local ones, so there is one way to subtract the frame
-(\rocq{ordered_residual_unique}). Every machine flush belongs to exactly
+before the local ones, so there is one way to subtract the frame. Every machine flush belongs to exactly
 the frame or the local resource. And an invariant from the guarded
 fragment (Section~\ref{sec:calculus}) is buffer-free and holds of a memory
-under any nonempty set of completeness marks
-(\rocq{invariant_fragment_remark}), which is what allows the pool to be
+under any nonempty set of completeness marks, which is what allows the pool to be
 read at full completeness and handed over with the acquirer's mark alone.

@@ -25,9 +25,7 @@ The dissertation expected their soundness to be hard to show and left them
 as future work. For the repaired calculus they are unsound. Adding the load rule lets
 one derive a false specification
 (\rocq{daring_load_extension_breaks_adequacy}), and each rule has an
-instance whose premise is valid and whose conclusion is invalid
-(\rocq{daring_load_honest_counterexample},
-\rocq{daring_store_honest_counterexample}). Two features of the repaired
+instance whose premise is valid and whose conclusion is invalid. Two features of the repaired
 model are responsible. A thread that holds the lock also holds the
 invariant's cells, so $J \fsep P$ can be false of a state the thread is
 really in. And an ordinary step leaves the invariant's cells fixed, so
@@ -96,10 +94,9 @@ use \rn{atomic} in another, and it is not known how to combine them.
 
 A load or store cannot move a cell from the invariant to a thread that
 has no completeness mark. Owning a cell requires a mark, and these steps
-earn none (\rocq{buffered_unmarked_ordinary_no_heap}). A thread that
-starts from $\femp$ may have no mark
-(\rocq{buffered_emp_load_withdrawal_premise_invalid}). Two threads that
+earn none. A thread that
+starts from $\femp$ may have no mark. Two threads that
 start with nothing can each be given $\fbar{i}$ instead, without changing
-the machine state (\rocq{buffered_barrier_parallel_initial_adequacy}).
+the machine state.
 That supplies the mark. The premise of \rn{atomic} must still show that
 the cell is there to take.

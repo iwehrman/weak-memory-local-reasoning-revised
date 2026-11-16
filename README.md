@@ -1,4 +1,4 @@
-# Weak-Memory Local Reasoning, Revised
+# Weak-Memory Local Reasoning, Revisited
 
 A Rocq mechanization of the program logic from Ian Wehrman's 2012
 dissertation, [*Weak-Memory Local Reasoning*][dissertation], together with
@@ -72,7 +72,7 @@ tectonic paper/weak-memory-local-reasoning-revised.tex
 | --- | --- |
 | [`paper/`](paper) | The report, in LaTeX, with a built PDF. |
 | [`theories/`](theories) | The Rocq development: 218 files, about 34,000 lines. |
-| [`notes/`](notes) | Design notes. [`current-calculus.md`](notes/current-calculus.md) compares the repaired calculus with the dissertation rule by rule, and [`paper-theorem-index.md`](notes/paper-theorem-index.md) maps the report's claims to theorems. |
+| [`notes/`](notes) | Design notes. [`current-calculus.md`](notes/current-calculus.md) compares the repaired lock calculus with the dissertation rule by rule (it predates the second calculus for unlocked access, which is described in Section 9 of the report), and [`paper-theorem-index.md`](notes/paper-theorem-index.md) maps the report's claims to theorems. |
 | [`review/`](review) | The working record: checkpoint reports, review requests and responses, kept as written. |
 | [`scripts/`](scripts) | Bounded searches that were used to look for counterexamples before attempting general proofs. |
 

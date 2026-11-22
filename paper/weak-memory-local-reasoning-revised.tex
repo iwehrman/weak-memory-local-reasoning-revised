@@ -26,20 +26,30 @@
 \maketitle
 
 \begin{abstract}
-My 2012 dissertation proposed a program logic for local reasoning about
-concurrent programs on an x86-like, total-store-order memory model.
-Four of its rules together derive a false specification in which a thread
-owns a cell containing $7$, executes $\cskip$, and owns the same cell
-containing $5$. The repaired calculus transfers ownership at lock and
-unlock and restricts the temporal frame rule to commands that contain no
-$\cunlock$. The rule still lets us prove that a load reads the processor's
-most recent write to the same address while that write is buffered.
-In Rocq I prove the repaired calculus sound and adequate for the original
-machine. It retains the assertion language, the unit law for $\femp$, and
-the original load and store axioms. I also give a sound proof system for
-entailment between assertions, a second task the dissertation left
-unfinished. A smaller calculus for programs that take no lock proves
-the dissertation's opening example, a fenced simplification of Dekker's
+My 2012 dissertation asked how to reason about one thread of a concurrent
+program on an x86-like machine with total store order. A processor can
+read back a value it has just written while shared memory still holds
+the previous value. I proposed a temporal frame rule to make such proofs
+local. It lets a proof of the read set aside the older contents of the
+same cell and reason about the buffered write alone. I left the soundness
+proof unfinished.
+
+The difficulty arises when a thread gives up ownership of a cell. Four
+of the original rules together let a proof give the cell to the state
+protected by a lock and keep an earlier description of it as a private
+ownership claim. This yields a false specification in which a thread
+executes $\cskip$, a command that does nothing, and then owns the same
+cell with a different value.
+
+The repair ties ownership transfer to acquiring and releasing the lock.
+Temporal framing applies only to commands that contain no $\cunlock$,
+so the proof of reading a buffered write survives. I prove soundness
+and adequacy in Rocq. A verified program started as specified on the
+dissertation's machine cannot abort, and if it finishes, its
+postcondition holds. I also give a sound proof system for the
+assertions used in those specifications.
+A separate calculus for shared accesses without the lock proves the
+dissertation's opening example, a fenced simplification of Dekker's
 algorithm.
 \end{abstract}
 

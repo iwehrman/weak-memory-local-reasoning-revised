@@ -23,6 +23,13 @@ has no buffered writes. The logic is the difference between these two.
 \subsection{Reading a buffered write}
 \label{sec:forwarding}
 
+Suppose a thread owns a cell at $x$, stores $v$ there on processor $i$,
+and immediately loads from $x$ on the same processor. If the write is
+still pending, the load finds it in $i$'s buffer. If the write has
+flushed between the two instructions, the load finds the value in the
+heap. The assertion $x \fwrite{i} v$ covers both possibilities, so one
+load proof accounts for both timings.
+
 After $\cstore{x}{v}_i$ the thread holds $R \fseq x \fwrite{i} v$, where
 $R$ describes the older state of $x$. The load axiom wants the loaded write
 to be spatially separate from the rest, and an old cell cannot be separated

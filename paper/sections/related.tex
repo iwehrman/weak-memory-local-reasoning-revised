@@ -47,7 +47,10 @@ machine. Section~\ref{sec:trilemma}'s conflict between temporal framing,
 units and ownership transfer does not depend on TSO and may be of use to
 anyone designing a logic with a sequential conjunction.
 Section~\ref{sec:daring} handles unlocked access to shared state in a
-separate judgment. It remains open whether a single judgment for this
-logic can handle both locked and unlocked access in the same program
+separate judgment. Consider a program that updates a shared cell under
+the lock, releases the lock, and later reads a separate shared flag
+without acquiring it again. The update calls for the lock rules and the
+read for the unlocked-access rules. How to use both in a single
+judgment about the whole program remains open
 (Section~\ref{sec:open}). A further question is how to hide the memory
 model from library clients, as iCAP-TSO does.

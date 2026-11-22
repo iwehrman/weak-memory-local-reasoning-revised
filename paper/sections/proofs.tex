@@ -21,6 +21,7 @@ the store may terminate with its write still buffered, and a cell assertion
 has no buffered writes. The logic is the difference between these two.
 
 \subsection{Reading a buffered write}
+\label{sec:forwarding}
 
 After $\cstore{x}{v}_i$ the thread holds $R \fseq x \fwrite{i} v$, where
 $R$ describes the older state of $x$. The load axiom wants the loaded write

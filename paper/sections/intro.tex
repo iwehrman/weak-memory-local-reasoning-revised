@@ -3,81 +3,69 @@
 
 The dissertation~\cite{wehrman12} set out to give a local reasoning
 principle for programs running on an x86-like machine, where each processor
-buffers its writes and other processors cannot see a write until it leaves
-the buffer. Its logic has three separating conjunctions. Spatial
-conjunction $P \fsep Q$ splits memory by address, as in separation logic.
-Temporal conjunction $P \fseq Q$ splits it by time: $P$ describes earlier
-writes and $Q$ later ones, possibly to the same addresses. Strong temporal
-conjunction $P \fsseq Q$ requires both. Each has a frame rule, and a
-concurrency rule and a shared invariant in the style of concurrent
-separation logic sit on top.
+buffers its writes. It left the soundness proof unfinished and suggested
+that the remaining proofs were ``mostly straightforward inductions.''
+I have wondered since whether that was true. Fourteen years later I
+returned to the question with Rocq.
 
-The dissertation was candid about where it stopped. Its statement of
-contributions lists two major components as unfinished and admits a third
-gap:
-\begin{enumerate}[nosep]
-  \item there is no proof system for the assertion language;
-  \item the soundness proof for the specification logic is incomplete; and
-  \item there are few worked examples, so it is unclear how one would
-        actually use the rules to verify a program.
-\end{enumerate}
-It also hypothesized that the logic was sound and that the remaining proofs
-were ``mostly straightforward inductions.''
+Suppose a thread holds the lock and owns a cell containing $7$. Four of
+the original rules together let it prove that after $\cskip$ it owns that
+cell containing $5$. Temporal conjunction lets the proof describe the
+current $7$ as overriding an earlier $5$, even if nobody ever wrote $5$.
+The invariant rule gives the cell to the shared invariant. The temporal
+frame rule carries the earlier $5$ across that transfer, leaving the
+thread with a claim to the very cell it just gave away. The derivation
+uses only \rn{skip}, \rn{cons}, \rn{inv} and \rn{frame-tm}. In the
+corresponding execution the cell still contains $7$ after $\cskip$
+(Section~\ref{sec:inconsistent}).
 
-I have wondered since whether that was true. This report returns to those
-three items, fourteen years later, to satisfy that curiosity, with a
-mechanization in the Rocq prover. Its findings are as follows.
+Now suppose a processor writes $7$ to a cell containing $5$ and loads
+from it before the write flushes. The heap still contains $5$, and the
+load reads $7$ from the processor's buffer. A spatial frame would require
+distinct addresses for the old cell and the pending write.
+Temporal framing lets the proof set aside the old $5$ and apply the load
+axiom to the newest write alone (Section~\ref{sec:forwarding}). The repair
+moves ownership transfer to lock and unlock and permits temporal framing
+only around commands that contain no $\cunlock$, such as this load. A
+thread releasing the lock must show which of its cells return to the
+invariant and which stay private (Section~\ref{sec:calculus}).
 
-\paragraph{The soundness theorem does not hold as stated.}
-Several auxiliary claims are false, but each can be fixed without
-changing the design (Section~\ref{sec:local-errors}). More seriously, the rules themselves are
-inconsistent with any adequate semantics: from \rn{skip}, \rn{cons},
-\rn{inv} and \rn{frame-tm} alone one can derive that a $\cskip$ changes the
-contents of a memory cell (Section~\ref{sec:inconsistent}). No choice of
-safety predicate can repair that.
+The conflict in the first example is independent of the memory model.
+When a command gives away a cell and leaves $\femp$, unrestricted
+temporal framing carries an earlier assertion $R$ about the cell into
+the postcondition $R \fseq \femp$. The right-unit law and the rule of
+consequence then give $R$ alone. If the transfer made $R$ false, the
+specification is false (Section~\ref{sec:trilemma}).
 
-\paragraph{The cause is general.}
-An unrestricted temporal frame rule, a right unit for temporal conjunction,
-the rule of consequence, and a command that gives away ownership of a
-cell cannot coexist once some history that held before the transfer is
-false after it (Section~\ref{sec:trilemma}). The observation is
-independent of the memory model, and a sequential conjunction in which
-later values override earlier ones supplies such histories.
-
-\paragraph{A repaired calculus is sound.}
-The repair replaces the invariant rule by lock and unlock rules that
-transfer the invariant, restricts the temporal frame rule to commands that do not release the lock, and adjusts four side conditions
-(Section~\ref{sec:changes}). The repaired calculus is proved sound by
-induction on derivations, with an adequacy theorem for the dissertation's
-machine (Section~\ref{sec:results}). The proofs are checked by the Rocq
-kernel and use no axioms.
-
-\paragraph{Most of the design survives.}
-The machine, the assertion language and its interpretation of atoms, the
-unit laws for $\femp$, overlapping temporal history, the temporal and
-spatial frame rules, the concurrency rule, and the original load and store
-axioms are all retained. So is the dissertation's assertion algebra,
-with one family of exceptions: the original laws that rebracket or exchange
-through strong temporal conjunction fail, and with them the strong temporal
-frame rule. The exchange laws between spatial and temporal conjunction also
+\paragraph{What the repair preserves.}
+Spatial conjunction $P \fsep Q$ still splits memory by address. Temporal
+conjunction $P \fseq Q$ splits it into earlier and later parts, possibly
+at the same addresses. Each retains a frame rule. The machine, the
+assertion language and its interpretation of atoms, the unit laws for
+$\femp$, the concurrency rule, and the original load and store axioms
+survive. Strong temporal conjunction $P \fsseq Q$ requires both splits.
+Its frame rule and the original laws that rebracket or exchange through
+it fail. The exchange laws between spatial and temporal conjunction also
 fail or are vacuous (Appendix~\ref{app:statements}).
 
-\paragraph{Assertions have a proof system.}
-A calculus of 47 rules for entailment between assertions is proved sound
-(Section~\ref{sec:assertion-rules}). Its completeness is not established and was not
-a goal, but it is enough: the larger derivations below use no semantic
-entailment at all.
+Several auxiliary claims need local repairs (Section~\ref{sec:local-errors}),
+and four rules need adjusted side conditions (Section~\ref{sec:changes}).
+The soundness proof proceeds by induction on derivations. The Rocq kernel
+checks that proof and the adequacy theorem for the dissertation's machine,
+both without axioms (Section~\ref{sec:results}).
 
-\paragraph{The logic can be used.}
-Section~\ref{sec:proofs} derives a shared container in which a thread
-acquires the lock, removes a cell, releases the lock, writes the cell
-privately, and later returns it, while another processor's write stays
-buffered throughout. It re-derives the dissertation's own message-passing
-example. And it builds named locks on top of the single global lock, as
-derived rules, and uses one to pass a message of any length from a producer
-to a consumer.
+\paragraph{Using the logic.}
+The dissertation left the assertion language without a proof system and
+gave few worked examples. In the shared container of Section~\ref{sec:proofs}
+a thread takes a cell, releases the lock, writes the cell privately, and
+later returns it. In one complete execution another processor's write
+stays buffered throughout. All the entailments in the basic container
+proof follow from a sound calculus of 47 assertion rules
+(Section~\ref{sec:assertion-rules}). The same rules discharge the
+entailments for the dissertation's message-passing example and for a
+producer and consumer that pass a message of any length using a named
+lock derived from the single global lock.
 
-\paragraph{Unlocked access has a sound rule.}
 The dissertation's rules for touching shared state without the lock are
 unsound for the repaired calculus. Section~\ref{sec:daring} gives a
 restricted form, in a separate judgment for programs that take no lock, and
@@ -90,6 +78,5 @@ forgotten its details. Section~\ref{sec:original} recalls the original model and
 calculus in the original notation. Sections~\ref{sec:wrong}
 and~\ref{sec:changes} say what was wrong and what changed.
 Sections~\ref{sec:model} to~\ref{sec:proofs} present the repaired model,
-calculus, results and derivations. Proofs are not reproduced; every claim
-cites the name of its Rocq theorem, and the appendix gives fuller
-statements.
+calculus, results and derivations. The text names the principal Rocq
+theorems, and the appendix gives fuller statements.

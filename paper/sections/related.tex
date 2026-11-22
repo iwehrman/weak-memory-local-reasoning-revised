@@ -45,6 +45,9 @@ conjunctions over the whole history of a thread's writes, each with a frame
 rule, and a soundness proof checked end to end against an operational TSO
 machine. Section~\ref{sec:trilemma}'s conflict between temporal framing,
 units and ownership transfer does not depend on TSO and may be of use to
-anyone designing a logic with a sequential conjunction. What it lacks,
-unlocked access and a way for libraries to hide the memory model from
-their clients, is what the later logics were built to provide.
+anyone designing a logic with a sequential conjunction.
+Section~\ref{sec:daring} handles unlocked access to shared state in a
+separate judgment. It remains open whether a single judgment for this
+logic can handle both locked and unlocked access in the same program
+(Section~\ref{sec:open}). A further question is how to hide the memory
+model from library clients, as iCAP-TSO does.

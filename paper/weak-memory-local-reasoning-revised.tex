@@ -26,31 +26,27 @@
 \maketitle
 
 \begin{abstract}
-My 2012 dissertation asked how to reason about one thread of a concurrent
-program on an x86-like machine with total store order. A processor can
-read back a value it has just written while shared memory still holds
-the previous value. I proposed a temporal frame rule to make such proofs
-local. It lets a proof of the read set aside the older contents of the
-same cell and reason about the buffered write alone. I left the soundness
-proof unfinished.
+My 2012 dissertation proposed a program logic for concurrent programs on an
+x86-like machine, where each processor buffers its writes. Its central rule
+is a temporal frame rule: to prove that a processor reads back its own
+buffered write, a proof sets aside the older contents of the same cell and
+reasons about the write alone. I left the soundness proof unfinished, and
+out of curiosity I have returned to it with a mechanization in Rocq.
 
-The difficulty arises when a thread gives up ownership of a cell. Four
-of the original rules together let a proof give the cell to the state
-protected by a lock and keep an earlier description of it as a private
-ownership claim. This yields a false specification in which a thread
-executes $\cskip$, a command that does nothing, and then owns the same
-cell with a different value.
-
-The repair ties ownership transfer to acquiring and releasing the lock.
-Temporal framing applies only to commands that contain no $\cunlock$,
-so the proof of reading a buffered write survives. I prove soundness
-and adequacy in Rocq. A verified program started as specified on the
-dissertation's machine cannot abort, and if it finishes, its
-postcondition holds. I also give a sound proof system for the
-assertions used in those specifications.
-A separate calculus for shared accesses without the lock proves the
+The soundness theorem does not hold as stated. Four of the original rules
+derive a specification in which a thread executes $\cskip$ and then owns a
+cell with a different value: the proof gives the cell to the lock's
+invariant, and the temporal frame rule keeps an invented earlier value as a
+claim about the present. However, a repaired calculus is sound and adequate
+for the machine. It transfers ownership only when the lock is acquired or
+released, and frames temporally only across commands that do not release
+the lock, which still covers the read. It keeps the assertion language,
+the unit law for $\femp$ and the original load and store axioms. The report
+also gives a sound proof system for assertions, worked examples, and a
+separate calculus for access without the lock that proves the
 dissertation's opening example, a fenced simplification of Dekker's
-algorithm.
+algorithm. It is written for a reader who knew the dissertation but has
+forgotten its details.
 \end{abstract}
 
 \input{sections/intro}

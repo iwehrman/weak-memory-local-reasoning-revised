@@ -1,118 +1,105 @@
 \section{Introduction}
 \label{sec:intro}
 
-In my dissertation~\cite{wehrman12} I proposed rules for reasoning about
-concurrent programs on an x86-like machine. I left the soundness proof
-unfinished. Would every specification the rules could prove hold when
-the program ran? I suggested that the remaining proofs were ``mostly
-straightforward inductions.'' I have wondered since whether that was
-true. Fourteen years later I returned to the question with the Rocq
-proof assistant.
+In my dissertation~\cite{wehrman12} I proposed a program logic for
+concurrent programs on an x86-like machine and left its soundness proof
+unfinished, suggesting that the remaining proofs were ``mostly
+straightforward inductions.'' I have wondered since whether that was true.
+Fourteen years later I returned to the question with the Rocq prover.
 
-Suppose a thread has a memory cell to itself. It writes to the cell and
-then immediately reads it. On this machine the write first enters the
-processor's store buffer. A \emph{flush} moves the oldest buffered write
-to the shared heap. If this write flushes between the two instructions,
-the read finds the new value there. If the write is still pending, the
-heap still holds the previous value, and the read finds the new one in
-the processor's own buffer.
-How much of the machine should we have to describe to prove what that
-one read returns?
+The logic was built for programs like this one. A thread owns a memory
+cell, writes to it, and immediately reads it back. On this machine the
+write first enters the processor's store buffer, and a \emph{flush} later
+moves it to the shared heap. If the write flushes between the two
+instructions, the read finds the new value in the heap. If it has not, the
+heap still holds the old value, and the read finds the new one in the
+processor's own buffer. A proof of the read should not have to say which
+happened.
 
-In separation logic, an assertion that a thread owns a cell with a given
-value does two jobs. It records the thread's permission to access the cell
-and states what value the cell holds. Suppose the thread also owns a
-counter at another address. We can write $R \fsep P$ for this division
-of memory by address, with $R$ describing the counter and $P$ the cell
-being read. The \emph{spatial frame rule} lets us prove the read using
-$P$ alone, then put $R$ back into both the starting and ending
-conditions. The assertion we set aside this way is called a \emph{frame}.
+Separation logic already lets a proof set aside memory that a command does
+not touch. If $R \fsep P$ divides memory by address, the \emph{spatial
+frame rule} lets a proof of the command use $P$ alone and add the
+\emph{frame} $R$ back afterwards. Here, though, the old value and the
+buffered write are at the \emph{same} address. The dissertation added a
+second way to divide memory, $R \fseq P$, in which $R$ describes earlier
+writes and $P$ later ones, with a \emph{temporal frame rule} to go with it.
+For the read, $P$ is the processor's latest write to the cell and $R$ is
+everything before it. The load axiom applies to $P$ alone, and the rule
+carries $R$ across the load unchanged (Section~\ref{sec:forwarding}).
+This rule is what the dissertation's design rests on, and it is also what
+breaks its soundness.
 
-The older value in the heap and the newer write in the buffer concern the
-\emph{same} address. The dissertation proposed a second way to frame a
-proof. Write $R \fseq P$ when memory can be split into an earlier part
-described by $R$ and a later part described by $P$.
+\paragraph{A proof can give a cell away and keep it.}
+The failure needs no buffered writes. Take a thread that holds the lock and
+owns a cell containing $7$, and let the lock's \emph{invariant}, the
+assertion describing the memory it protects, allow either nothing or that
+one cell. The original invariant rule lets a proof of $\cskip$ hand the cell
+over to the invariant. Nothing happens on the machine, but the proof no
+longer counts the cell as the thread's.
 
-In the load example, $R$ describes the old contents of the cell and
-$P$ the processor's most
-recent write. The load rule applies to $P$ alone. The \emph{temporal
-frame rule} lets us use that proof with $R$ as the earlier part, both
-before and after the load (Section~\ref{sec:forwarding}).
+Before the handover, the proof can also set aside an invented history of
+the cell. A temporal division is checked against memory as it now stands,
+and where both parts contain the same cell, the later part's value is the
+one in memory. So the thread's state also satisfies ``the cell contained
+$5$, and later the cell contained $7$,'' although $5$ was never written.
+The temporal frame rule carries the earlier part across $\cskip$. Afterwards
+the later part holds only the lock, since its cell went to the invariant,
+and the unit law $R \fseq \femp \sentails R$ turns what is left into a
+claim about the present: the thread owns the cell, and it contains $5$. The
+heap still holds $7$. Four of the original rules derive this
+(Section~\ref{sec:inconsistent}), so no choice of semantics can make them
+sound. Several auxiliary claims of the dissertation are also false, but each
+can be fixed without changing the design (Section~\ref{sec:local-errors}).
 
-\paragraph{How a proof gives a cell away and keeps it.}
-Consider an even simpler command, $\cskip$, which does nothing. A thread
-holds the lock and owns a cell. Choose an execution with empty store
-buffers, so there is no pending write that might change the heap during
-the command. The lock has a \emph{shared invariant}, an assertion
-describing the cells it protects when it is free. Here the invariant
-allows the protected part of memory either to be empty or to contain
-this one cell with its initial value. The original invariant rule lets
-the proof of $\cskip$ move the cell from the thread's private state into that
-invariant. This changes who accounts for the cell in the proof. The
-machine has carried out no store.
+\paragraph{The cause is general.}
+Nothing in this argument depends on store buffers. An unrestricted temporal
+frame rule, a right unit for temporal conjunction, the rule of consequence,
+and a command that gives away a cell cannot coexist once some history that
+held before the transfer is false after it (Section~\ref{sec:trilemma}). A
+sequential conjunction in which later values override earlier ones supplies
+such histories.
 
-Now consider what the thread could have set aside before that transfer.
-A temporal assertion is checked against the memory as it stands. When
-both parts describe heap contents at the same address, the later value
-wins. The proof may therefore choose \emph{any} value for the earlier
-part and put the actual value in the later part. The two parts together
-describe the cell correctly, even if the chosen earlier value was never
-written.
+\paragraph{A repaired calculus is sound.}
+In the repair, a thread receives the invariant's cells only when it acquires
+the lock, and gives cells up only when it releases the lock, saying which
+ones it returns to satisfy the invariant. That removes the handover during
+$\cskip$. A release still gives cells away, so the temporal frame rule
+applies only to commands that contain no $\cunlock$. A load is such a
+command, and the read above is still proved locally. Four side conditions
+change as well (Section~\ref{sec:changes}). With two distinct active
+processors and an invariant from a restricted fragment, the repaired
+calculus is sound, and it is adequate for the dissertation's machine: a
+verified program started as its specification requires cannot abort, and if
+it terminates, its postcondition holds (Section~\ref{sec:results}). The
+proofs are checked by the Rocq kernel and use no axioms.
 
-The unrestricted temporal frame rule carries that earlier part across
-$\cskip$. The later part now records that the thread holds the lock,
-but its heap is empty because the proof has given the cell away. The
-unit law says that $R \fseq \femp$, an assertion $R$ followed by empty
-memory, entails $R$ on its own. In this example the thread still has
-its lock token. The assertion it recovers alongside the token says that
-it owns the cell \emph{now}, with the earlier value. If that value
-differs from the one in the heap, the postcondition is false.
-Section~\ref{sec:inconsistent} gives the derivation from four
-original rules. Section~\ref{sec:trilemma} shows how the same argument
-can arise in other logics that combine ownership transfer with temporal
-framing.
+\paragraph{Most of the design survives.}
+The machine, the assertion language and its interpretation of atoms, the
+unit laws for $\femp$, overlapping temporal history, the temporal and
+spatial frame rules, the concurrency rule, and the original load and store
+axioms are all retained. So is most of the dissertation's assertion
+algebra. The exceptions involve its third conjunction, the strong temporal
+conjunction $P \fsseq Q$, which asks for a spatial and a temporal division
+of memory that need not agree. The laws that rebracket or exchange through
+it fail, and with them its frame rule. The exchange laws between spatial
+and temporal conjunction also fail or are vacuous
+(Appendix~\ref{app:statements}).
 
-\paragraph{Where ownership changes hands.}
-In the repaired calculus, acquiring the lock gives the thread the cells
-described by the invariant. To release the lock, the thread must show which
-cells it returns to satisfy the invariant and which it keeps for its own
-use. This removes the step that gave away a cell during $\cskip$. Release
-itself can still give a cell away, so the temporal frame rule applies
-only to commands that contain no $\cunlock$. A load qualifies, and the
-proof of reading one's own buffered write goes through. A spatial frame
-can still carry an unrelated cell across a release because its address
-is separate from everything the thread returns (Section~\ref{sec:calculus}).
+\paragraph{Assertions have a proof system.}
+A calculus of 47 rules for entailment between assertions is proved sound
+(Section~\ref{sec:assertion-rules}). Its completeness was not a goal, but it
+is enough: the larger derivations below use no semantic entailment at all.
 
-The repair keeps the machine, the assertion language and its atoms, the
-unit laws for $\femp$, the concurrency rule, and the original load and
-store axioms. The dissertation also defined a strong temporal
-conjunction, $P \fsseq Q$, which asks for both a spatial split and a
-temporal split. The two splits may divide memory differently. Its frame
-rule and several algebraic laws fail for this reason
-(Appendix~\ref{app:statements}). Sections~\ref{sec:local-errors}
-and~\ref{sec:changes} give the local repairs and the four rules whose
-side conditions change.
+\paragraph{The logic can be used.}
+Section~\ref{sec:proofs} derives a shared container in which a thread
+acquires the lock, removes a cell, releases the lock, writes the cell
+privately, and later returns it, while another processor's write stays
+buffered throughout. It re-derives the dissertation's own message-passing
+example. And it builds named locks on top of the single global lock, as
+derived rules, and uses one to pass a message of any length from a producer
+to a consumer.
 
-With two distinct active processors and an invariant of the form in
-Section~\ref{sec:calculus}, the repaired rules are sound. Start a
-verified program with the lock free, the protected state satisfying its
-invariant, and the thread owning what its precondition requires. No
-finite execution from that state aborts. If the program terminates, its
-private state satisfies the postcondition. The Rocq kernel checks both
-soundness and adequacy without axioms (Section~\ref{sec:results}).
-
-\paragraph{Using the logic.}
-The dissertation left the assertion language without a proof system and
-gave few worked examples. In the shared container of Section~\ref{sec:proofs}
-a thread takes a cell, releases the lock, writes the cell privately, and
-later returns it. In one complete execution another processor's write
-stays buffered throughout. All the entailments in the basic container
-proof follow from a sound calculus of 47 assertion rules
-(Section~\ref{sec:assertion-rules}). The same rules discharge the
-entailments for the dissertation's message-passing example and for a
-producer and consumer that pass a message of any length using a named
-lock derived from the single global lock.
-
+\paragraph{Unlocked access has a sound rule.}
 The dissertation's rules for touching shared state without the lock are
 unsound for the repaired calculus. Section~\ref{sec:daring} gives a
 restricted form, in a separate judgment for programs that take no lock, and
@@ -120,10 +107,11 @@ uses it to prove the fenced simplification of Dekker's algorithm with
 which the dissertation opens.
 
 \medskip
-Section~\ref{sec:original} recalls the original machine and proof rules
-in the dissertation's notation so that the report can be read without
-the dissertation at hand. Sections~\ref{sec:wrong}
+This report is for a reader who knew the original dissertation but has
+forgotten its details. Section~\ref{sec:original} recalls the original model
+and calculus in the original notation. Sections~\ref{sec:wrong}
 and~\ref{sec:changes} say what was wrong and what changed.
 Sections~\ref{sec:model} to~\ref{sec:proofs} present the repaired model,
-calculus, results and derivations. The text names the principal Rocq
-theorems, and the appendix gives fuller statements.
+calculus, results and derivations. Proofs are not reproduced. The text
+names the principal Rocq theorems, and the appendix gives fuller
+statements.

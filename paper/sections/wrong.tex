@@ -78,16 +78,21 @@ The derivations below use the dissertation's own points-to, $x \fpointsto
 v$, and are checked against its own interpretation of assertions.
 
 \paragraph{History can be invented.}
-A model is a memory and records nothing of how that memory came about. So a
-current cell is also a model of any stale value followed by that cell:
+A model is a memory and records nothing of how that memory came about. If
+both parts of a temporal split contain the cell at $x$, the later part's
+value is the one in the combined memory. So a cell is also a model of any
+other value followed by itself. With the lock held, as in the derivation
+below,
 \begin{equation}
   \label{eq:invent}
   x \fpointsto 7 \fsep \flock{i}
   \;\sentails\;
   x \fpointsto 5 \fseq (x \fpointsto 7 \fsep \flock{i}).
 \end{equation}
-The stale cell is overridden by the later one, and nothing remains of it.
-This is the non-cancellativity that the dissertation notes in passing.
+Here $7$ is the cell's actual value and $5$ stands for any other. No
+execution need ever have written $5$, and the right-hand side describes
+the same memory whatever value replaces it. This is the non-cancellativity
+that the dissertation notes in passing.
 
 \paragraph{A $\cskip$ that changes memory.}
 Let $J$ be $\femp \disj x \fpointsto 7$. The following is a derivation in
